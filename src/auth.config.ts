@@ -17,7 +17,9 @@ export default {
   ],
   events: {},
   callbacks: {},
-  secret: "",
+  secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
-  pages: {},
+  pages: {
+    error: "/auth/error",
+  },
 } as NextAuthConfig;
