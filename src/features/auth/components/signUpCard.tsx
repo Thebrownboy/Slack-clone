@@ -13,13 +13,23 @@ import React from "react";
 import Socials from "./Socials";
 import Link from "next/link";
 import useSignUpFunc from "../hooks/useSignUpFunc";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaCheck } from "react-icons/fa";
+import { MdCancel } from "react-icons/md";
 
 function SignUpCard({}) {
   const [passwordShown, setPasswordShown] = React.useState(false);
 
-  const { errors, values, handleBlur, handleChange, handleSubmit, touched } =
-    useSignUpFunc();
+  const {
+    isSubmitting,
+    successMsg,
+    errorMsg,
+    errors,
+    values,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    touched,
+  } = useSignUpFunc();
   return (
     <Card className="w-full h-full p-8 max-w-[342px]">
       <CardHeader className="px-0 pt-0">
@@ -97,10 +107,31 @@ function SignUpCard({}) {
             </p>
           </div>
 
-          <Button type="submit" className="w-full" size="lg" disabled={false}>
-            {" "}
-            continue{" "}
+          <Button
+            type="submit"
+            className="w-full"
+            size="lg"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <div className=" size-4 rounded-full border border-white border-t-transparent animate-spin"></div>
+            ) : (
+              "continue"
+            )}
           </Button>
+          {successMsg && (
+            <div className=" bg-green-200 p-3 flex gap-2 items-center  w-full  rounded-md">
+              <FaCheck color="#16a34a" size={12} />
+              <p className=" text-green-600">{successMsg}</p>
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className=" bg-red-300 p-3 flex gap-2 items-center  w-full  rounded-md">
+              <MdCancel color="#dc2626 " size={12} />
+              <p className=" text-red-600">{errorMsg}</p>
+            </div>
+          )}
         </form>
         <Separator />
         <Socials />

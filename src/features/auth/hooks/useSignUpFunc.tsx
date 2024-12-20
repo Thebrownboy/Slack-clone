@@ -1,28 +1,57 @@
 import { signUpValidationSchema } from "@/lib/validation-schemas";
+import { onRegisterSubmit } from "@/utils/authentication";
 import { useFormik } from "formik";
+import { useState } from "react";
 
 export default function useSignUpFunc() {
+  const [successMsg, setSucessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const initialValues = {
     email: "",
     password: "",
     confirmPassword: "",
   };
-  const onSubmit = ({
+  const onSubmit = async ({
     email,
     password,
-    confirmPassword,
   }: {
     email: string;
     password: string;
     confirmPassword: string;
   }) => {
-    console.log(email, password, confirmPassword);
+    const response = await onRegisterSubmit(email, password);
+    if (!response.success) {
+      setErrorMsg(response.msg);
+      setSucessMsg("");
+      return;
+    } else {
+      setErrorMsg("");
+      setSucessMsg(response.msg);
+      return;
+    }
   };
-  const { values, errors, touched, handleSubmit, handleBlur, handleChange } =
-    useFormik({
-      initialValues,
-      onSubmit,
-      validationSchema: signUpValidationSchema,
-    });
-  return { values, errors, touched, handleSubmit, handleBlur, handleChange };
+  const {
+    isSubmitting,
+    values,
+    errors,
+    touched,
+    handleSubmit,
+    handleBlur,
+    handleChange,
+  } = useFormik({
+    initialValues,
+    onSubmit,
+    validationSchema: signUpValidationSchema,
+  });
+  return {
+    successMsg,
+    errorMsg,
+    values,
+    errors,
+    touched,
+    handleSubmit,
+    handleBlur,
+    handleChange,
+    isSubmitting,
+  };
 }
