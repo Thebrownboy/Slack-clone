@@ -16,12 +16,20 @@ import React from "react";
 import Socials from "./Socials";
 import Link from "next/link";
 import useSignInFunc from "../hooks/useSignInFunc";
+import { MdCancel } from "react-icons/md";
 
 function SignInCard({}) {
   const [passwordShown, setPasswordShown] = React.useState(false);
-  const { touched, handleSubmit, values, handleBlur, handleChange, errors } =
-    useSignInFunc();
-  console.log(errors);
+  const {
+    isSubmitting,
+    errorMsg,
+    touched,
+    handleSubmit,
+    values,
+    handleBlur,
+    handleChange,
+    errors,
+  } = useSignInFunc();
   return (
     <Card className="w-full h-full p-8 max-w-[342px]">
       <CardHeader className="px-0 pt-0">
@@ -83,9 +91,19 @@ function SignInCard({}) {
           </div>
 
           <Button type="submit" className="w-full" size="lg" disabled={false}>
-            {" "}
-            continue{" "}
+            {isSubmitting ? (
+              <div className=" size-4 rounded-full border border-white border-t-transparent animate-spin"></div>
+            ) : (
+              "continue"
+            )}
           </Button>
+
+          {errorMsg && (
+            <div className=" bg-red-300 p-3 flex gap-2 items-center  w-full  rounded-md">
+              <MdCancel color="#dc2626 " size={12} />
+              <p className=" text-red-600">{errorMsg}</p>
+            </div>
+          )}
         </form>
         <Separator />
         <Socials />
