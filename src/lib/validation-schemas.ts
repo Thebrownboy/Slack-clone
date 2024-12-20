@@ -9,6 +9,18 @@ export const signInValidationSchema = yup.object().shape({
     .string()
     .required("Password is required")
     .min(8, "Password must be at least 8 characters")
+    .max(50, "Password must be at most 50 characters"),
+});
+
+export const signUpValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("Please enter a valid email")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters")
     .max(50, "Password must be at most 50 characters")
     .test(
       "password regex",
@@ -19,4 +31,7 @@ export const signInValidationSchema = yup.object().shape({
         );
       }
     ),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match"),
 });
