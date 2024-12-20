@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,10 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@radix-ui/react-separator";
 import React from "react";
-import { SignInFlow } from "../types";
 import Socials from "./Socials";
+import Link from "next/link";
 
-function SignInCard({ setState }: { setState: (state: SignInFlow) => void }) {
+function SignInCard({}) {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   return (
@@ -58,12 +59,14 @@ function SignInCard({ setState }: { setState: (state: SignInFlow) => void }) {
         <Socials />
         <p className="text-xs text-muted-foreground">
           Don&apos;t have an account?{" "}
-          <span
-            className="text-sky-700 hover:underline cursor-pointer"
-            onClick={() => setState("signUp")}
-          >
-            Sign Up
-          </span>
+          <Link href={"/auth/signup"}>
+            <span
+              className="text-sky-700 hover:underline cursor-pointer"
+              onClick={() => {}}
+            >
+              Sign Up
+            </span>
+          </Link>
         </p>
       </CardContent>
     </Card>

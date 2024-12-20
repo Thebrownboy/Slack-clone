@@ -1,22 +1,23 @@
 import { auth } from "./auth";
 
 export default auth(async (request) => {
-  const { nextUrl } = request;
-  console.log(request.auth);
-  const loggedIn = !!request.auth;
-  console.log(loggedIn);
-  if (nextUrl.pathname.startsWith("/api/auth")) {
-    return;
-  }
-  if (!loggedIn && nextUrl.pathname !== "/") {
-    console.log("I am true here ");
-    return Response.redirect(new URL("/", nextUrl));
-  }
-  if (loggedIn && nextUrl.pathname !== "/settings") {
-    return Response.redirect(new URL("/settings", nextUrl));
-  } else {
-    return;
-  }
+  console.log(request);
+  // const { nextUrl } = request;
+  // console.log(request.auth);
+  // const loggedIn = !!request.auth;
+  // console.log(loggedIn);
+  // if (nextUrl.pathname.startsWith("/api/auth")) {
+  //   return;
+  // }
+  // if (!loggedIn && nextUrl.pathname !== "/") {
+  //   console.log("I am true here ");
+  //   return Response.redirect(new URL("/", nextUrl));
+  // }
+  // if (loggedIn && nextUrl.pathname !== "/settings") {
+  //   return Response.redirect(new URL("/settings", nextUrl));
+  // } else {
+  //   return;
+  // }
 });
 
 export const config = {
