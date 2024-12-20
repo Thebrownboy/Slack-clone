@@ -15,7 +15,6 @@ export default function useSignInFunc() {
     password: string;
     email: string;
   }) => {
-    console.log(email, password);
     const response = await onLoginSubmit(email, password);
     if (!response.success) {
       updateErrorMsg(response.msg);

@@ -2,7 +2,6 @@ import { auth } from "./auth";
 import { apiAuthRoute, authneticationRoutes } from "./routes";
 
 export default auth(async (request) => {
-  console.log(request);
   const { nextUrl } = request;
   const loggedIn = !!request.auth;
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthRoute);
@@ -22,19 +21,6 @@ export default auth(async (request) => {
     return;
   }
   return Response.redirect(new URL(authneticationRoutes[0], nextUrl));
-
-  // if (nextUrl.pathname.startsWith("/api/auth")) {
-  //   return;
-  // }
-  // if (!loggedIn && nextUrl.pathname !== "/") {
-  //   console.log("I am true here ");
-  //   return Response.redirect(new URL("/", nextUrl));
-  // }
-  // if (loggedIn && nextUrl.pathname !== "/settings") {
-  //   return Response.redirect(new URL("/settings", nextUrl));
-  // } else {
-  //   return;
-  // }
 });
 
 export const config = {

@@ -9,6 +9,7 @@ export default {
   providers: [
     Credentials({
       async authorize(credentials) {
+        console.log("Credentials authorize");
         try {
           // this validation should be done here also cuz the user can send the request to the server without using the UI
           const validatedCredentials = await signInValidationSchema.validate(
@@ -21,6 +22,7 @@ export default {
             return null;
           }
           const match = await bycrpt.compare(password, user.password);
+          console.log("This is the user ", user);
           if (match) return user;
           return null;
         } catch (err) {
@@ -39,7 +41,15 @@ export default {
     }),
   ],
   events: {},
-  callbacks: {},
+  callbacks: {
+    async signIn({ user }) {
+      console.log("Sign in callback");
+      if (user) {
+        return true;
+      }
+      return false;
+    },
+  },
   secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt" },
   pages: {
