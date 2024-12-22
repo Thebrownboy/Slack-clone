@@ -44,13 +44,13 @@ function SignUpCard({}) {
         <form className="space-y-2.5" onSubmit={handleSubmit}>
           <div>
             <Input
-              disabled={false}
+              disabled={isSubmitting}
               value={values.name}
               name="name"
               onChange={handleChange}
               onBlur={handleBlur}
               required
-              placeholder="Name"
+              placeholder="Full Name"
               type="text"
             />
             <p className="text-red-600 text-[10px]">
@@ -59,7 +59,7 @@ function SignUpCard({}) {
           </div>
           <div>
             <Input
-              disabled={false}
+              disabled={isSubmitting}
               value={values.email}
               name="email"
               onChange={handleChange}
@@ -92,7 +92,7 @@ function SignUpCard({}) {
             )}
             <div className=" space-y-2">
               <Input
-                disabled={false}
+                disabled={isSubmitting}
                 value={values.password}
                 name="password"
                 onChange={handleChange}
@@ -108,7 +108,7 @@ function SignUpCard({}) {
           </div>
           <div className=" space-y-2">
             <Input
-              disabled={false}
+              disabled={isSubmitting}
               value={values.confirmPassword}
               name="confirmPassword"
               onChange={handleChange}
