@@ -1,11 +1,16 @@
 import { db } from "@/lib/db";
 import "server-only";
 import bcrypt from "bcryptjs";
-export const addNewUser = async (email: string, password: string) => {
+export const addNewUser = async (
+  email: string,
+  password: string,
+  name: string
+) => {
   const hasedPaswword = await bcrypt.hash(password, 10);
   try {
     await db.user.create({
       data: {
+        name,
         email,
         password: hasedPaswword,
       },

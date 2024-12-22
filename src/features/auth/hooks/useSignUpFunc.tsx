@@ -7,6 +7,7 @@ export default function useSignUpFunc() {
   const [successMsg, setSucessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const initialValues = {
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -14,12 +15,14 @@ export default function useSignUpFunc() {
   const onSubmit = async ({
     email,
     password,
+    name,
   }: {
+    name: string;
     email: string;
     password: string;
     confirmPassword: string;
   }) => {
-    const response = await onRegisterSubmit(email, password);
+    const response = await onRegisterSubmit(email, password, name);
     if (!response.success) {
       setErrorMsg(response.msg);
       setSucessMsg("");

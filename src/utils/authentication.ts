@@ -7,7 +7,11 @@ import { addNewUser, findUserByEmail } from "./database";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
-export async function onRegisterSubmit(email: string, password: string) {
+export async function onRegisterSubmit(
+  email: string,
+  password: string,
+  name: string
+) {
   const user = await findUserByEmail(email);
   if (user) {
     return {
@@ -15,7 +19,7 @@ export async function onRegisterSubmit(email: string, password: string) {
       msg: "User already exists",
     };
   }
-  const { success } = await addNewUser(email, password);
+  const { success } = await addNewUser(email, password, name);
   if (success) {
     return {
       success: true,

@@ -13,6 +13,10 @@ export const signInValidationSchema = yup.object().shape({
 });
 
 export const signUpValidationSchema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Name is required")
+    .min(3, "the name should be at least three characters"),
   email: yup
     .string()
     .email("Please enter a valid email")

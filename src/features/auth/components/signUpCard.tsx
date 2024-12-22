@@ -45,6 +45,21 @@ function SignUpCard({}) {
           <div>
             <Input
               disabled={false}
+              value={values.name}
+              name="name"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              placeholder="Name"
+              type="text"
+            />
+            <p className="text-red-600 text-[10px]">
+              {touched.name && errors.name}
+            </p>
+          </div>
+          <div>
+            <Input
+              disabled={false}
               value={values.email}
               name="email"
               onChange={handleChange}
