@@ -1,14 +1,12 @@
 "use client";
 import { useSession } from "next-auth/react";
-
-import React from "react";
-import { signOut } from "next-auth/react";
+import UserButton from "@/features/auth/components/userButton";
 export default function Home() {
   const session = useSession();
   return (
     <div>
       {JSON.stringify(session)}
-      <button onClick={() => signOut()}>sign out </button>
+      <UserButton />
     </div>
   );
 }

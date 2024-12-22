@@ -42,6 +42,15 @@ export default {
   ],
   events: {},
   callbacks: {
+    async session({ session, token }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    async jwt({ token }) {
+      return token;
+    },
     async signIn({ user }) {
       console.log("Sign in callback");
       if (user) {

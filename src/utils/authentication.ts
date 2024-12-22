@@ -3,7 +3,7 @@
 // so it will not be a server side by default because you used it in  a client component
 // so server only will raise an error , but using "server" mode will make it server side
 import "server-only";
-import { addNewUser, findUserByEmail } from "./database";
+import { addNewUser, findUserByEmail, findUserById } from "./database";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
@@ -56,8 +56,19 @@ export async function onLoginSubmit(email: string, password: string) {
     }
     throw err;
   }
-  return {
-    success: false,
-    msg: "Invalid email or password",
-  };
+}
+
+export async function getUser(id: string | undefined) {
+  // this function will be treated as a server action , so this is why I will not call
+  // the findUserById method directly
+  if (id) {
+    const user = await findUserById(id);
+    if (user) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, updatedAt, emailVerified, createdAt, ...restData } =
+        user;
+      return restData;
+    }
+  }
+  return null;
 }

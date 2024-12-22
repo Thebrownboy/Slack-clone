@@ -37,3 +37,12 @@ export async function findUserByEmail(email: string) {
     return null;
   }
 }
+
+export async function findUserById(id: string) {
+  const user = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return user;
+}
