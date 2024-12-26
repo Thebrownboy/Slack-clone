@@ -42,14 +42,14 @@ export async function onLoginSubmit(email: string, password: string) {
       redirectTo: "/settings",
     });
     return {
-      sucess: true,
+      success: true,
       msg: "Success login",
     };
   } catch (err) {
     if (err instanceof AuthError) {
       if (err.type === "CredentialsSignin") {
         return {
-          sucess: false,
+          success: false,
           msg: "Invalid email or password",
         };
       }

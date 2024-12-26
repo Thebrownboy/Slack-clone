@@ -58,6 +58,7 @@ model VerificationToken {
 }
 
 model Workspace {
+  joinCode  String
   name      String
   userId    String
   id        String   @id @default(cuid())

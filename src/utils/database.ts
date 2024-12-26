@@ -46,3 +46,17 @@ export async function findUserById(id: string) {
   });
   return user;
 }
+
+export async function getWorkSpaces() {
+  return await db.workspace.findMany({});
+}
+
+export async function addWorkSpace(name: string, id: string) {
+  await db.workspace.create({
+    data: {
+      name,
+      userId: id,
+      joinCode: "123456",
+    },
+  });
+}
