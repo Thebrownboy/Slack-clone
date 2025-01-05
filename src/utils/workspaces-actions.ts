@@ -4,6 +4,7 @@ import "server-only";
 import {
   addWorkSpace,
   getAllWorkSpacesByUserId,
+  getWorkSpaceById,
   getWorkSpaces,
 } from "./database";
 
@@ -33,4 +34,8 @@ export async function createNewWorkspace(name: string, id: string) {
 // even if the function is just a single line , but it's essential to have this level of abstraction
 export async function getAllWorkSpacesOfUserAction(userId: string) {
   return await getAllWorkSpacesByUserId(userId);
+}
+
+export async function getWorkSpaceByIdAction(id: string) {
+  return await getWorkSpaceById(id);
 }

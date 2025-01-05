@@ -24,7 +24,10 @@ export default function WorkSpaceModal() {
   const [fetching, updateFetching] = useState(true);
   useEffect(() => {
     const getWorkSpaces = async () => {
+      // !TODO you should change that to be the workspaces that they are part of , not just the work space that the user  has created.
+
       updateWorkSpaces(await getAllWorkSpacesOfUserAction(data?.user.id || ""));
+
       updateFetching(false);
     };
     getWorkSpaces();

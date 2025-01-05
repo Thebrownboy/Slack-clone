@@ -68,3 +68,11 @@ export async function getAllWorkSpacesByUserId(userId: string) {
     },
   });
 }
+
+export async function getWorkSpaceById(id: string) {
+  return await db.workspace.findUnique({
+    where: {
+      id,
+    },
+  });
+}

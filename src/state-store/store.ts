@@ -1,13 +1,6 @@
 import { create } from "zustand";
 
-type tWorkspace = {
-  joinCode: string;
-  name: string;
-  userId: string;
-  id: string;
-  createdAt: Date;
-};
-
+import { tWorkspace } from "@/types/common-types";
 type tWorkspaceStore = {
   workSpaces: tWorkspace[];
   updateWorkSpaces: (workSpaces: tWorkspace[]) => void;
