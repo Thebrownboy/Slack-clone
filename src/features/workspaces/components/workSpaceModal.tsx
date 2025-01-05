@@ -9,20 +9,34 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createNewWorkspace } from "@/utils/workspaces-actions";
+import {
+  createNewWorkspace,
+  getAllWorkSpacesOfUserAction,
+} from "@/utils/workspaces-actions";
 import { MdError } from "react-icons/md";
+import { useWorkSpaceStore } from "@/state-store/store";
 
 export default function WorkSpaceModal() {
   const { data } = useSession();
   const [open, setOpen] = useState(false);
-
+  const workSpaces = useWorkSpaceStore((state) => state.workSpaces);
+  const updateWorkSpaces = useWorkSpaceStore((state) => state.updateWorkSpaces);
+  const [fetching, updateFetching] = useState(true);
   useEffect(() => {
-    if (data?.user.inWorkSpace) {
+    const getWorkSpaces = async () => {
+      updateWorkSpaces(await getAllWorkSpacesOfUserAction(data?.user.id || ""));
+      updateFetching(false);
+    };
+    getWorkSpaces();
+  }, [data?.user.id, updateWorkSpaces]);
+  useEffect(() => {
+    if (workSpaces.length) {
       console.log("Redirect to workspace");
+      setOpen(false);
     } else if (!open) {
       setOpen(true);
     }
-  }, [open, data]);
+  }, [open, data, workSpaces]);
   const handleClose = () => {
     setOpen(false);
     // TODO: Clear Form
@@ -45,7 +59,7 @@ export default function WorkSpaceModal() {
     }
   };
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={!fetching && open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add a WorkSpace</DialogTitle>

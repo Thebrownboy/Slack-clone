@@ -60,3 +60,11 @@ export async function addWorkSpace(name: string, id: string) {
     },
   });
 }
+
+export async function getAllWorkSpacesByUserId(userId: string) {
+  return await db.workspace.findMany({
+    where: {
+      userId,
+    },
+  });
+}

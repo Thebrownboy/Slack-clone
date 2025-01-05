@@ -1,7 +1,11 @@
 "use server";
 
 import "server-only";
-import { addWorkSpace, getWorkSpaces } from "./database";
+import {
+  addWorkSpace,
+  getAllWorkSpacesByUserId,
+  getWorkSpaces,
+} from "./database";
 
 // these files are treated as server actions
 
@@ -22,4 +26,11 @@ export async function createNewWorkspace(name: string, id: string) {
       msg: "Unkown Error Happend",
     };
   }
+}
+
+// this is an action
+// another layer of abstraction
+// even if the function is just a single line , but it's essential to have this level of abstraction
+export async function getAllWorkSpacesOfUserAction(userId: string) {
+  return await getAllWorkSpacesByUserId(userId);
 }

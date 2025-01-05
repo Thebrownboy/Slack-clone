@@ -44,24 +44,13 @@ export default {
   events: {},
   callbacks: {
     async session({ session, token }) {
-      // TODO : create a boolean that check if the user is in a workspace or not
-      // if the user is not in a workspace , a modal to create or Join a workspace should be displayed in the home
-      // screen
-      // for now it will be asimple function that return true if there is any existing workspaces , and false if not
-
       if (token.sub && session.user) {
         session.user.id = token.sub;
-      }
-      console.log("Token ", token.inWorkSpace);
-      if (token.inWorkSpace && session.user) {
-        session.user.inWorkSpace = token.inWorkspace as boolean;
       }
       console.log("This is the sessions ", session);
       return session;
     },
     async jwt({ token }) {
-      //
-      token.inWorkSpace = false;
       return token;
     },
     async signIn({ user }) {
