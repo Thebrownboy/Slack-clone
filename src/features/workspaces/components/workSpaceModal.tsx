@@ -21,12 +21,16 @@ export default function WorkSpaceModal() {
     useGetCurrentUserWorkSpaces(data?.user.id || "");
 
   useEffect(() => {
+    if (!data?.user) {
+      setOpen(false);
+      return;
+    }
     if (workSpaces?.length) {
       setOpen(false);
     } else {
       setOpen(true);
     }
-  }, [workSpaces, setOpen]);
+  }, [workSpaces, setOpen, data]);
   const handleClose = () => {
     setOpen(false);
     updateWorkspaceName("");
