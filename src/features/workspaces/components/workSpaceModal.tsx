@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createNewWorkspace } from "@/utils/workspaces-actions";
 import { MdError } from "react-icons/md";
-import useGetCurrentUserWorkSpaces from "@/hooks/useGetCurrentUserWorkSpaces";
+import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
 import { useWorkSpaceStore } from "@/state-store/store";
 
 export default function WorkSpaceModal() {

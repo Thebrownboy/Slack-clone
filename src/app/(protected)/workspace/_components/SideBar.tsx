@@ -3,12 +3,22 @@ import UserButton from "@/features/auth/components/userButton";
 import WorkSpaceSwitcher from "./WorkSpaceSwitcher";
 import SidebarButton from "@/components/sidebar-button";
 import { BellIcon, Home, MessagesSquare, MoreHorizontal } from "lucide-react";
+import { tWorkspace } from "@/types/common-types";
 
-export default function SideBar() {
+export default function SideBar({
+  currentWorkSpace,
+  isloading,
+}: {
+  isloading: boolean;
+  currentWorkSpace: tWorkspace | null;
+}) {
   return (
     <aside className="w-[70px] h-full bg-[#481349] flex flex-col gap-y-4 items-center pt-[9px] pb-[10px] justify-between">
       <div className=" flex flex-col gap-7">
-        <WorkSpaceSwitcher />
+        <WorkSpaceSwitcher
+          isLoading={isloading}
+          currentWorkSpace={currentWorkSpace}
+        />
         <SidebarButton icon={Home} label="Home" isActive={true} />
         <SidebarButton icon={MessagesSquare} label="DMs" isActive={true} />
         <SidebarButton icon={BellIcon} label="activity" isActive={true} />

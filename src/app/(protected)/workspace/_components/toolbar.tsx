@@ -1,12 +1,13 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import useGetCurrentWorkSpace from "@/hooks/useGetCurrentWorkSpace";
+import { tWorkspace } from "@/types/common-types";
 import { Info, Search } from "lucide-react";
-import { useParams } from "next/navigation";
 
-export const Toolbar = () => {
-  const { workspaceId } = useParams();
-  const { currentWorkSpace } = useGetCurrentWorkSpace(workspaceId as string);
+export const Toolbar = ({
+  currentWorkSpace,
+}: {
+  currentWorkSpace: tWorkspace | null;
+}) => {
   return (
     <nav className="bg-[#481349] flex items-center justify-between h-10 p-1.5">
       <div className="flex-1"></div>
