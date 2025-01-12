@@ -80,6 +80,12 @@ model Member {
 
   user      User      @relation(fields: [userId], references: [id])
   workspace Workspace @relation(fields: [workspaceId], references: [id])
+  // this will optimize the queries that are using userId and workspaceId in the where clause 
 
   @@id([userId, workspaceId])
+  // this will optimize the queries that are using userId in the where clause 
+  @@index([userId])
+  // this will optimize the queries that are using workspaceId in the where clause 
+  @@index([workspaceId])
+  @@index([userId, workspaceId])
 }
