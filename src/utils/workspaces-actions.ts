@@ -4,6 +4,7 @@ import "server-only";
 import {
   addWorkSpace,
   getAllWorkSpacesByUserId,
+  getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
   getWorkSpaces,
 } from "./database";
@@ -38,4 +39,11 @@ export async function getAllWorkSpacesOfUserAction(userId: string) {
 
 export async function getWorkSpaceByIdAction(id: string) {
   return await getWorkSpaceById(id);
+}
+
+export async function getMemberByUserIdAndWorkSpaceIdAction(
+  userId: string,
+  workspaceId: string
+) {
+  return await getMemberByUserIdAndWorkSpaceId(userId, workspaceId);
 }

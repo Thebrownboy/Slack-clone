@@ -1,26 +1,12 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useWorkSpaceStore } from "@/state-store/store";
-import { tWorkspace } from "@/types/common-types";
-import { getWorkSpaceByIdAction } from "@/utils/workspaces-actions";
+import useGetCurrentWorkSpace from "@/hooks/useGetCurrentWorkSpace";
 import { Info, Search } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export const Toolbar = () => {
   const { workspaceId } = useParams();
-  const userWorkSpaces = useWorkSpaceStore((state) => state.workSpaces);
-  const [currentWorkSpace, updateCurrentWorkSpace] = useState<
-    tWorkspace | undefined | null
-  >(undefined);
-  useEffect(() => {
-    const getCurrentWorkspace = async () => {
-      const response = await getWorkSpaceByIdAction(workspaceId as string | "");
-      updateCurrentWorkSpace(response);
-    };
-    getCurrentWorkspace();
-  }, [workspaceId, userWorkSpaces]);
-
+  const { currentWorkSpace } = useGetCurrentWorkSpace(workspaceId as string);
   return (
     <nav className="bg-[#481349] flex items-center justify-between h-10 p-1.5">
       <div className="flex-1"></div>

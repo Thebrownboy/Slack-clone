@@ -88,3 +88,17 @@ export async function getWorkSpaceById(id: string) {
     },
   });
 }
+
+export async function getMemberByUserIdAndWorkSpaceId(
+  userId: string,
+  workspaceId: string
+) {
+  return await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+}

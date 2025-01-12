@@ -11,19 +11,15 @@ import { Loader, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useWorkSpaceStore } from "@/state-store/store";
-import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 export default function WorkSpaceSwitcher() {
   const { workspaceId } = useParams();
   const router = useRouter();
   const { data } = useSession();
-  const { setOpen, isOpen } = useWorkSpaceStore((state) => state);
+  const setOpen = useWorkSpaceStore((state) => state.setOpen);
   const { currentWorkSpace, isLoading } = useGetCurrentWorkSpace(
     (workspaceId as string) || ""
   );
-  useEffect(() => {
-    console.log("Here we go ");
-  }, [isOpen]);
   const { userWorkSpaces } = useGetCurrentUserWorkSpaces(data?.user.id || "");
 
   const filteredWorkspaces = userWorkSpaces?.filter(
