@@ -25,7 +25,7 @@ model User {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   Workspace Workspace[]
-  Member    Member[]
+  Member    Members[]
 }
 
 model Account {
@@ -62,10 +62,10 @@ model Workspace {
   joinCode  String
   name      String
   userId    String
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Member    Member[]
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Member    Members[]
 }
 
 enum Role {
@@ -73,7 +73,7 @@ enum Role {
   member
 }
 
-model Member {
+model Members {
   userId      String
   workspaceId String
   role        Role

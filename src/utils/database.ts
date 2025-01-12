@@ -51,12 +51,20 @@ export async function getWorkSpaces() {
   return await db.workspace.findMany({});
 }
 
-export async function addWorkSpace(name: string, id: string) {
-  await db.workspace.create({
+export async function addWorkSpace(name: string, userId: string) {
+  const { id: workspaceId } = await db.workspace.create({
     data: {
       name,
-      userId: id,
+      userId,
       joinCode: "123456",
+    },
+  });
+
+  await db.members.create({
+    data: {
+      role: "admin",
+      userId,
+      workspaceId,
     },
   });
 }
@@ -64,7 +72,11 @@ export async function addWorkSpace(name: string, id: string) {
 export async function getAllWorkSpacesByUserId(userId: string) {
   return await db.workspace.findMany({
     where: {
-      userId,
+      Member: {
+        some: {
+          userId,
+        },
+      },
     },
   });
 }
