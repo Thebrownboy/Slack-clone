@@ -44,7 +44,10 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
             minSize={11}
             className="bg-[#5e2c5f]"
           >
-            <WorkspaceSidebar />
+            <WorkspaceSidebar
+              loading={loading}
+              currentWorkSpace={currentWorkSpace}
+            />
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel minSize={20}>{children}</ResizablePanel>
