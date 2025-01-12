@@ -1,3 +1,4 @@
+"use client";
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 import {
   DropdownMenu,
