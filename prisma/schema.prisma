@@ -25,6 +25,7 @@ model User {
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   Workspace Workspace[]
+  Member    Member[]
 }
 
 model Account {
@@ -64,4 +65,21 @@ model Workspace {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Member    Member[]
+}
+
+enum Role {
+  admin
+  member
+}
+
+model Member {
+  userId      String
+  workspaceId String
+  role        Role
+
+  user      User      @relation(fields: [userId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id])
+
+  @@id([userId, workspaceId])
 }
