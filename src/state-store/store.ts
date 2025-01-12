@@ -1,16 +1,15 @@
 import { create } from "zustand";
 
-import { tWorkspace } from "@/types/common-types";
-type tWorkspaceStore = {
-  workSpaces: tWorkspace[];
-  updateWorkSpaces: (workSpaces: tWorkspace[]) => void;
-};
+interface iCreateWorkspaceModal {
+  isOpen: boolean;
+  setOpen(open: boolean): void;
+}
 
-export const useWorkSpaceStore = create<tWorkspaceStore>((set) => {
+export const useWorkSpaceStore = create<iCreateWorkspaceModal>((set) => {
   return {
-    workSpaces: [],
-    updateWorkSpaces(workSpaces: tWorkspace[]) {
-      set({ workSpaces });
+    isOpen: false,
+    setOpen(open: boolean) {
+      set({ isOpen: open });
     },
   };
 });

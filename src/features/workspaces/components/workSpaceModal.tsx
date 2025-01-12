@@ -9,39 +9,27 @@ import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  createNewWorkspace,
-  getAllWorkSpacesOfUserAction,
-} from "@/utils/workspaces-actions";
+import { createNewWorkspace } from "@/utils/workspaces-actions";
 import { MdError } from "react-icons/md";
+import useGetCurrentUserWorkSpaces from "@/hooks/useGetCurrentUserWorkSpaces";
 import { useWorkSpaceStore } from "@/state-store/store";
 
 export default function WorkSpaceModal() {
+  const { setOpen, isOpen: open } = useWorkSpaceStore((state) => state);
   const { data } = useSession();
-  const [open, setOpen] = useState(false);
-  const workSpaces = useWorkSpaceStore((state) => state.workSpaces);
-  const updateWorkSpaces = useWorkSpaceStore((state) => state.updateWorkSpaces);
-  const [fetching, updateFetching] = useState(true);
-  useEffect(() => {
-    const getWorkSpaces = async () => {
-      // !TODO you should change that to be the workspaces that they are part of , not just the work space that the user  has created.
+  const { isFetching: fetching, userWorkSpaces: workSpaces } =
+    useGetCurrentUserWorkSpaces(data?.user.id || "");
 
-      updateWorkSpaces(await getAllWorkSpacesOfUserAction(data?.user.id || ""));
-
-      updateFetching(false);
-    };
-    getWorkSpaces();
-  }, [data?.user.id, updateWorkSpaces]);
   useEffect(() => {
-    if (workSpaces.length) {
-      console.log("Redirect to workspace");
+    if (workSpaces?.length) {
       setOpen(false);
-    } else if (!open) {
+    } else {
       setOpen(true);
     }
-  }, [open, data, workSpaces]);
+  }, [workSpaces, setOpen]);
   const handleClose = () => {
     setOpen(false);
+    updateWorkspaceName("");
     // TODO: Clear Form
   };
   const [workspaceName, updateWorkspaceName] = useState("");
@@ -50,7 +38,6 @@ export default function WorkSpaceModal() {
   const submitCreateAction = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
-    console.log("I am her ");
     if (data?.user.id) {
       updateIsPending(true);
       const response = await createNewWorkspace(workspaceName, data?.user.id);
