@@ -52,11 +52,20 @@ export async function getWorkSpaces() {
 }
 
 export async function addWorkSpace(name: string, userId: string) {
+  const generateCode = () => {
+    const code = Array.from(
+      { length: 6 },
+      () =>
+        "0123456789abcdefjhijklmnopqrstuvwxyz"[Math.floor(Math.random() * 36)]
+    ).join("");
+
+    return code;
+  };
   const { id: workspaceId } = await db.workspace.create({
     data: {
       name,
       userId,
-      joinCode: "123456",
+      joinCode: generateCode(),
     },
   });
 

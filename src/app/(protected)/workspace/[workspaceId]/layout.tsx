@@ -4,6 +4,11 @@ import SideBar from "../_components/SideBar";
 import { Loader2Icon } from "lucide-react";
 
 import useWorkspaceGaurd from "@/hooks/useWorkspaceGaurd";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   // using this techinque here will not affect the performance cuz children can be server components as they wanna
@@ -21,7 +26,21 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
       <Toolbar />
       <div className="flex h-[calc(100vh-40px)]">
         <SideBar />
-        {children}
+        {/* autosave id will be used to save the size after any reload to the screen */}
+        <ResizablePanelGroup
+          direction="horizontal"
+          autoSaveId={"ab-workspace-layout"}
+        >
+          <ResizablePanel
+            defaultSize={20}
+            minSize={11}
+            className="bg-[#5e2c5f]"
+          >
+            <div>Channles SideBar</div>
+          </ResizablePanel>
+          <ResizableHandle withHandle />
+          <ResizablePanel minSize={20}>{children}</ResizablePanel>
+        </ResizablePanelGroup>
       </div>
     </div>
   );
