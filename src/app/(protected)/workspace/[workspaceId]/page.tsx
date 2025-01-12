@@ -7,7 +7,6 @@ export default async function WorkSpace({
 }: {
   params: { workspaceId: string };
 }) {
-  const response = await getWorkSpaceByIdAction(workspaceId);
-  console.log(response);
+  await getWorkSpaceByIdAction(workspaceId);
   return <div>id:{workspaceId}</div>;
 }

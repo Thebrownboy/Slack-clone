@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { useWorkSpaceStore } from "@/state-store/store";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 export default function WorkSpaceSwitcher() {
   const { workspaceId } = useParams();
   const router = useRouter();
@@ -30,12 +31,15 @@ export default function WorkSpaceSwitcher() {
   );
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded flex justify-center items-center size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 text-slate-800 font-semibold text-xl">
-        {isLoading ? (
-          <Loader className="size-5 animate-spin shrink-0" />
-        ) : (
-          currentWorkSpace?.name.charAt(0).toUpperCase()
-        )}
+      {/* as child allows you to replace the default component with a custom child element while keeping the define classes  */}
+      <DropdownMenuTrigger asChild>
+        <Button className="rounded flex justify-center items-center size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 text-slate-800 font-semibold text-xl">
+          {isLoading ? (
+            <Loader className="size-5 animate-spin shrink-0" />
+          ) : (
+            currentWorkSpace?.name.charAt(0).toUpperCase()
+          )}
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="start" className="w-64">
         <DropdownMenuItem
