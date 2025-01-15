@@ -3,11 +3,14 @@
 import "server-only";
 import {
   addWorkSpace,
+  deleteWorkSpace,
   getAllWorkSpacesByUserId,
   getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
   getWorkSpaces,
+  updateWorkSpace,
 } from "./database";
+import { tWorkspace } from "@/types/common-types";
 
 // these files are treated as server actions
 
@@ -46,4 +49,39 @@ export async function getMemberByUserIdAndWorkSpaceIdAction(
   workspaceId: string
 ) {
   return await getMemberByUserIdAndWorkSpaceId(userId, workspaceId);
+}
+
+export async function updateWorkSpaceAction(
+  useId: string,
+  workspaceId: string,
+  data: tWorkspace
+) {
+  if (await updateWorkSpace(useId, workspaceId, data)) {
+    return {
+      success: true,
+      msg: "updated successfully",
+    };
+  } else {
+    return {
+      success: false,
+      msg: "Unauthorized",
+    };
+  }
+}
+
+export async function deleteWorkSpaceAction(
+  useId: string,
+  workspaceId: string
+) {
+  if (await deleteWorkSpace(useId, workspaceId)) {
+    return {
+      success: true,
+      msg: "updated successfully",
+    };
+  } else {
+    return {
+      success: false,
+      msg: "Unauthorized",
+    };
+  }
 }

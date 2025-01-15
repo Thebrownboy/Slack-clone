@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import "server-only";
 import bcrypt from "bcryptjs";
+import { tWorkspace } from "@/types/common-types";
 export const addNewUser = async (
   email: string,
   password: string,
@@ -110,4 +111,52 @@ export async function getMemberByUserIdAndWorkSpaceId(
       },
     },
   });
+}
+
+export async function updateWorkSpace(
+  userId: string,
+  workspaceId: string,
+  data: tWorkspace
+) {
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+  const updatedWorkSpace = await db.workspace.update({
+    where: {
+      id: workspaceId,
+    },
+    data,
+  });
+  return updatedWorkSpace;
+}
+
+export async function deleteWorkSpace(userId: string, workspaceId: string) {
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+  const deleteWorkSpace = await db.workspace.delete({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  return deleteWorkSpace;
 }

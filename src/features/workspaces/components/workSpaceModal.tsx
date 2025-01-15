@@ -6,20 +6,26 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createNewWorkspace } from "@/utils/workspaces-actions";
 import { MdError } from "react-icons/md";
 import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
 import { useWorkSpaceStore } from "@/state-store/store";
+import useCreateWorkspace from "../hooks/useCreateWorkspace";
 
 export default function WorkSpaceModal() {
   const { setOpen, isOpen: open } = useWorkSpaceStore((state) => state);
   const { data } = useSession();
   const { isFetching: fetching, userWorkSpaces: workSpaces } =
     useGetCurrentUserWorkSpaces(data?.user.id || "");
-
+  const {
+    errorMsg,
+    isPending,
+    submitCreateAction,
+    updateWorkspaceName,
+    workspaceName,
+  } = useCreateWorkspace(data?.user.id);
   useEffect(() => {
     if (!data?.user) {
       setOpen(false);
@@ -36,22 +42,7 @@ export default function WorkSpaceModal() {
     updateWorkspaceName("");
     // TODO: Clear Form
   };
-  const [workspaceName, updateWorkspaceName] = useState("");
-  const [errorMsg, updateErrorMsg] = useState("");
-  const [isPending, updateIsPending] = useState(false);
-  const submitCreateAction = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (data?.user.id) {
-      updateIsPending(true);
-      const response = await createNewWorkspace(workspaceName, data?.user.id);
-      if (!response.success) {
-        updateErrorMsg(response.msg);
-        event.preventDefault();
-      }
-      updateIsPending(false);
-    }
-  };
+
   return (
     <Dialog open={!fetching && open} onOpenChange={handleClose}>
       <DialogContent>
