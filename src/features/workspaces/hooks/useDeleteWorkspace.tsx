@@ -1,22 +1,18 @@
-import { tWorkspace } from "@/types/common-types";
-import { updateWorkSpaceAction } from "@/utils/workspaces-actions";
+import { deleteWorkSpaceAction } from "@/utils/workspaces-actions";
 import { useState } from "react";
 
 export default function useUpdateWorkspace(
   userId: string | undefined,
   workspaceId: string = ""
 ) {
-  const [workspaceName, updateWorkspaceName] = useState("");
-
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
   const submitCreateAction = async (
-    event: React.FormEvent<HTMLFormElement>,
-    data: tWorkspace
+    event: React.FormEvent<HTMLFormElement>
   ) => {
     if (userId) {
       updateIsPending(true);
-      const response = await updateWorkSpaceAction(userId, workspaceId, data);
+      const response = await deleteWorkSpaceAction(userId, workspaceId);
       if (!response.success) {
         updateErrorMsg(response.msg);
         event.preventDefault();
@@ -28,8 +24,6 @@ export default function useUpdateWorkspace(
   return {
     submitCreateAction,
     errorMsg,
-    updateWorkspaceName,
     isPending,
-    workspaceName,
   };
 }
