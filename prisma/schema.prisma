@@ -58,6 +58,11 @@ model VerificationToken {
   @@id([identifier, token])
 }
 
+enum Role {
+  admin
+  member
+}
+
 model Workspace {
   joinCode  String
   name      String
@@ -68,18 +73,13 @@ model Workspace {
   Member    Members[]
 }
 
-enum Role {
-  admin
-  member
-}
-
 model Members {
   userId      String
   workspaceId String
   role        Role
 
   user      User      @relation(fields: [userId], references: [id])
-  workspace Workspace @relation(fields: [workspaceId], references: [id])
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   // this will optimize the queries that are using userId and workspaceId in the where clause 
 
   @@id([userId, workspaceId])

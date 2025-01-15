@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import "server-only";
 import bcrypt from "bcryptjs";
-import { tWorkspace } from "@/types/common-types";
+import { tUpdatedWorkspace } from "@/types/common-types";
 export const addNewUser = async (
   email: string,
   password: string,
@@ -116,7 +116,7 @@ export async function getMemberByUserIdAndWorkSpaceId(
 export async function updateWorkSpace(
   userId: string,
   workspaceId: string,
-  data: tWorkspace
+  data: tUpdatedWorkspace
 ) {
   const member = await db.members.findUnique({
     where: {

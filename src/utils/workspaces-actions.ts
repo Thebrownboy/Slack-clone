@@ -10,7 +10,7 @@ import {
   getWorkSpaces,
   updateWorkSpace,
 } from "./database";
-import { tWorkspace } from "@/types/common-types";
+import { tUpdatedWorkspace } from "@/types/common-types";
 
 // these files are treated as server actions
 
@@ -54,7 +54,7 @@ export async function getMemberByUserIdAndWorkSpaceIdAction(
 export async function updateWorkSpaceAction(
   useId: string,
   workspaceId: string,
-  data: tWorkspace
+  data: tUpdatedWorkspace
 ) {
   if (await updateWorkSpace(useId, workspaceId, data)) {
     return {

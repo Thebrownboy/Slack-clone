@@ -1,28 +1,25 @@
 import { deleteWorkSpaceAction } from "@/utils/workspaces-actions";
 import { useState } from "react";
 
-export default function useUpdateWorkspace(
+export default function useDeleteWorkspace(
   userId: string | undefined,
   workspaceId: string = ""
 ) {
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
-  const submitCreateAction = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
+  const submitDeleteAction = async () => {
     if (userId) {
       updateIsPending(true);
       const response = await deleteWorkSpaceAction(userId, workspaceId);
       if (!response.success) {
         updateErrorMsg(response.msg);
-        event.preventDefault();
       }
       updateIsPending(false);
     }
   };
 
   return {
-    submitCreateAction,
+    submitDeleteAction,
     errorMsg,
     isPending,
   };

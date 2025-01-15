@@ -12,3 +12,11 @@ export type tWorkspace = {
   id: string;
   createdAt: Date;
 };
+
+export type tUpdatedWorkspace = {
+  joinCode?: string;
+  name?: string;
+  userId?: string;
+  id?: string;
+  createdAt?: Date;
+};
