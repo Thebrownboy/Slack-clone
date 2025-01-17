@@ -17,6 +17,7 @@ export default function WorkspaceSidebar() {
       <Loader className="size-5 animate-spin text-white" />
     </div>;
   }
+  console.log("Workspace sidebar will be render");
   return (
     <div className="flex flex-col bg-[#5E2C5F] h-full">
       <WorkspaceHeader isAdmin={member?.role === "admin"} />

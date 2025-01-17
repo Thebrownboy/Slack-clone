@@ -14,7 +14,6 @@ export default function useGetCurrentUserData() {
     const getCurrentUser = async () => {
       try {
         const user = await getUser(session.data?.user?.id);
-        console.log("I am here inside get CurrentUserdata ", user);
         updateUser(user);
         updateLoading(false);
       } catch (err) {

@@ -18,15 +18,15 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
 
   useGetCurrentWorkSpace();
   useGetCurrentUserData();
-  const { loading } = useWorkspaceGaurd();
+  useWorkspaceGaurd();
 
-  if (loading) {
-    return (
-      <div className="w-full h-full flex justify-center items-center ">
-        <Loader2Icon className="animate-spin" size={60}></Loader2Icon>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="w-full h-full flex justify-center items-center ">
+  //       <Loader2Icon className="animate-spin" size={60}></Loader2Icon>
+  //     </div>
+  //   );
+  // }
   console.log("layout  will be re-render");
 
   return (

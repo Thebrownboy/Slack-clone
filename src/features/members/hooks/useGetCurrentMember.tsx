@@ -24,7 +24,7 @@ export default function useGetCurrentMember(
       setMember(member);
       setLoading(false);
     };
-    getMember();
+    if (workspaceId) getMember();
   }, [workspaceId, userId]);
   return { member, loading };
 }
