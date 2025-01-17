@@ -1,16 +1,11 @@
 import useGetCurrentMember from "@/features/members/hooks/useGetCurrentMember";
-import { tWorkspace } from "@/types/common-types";
 import { Loader } from "lucide-react";
 import WorkspaceHeader from "./workspaceHeader";
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 
-export default function WorkspaceSidebar({
-  currentWorkSpace,
-  loading: workspaceLoading,
-}: {
-  currentWorkSpace: tWorkspace | null;
-  loading: boolean;
-}) {
+export default function WorkspaceSidebar() {
+  const { workSpace: currentWorkSpace, isLoading: workspaceLoading } =
+    useCurrentWorkspace((state) => state);
   const workspaceId = currentWorkSpace?.id;
   const { user } = useCurrentUser((state) => state);
   const { loading: memberLoading, member } = useGetCurrentMember(
@@ -24,10 +19,7 @@ export default function WorkspaceSidebar({
   }
   return (
     <div className="flex flex-col bg-[#5E2C5F] h-full">
-      <WorkspaceHeader
-        workspace={currentWorkSpace}
-        isAdmin={member?.role === "admin"}
-      />
+      <WorkspaceHeader isAdmin={member?.role === "admin"} />
     </div>
   );
 }

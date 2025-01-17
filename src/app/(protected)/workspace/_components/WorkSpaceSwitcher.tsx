@@ -8,17 +8,15 @@ import {
 } from "@/../src/components/ui/dropdown-menu";
 import { Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCreateWorkspaceModal, useCurrentUser } from "@/state-store/store";
+import {
+  useCreateWorkspaceModal,
+  useCurrentUser,
+  useCurrentWorkspace,
+} from "@/state-store/store";
 import { Button } from "@/components/ui/button";
-import { tWorkspace } from "@/types/common-types";
-export default function WorkSpaceSwitcher({
-  currentWorkSpace,
-  isLoading,
-}: {
-  isLoading: boolean;
-  currentWorkSpace: tWorkspace | null;
-}) {
-  const workspaceId = currentWorkSpace?.id;
+export default function WorkSpaceSwitcher() {
+  const { workSpace, isLoading } = useCurrentWorkspace((state) => state);
+  const workspaceId = workSpace?.id;
   const router = useRouter();
   const { user } = useCurrentUser((state) => state);
 
@@ -37,16 +35,16 @@ export default function WorkSpaceSwitcher({
           {isLoading ? (
             <Loader className="size-5 animate-spin shrink-0" />
           ) : (
-            currentWorkSpace?.name.charAt(0).toUpperCase()
+            workSpace?.name.charAt(0).toUpperCase()
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="bottom" align="start" className="w-64">
         <DropdownMenuItem
-          onClick={() => router.push(`/workspace/${currentWorkSpace?.id}`)}
+          onClick={() => router.push(`/workspace/${workSpace?.id}`)}
           className="  cursor-pointer  flex flex-col justify-start items-start capitalize "
         >
-          <p className=" max-w-full truncate"> {currentWorkSpace?.name}</p>
+          <p className=" max-w-full truncate"> {workSpace?.name}</p>
           <span className="text-xs text-muted-foreground">
             {" "}
             Active Workspace

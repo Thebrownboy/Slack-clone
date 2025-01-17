@@ -7,18 +7,17 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { Hint } from "@/components/ui/hint";
-import { tWorkspace } from "@/types/common-types";
 import { ChevronDown, ListFilter, SquarePen } from "lucide-react";
 import PreferencesModal from "./preferencesModal";
 import { useState } from "react";
+import { useCurrentWorkspace } from "@/state-store/store";
 
 export default function WorkspaceHeader({
-  workspace,
   isAdmin,
 }: {
-  workspace: tWorkspace | null;
   readonly isAdmin: boolean;
 }) {
+  const { workSpace: workspace } = useCurrentWorkspace((state) => state);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   return (
     <>

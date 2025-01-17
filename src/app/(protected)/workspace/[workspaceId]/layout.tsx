@@ -16,7 +16,7 @@ import useGetCurrentUserData from "@/hooks/getCurrentUserData";
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   // using this techinque here will not affect the performance cuz children can be server components as they wanna
 
-  const { currentWorkSpace, isLoading } = useGetCurrentWorkSpace();
+  useGetCurrentWorkSpace();
   useGetCurrentUserData();
   const { loading } = useWorkspaceGaurd();
 
@@ -31,10 +31,9 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className=" h-full">
-      <Toolbar currentWorkSpace={currentWorkSpace} />
+      <Toolbar />
       <div className="flex h-[calc(100vh-40px)]">
-        {/* sending them as props is not a big deal here  */}
-        <SideBar isloading={isLoading} currentWorkSpace={currentWorkSpace} />
+        <SideBar />
         {/* autosave id will be used to save the size after any reload to the screen */}
         <ResizablePanelGroup
           direction="horizontal"
@@ -45,10 +44,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
             minSize={11}
             className="bg-[#5e2c5f]"
           >
-            <WorkspaceSidebar
-              loading={loading}
-              currentWorkSpace={currentWorkSpace}
-            />
+            <WorkspaceSidebar />
           </ResizablePanel>
           <ResizableHandle withHandle />
           <ResizablePanel minSize={20}>{children}</ResizablePanel>
