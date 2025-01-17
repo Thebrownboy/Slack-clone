@@ -1,7 +1,6 @@
 "use client";
 import { Toolbar } from "../_components/toolbar";
 import SideBar from "../_components/SideBar";
-import { Loader2Icon } from "lucide-react";
 
 import {
   ResizableHandle,
@@ -20,13 +19,6 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   useGetCurrentUserData();
   useWorkspaceGaurd();
 
-  // if (loading) {
-  //   return (
-  //     <div className="w-full h-full flex justify-center items-center ">
-  //       <Loader2Icon className="animate-spin" size={60}></Loader2Icon>
-  //     </div>
-  //   );
-  // }
   console.log("layout  will be re-render");
 
   return (

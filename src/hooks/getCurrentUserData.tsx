@@ -5,13 +5,14 @@ import { useEffect } from "react";
 
 export default function useGetCurrentUserData() {
   const session = useSession();
+  console.log(session);
   const { updateUser, user, loading, updateLoading } = useCurrentUser(
     (state) => state
   );
 
   useEffect(() => {
-    updateLoading(true);
     const getCurrentUser = async () => {
+      updateLoading(true);
       try {
         const user = await getUser(session.data?.user?.id);
         updateUser(user);
@@ -21,8 +22,8 @@ export default function useGetCurrentUserData() {
         console.log(err);
       }
     };
-    getCurrentUser();
-  }, [session, updateLoading, updateUser]);
+    if (!user) getCurrentUser();
+  }, [session, updateLoading, updateUser, user]);
 
   return { user, loading };
 }
