@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 export default function useWorkspaceGaurd() {
   const { workspaceId } = useParams();
   const { data } = useSession();
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  console.log("the data is ", data, router, workspaceId);
   useEffect(() => {
     const getMember = async () => {
       // you have userId and workspace id , the only thing you should do is to look at the member table with both userId and workspaceId

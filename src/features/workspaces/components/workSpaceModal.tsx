@@ -11,11 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MdError } from "react-icons/md";
 import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
-import { useWorkSpaceStore } from "@/state-store/store";
+import { useCreateWorkspaceModal } from "@/state-store/store";
 import useCreateWorkspace from "../hooks/useCreateWorkspace";
 
 export default function WorkSpaceModal() {
-  const { setOpen, isOpen: open } = useWorkSpaceStore((state) => state);
+  const { setOpen, isOpen: open } = useCreateWorkspaceModal((state) => state);
   const { data } = useSession();
   const { isFetching: fetching, userWorkSpaces: workSpaces } =
     useGetCurrentUserWorkSpaces(data?.user.id || "");

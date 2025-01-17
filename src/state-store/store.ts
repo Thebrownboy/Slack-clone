@@ -1,6 +1,17 @@
 import { tWorkspace } from "@/types/common-types";
 import { create } from "zustand";
 
+interface iUser {
+  email: string;
+  id: string;
+  image: string;
+  name: string;
+}
+
+interface IUserStore {
+  user: iUser;
+  updateUser(user: iUser): void;
+}
 interface iCreateWorkspaceModal {
   isOpen: boolean;
   setOpen(open: boolean): void;
@@ -13,7 +24,7 @@ interface iCurrentWorkspace {
   updateWorkspace(workspace: tWorkspace | null): void;
 }
 
-export const useWorkSpaceStore = create<iCreateWorkspaceModal>((set) => {
+export const useCreateWorkspaceModal = create<iCreateWorkspaceModal>((set) => {
   return {
     isOpen: false,
     setOpen(open: boolean) {
@@ -32,5 +43,14 @@ export const useCurrentWorkspace = create<iCurrentWorkspace>((set) => {
     updateWorkspace(workspace: tWorkspace | null) {
       set((state) => ({ ...state, workSpace: workspace }));
     },
+  };
+});
+
+export const useCurrentUser = create<IUserStore>((set) => {
+  return {
+    updateUser(user: iUser) {
+      set((state) => ({ ...state, user }));
+    },
+    user: null,
   };
 });

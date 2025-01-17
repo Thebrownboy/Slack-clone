@@ -20,6 +20,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   const { currentWorkSpace, isLoading } = useGetCurrentWorkSpace(
     workspaceId as string
   );
+
   if (loading) {
     return (
       <div className="w-full h-full flex justify-center items-center ">
@@ -27,6 +28,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
+  console.log("layout  will be re-render");
 
   return (
     <div className=" h-full">

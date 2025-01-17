@@ -56,15 +56,18 @@ export async function updateWorkSpaceAction(
   workspaceId: string,
   data: tUpdatedWorkspace
 ) {
-  if (await updateWorkSpace(useId, workspaceId, data)) {
+  const updatedWorkspace = await updateWorkSpace(useId, workspaceId, data);
+  if (updatedWorkspace) {
     return {
       success: true,
       msg: "updated successfully",
+      updatedWorkspace,
     };
   } else {
     return {
       success: false,
       msg: "Unauthorized",
+      updatedWorkspace: null,
     };
   }
 }

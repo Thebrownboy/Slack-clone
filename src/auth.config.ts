@@ -58,7 +58,11 @@ export default {
     },
   },
   secret: process.env.AUTH_SECRET,
-  session: { strategy: "jwt", maxAge: 1 * 60, updateAge: 1 * 60 },
+  session: {
+    strategy: "jwt",
+    // maxAge: 1 * 60,
+    // updateAge: 1 * 60
+  },
   pages: {
     error: "/auth/error",
   },

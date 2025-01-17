@@ -9,7 +9,7 @@ import {
 import { Loader, Plus } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { useWorkSpaceStore } from "@/state-store/store";
+import { useCreateWorkspaceModal } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
 import { tWorkspace } from "@/types/common-types";
 export default function WorkSpaceSwitcher({
@@ -22,7 +22,7 @@ export default function WorkSpaceSwitcher({
   const { workspaceId } = useParams();
   const router = useRouter();
   const { data } = useSession();
-  const setOpen = useWorkSpaceStore((state) => state.setOpen);
+  const setOpen = useCreateWorkspaceModal((state) => state.setOpen);
 
   const { userWorkSpaces } = useGetCurrentUserWorkSpaces(data?.user.id || "");
 

@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import useDeleteWorkspace from "@/features/workspaces/hooks/useDeleteWorkspace";
 import useUpdateWorkspace from "@/features/workspaces/hooks/useUpdateWorkspace";
 import useConfirm from "@/hooks/useConfirm";
+import { useCurrentWorkspace } from "@/state-store/store";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -40,8 +41,9 @@ export default function PreferencesModal({
   const { data } = useSession();
   const { workspaceId } = useParams();
   const router = useRouter();
-  const { isPending: isUpdatingWorkspace, submitCreateAction } =
-    useUpdateWorkspace(data?.user.id, workspaceId as string);
+  const { updateWorkspace } = useCurrentWorkspace((state) => state);
+  const { isPending: isUpdatingWorkspace, submitUpdateAction } =
+    useUpdateWorkspace(data?.user.id, workspaceId as string, updateWorkspace);
   const { submitDeleteAction } = useDeleteWorkspace(
     data?.user.id,
     workspaceId as string
@@ -74,7 +76,7 @@ export default function PreferencesModal({
                 <form
                   className="space-y-4"
                   onSubmit={async (e) => {
-                    await submitCreateAction(e, { name: value });
+                    await submitUpdateAction(e, { name: value });
                     setEditOpen(false);
                     setOpen(false);
                     // reload here is a very expensive thing to do
