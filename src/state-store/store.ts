@@ -7,12 +7,14 @@ interface iUser {
   image: string | null;
   name: string | null;
 }
+interface iUserState {
+  user: iUser | null;
+  loading: boolean;
+}
 
 interface IUserStore {
-  user: iUser | null;
-  updateUser(user: iUser | null): void;
-  loading: boolean;
-  updateLoading(loading: boolean): void;
+  userState: iUserState;
+  updateState(userState: iUserState): void;
 }
 interface iCreateWorkspaceModal {
   isOpen: boolean;
@@ -48,15 +50,32 @@ export const useCurrentWorkspace = create<iCurrentWorkspace>((set) => {
   };
 });
 
+// why I did not separet the state  and used one object
+// because if you use multiple values and multiple udpate funciton to that values
+// you will use these function separtely e.g. `updateLoading(false) , updateUser(user)`
+// this will cuz two renders instead of one , so udpating the two values one time
+// will be more efficient
 export const useCurrentUser = create<IUserStore>((set) => {
   return {
-    user: null,
-    loading: true,
-    updateLoading(loading: boolean) {
-      set((state) => ({ ...state, loading }));
+    userState: {
+      loading: true,
+      user: null,
     },
-    updateUser(user: iUser | null) {
-      set((state) => ({ ...state, user }));
+    updateState(userState) {
+      set((state) => ({ userState: { ...state.userState, ...userState } }));
+    },
+  };
+});
+
+interface Icounter {
+  counter: number;
+  updateCounter(couter: number): void;
+}
+export const useCurrentCounter = create<Icounter>((set) => {
+  return {
+    counter: 0,
+    updateCounter(counter: number) {
+      set((state) => ({ ...state, counter: counter }));
     },
   };
 });

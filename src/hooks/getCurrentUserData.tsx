@@ -5,25 +5,20 @@ import { useEffect } from "react";
 
 export default function useGetCurrentUserData() {
   const session = useSession();
-  console.log(session);
-  const { updateUser, user, loading, updateLoading } = useCurrentUser(
-    (state) => state
-  );
-
+  const { updateState, userState } = useCurrentUser((state) => state);
+  console.log("I will render ");
   useEffect(() => {
     const getCurrentUser = async () => {
-      updateLoading(true);
       try {
         const user = await getUser(session.data?.user?.id);
-        updateUser(user);
-        updateLoading(false);
+        updateState({ loading: false, user });
       } catch (err) {
-        updateLoading(false);
+        updateState({ ...userState, loading: false });
         console.log(err);
       }
     };
-    if (!user) getCurrentUser();
-  }, [session, updateLoading, updateUser, user]);
+    if (!userState.user) getCurrentUser();
+  }, [session, updateState, userState, userState.user, userState.loading]);
 
-  return { user, loading };
+  return { user: userState.user, loading: userState.loading };
 }

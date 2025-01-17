@@ -12,7 +12,7 @@ import { signOut } from "next-auth/react";
 
 export default function UserButton() {
   const { user, loading } = useGetCurrentUserData();
-  console.log(loading);
+
   if (loading) {
     return <Loader className="size-4 animate-spin text-muted-foreground" />;
   }

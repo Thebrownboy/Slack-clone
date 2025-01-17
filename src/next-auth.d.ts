@@ -4,9 +4,7 @@ import { DefaultJWT } from "next-auth/jwt";
 
 declare module "next-auth" {
   interface Session {
-    user: {
-      inWorkSpace: boolean;
-    } & DefaultSession["user"];
+    user: DefaultSession["user"];
   }
 }
 
