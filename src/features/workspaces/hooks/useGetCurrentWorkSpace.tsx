@@ -1,16 +1,19 @@
 import { useCurrentWorkspace } from "@/state-store/store";
 import { getWorkSpaceByIdAction } from "@/utils/workspaces-actions";
+import { useParams } from "next/navigation";
 import { useEffect } from "react";
 
-export default function useGetCurrentWorkSpace(workspaceId: string) {
-  console.log("useGetCurrentWorkspace has been called", workspaceId);
+export default function useGetCurrentWorkSpace() {
+  const { workspaceId } = useParams();
   const { updateWorkspace, isLoading, workSpace, updateLoading } =
     useCurrentWorkspace((state) => {
       return state;
     });
   useEffect(() => {
     const getCurrentWorkSpace = async () => {
-      const currentWorkSpace = await getWorkSpaceByIdAction(workspaceId);
+      const currentWorkSpace = await getWorkSpaceByIdAction(
+        workspaceId as string
+      );
       updateWorkspace(currentWorkSpace);
       updateLoading(false);
     };

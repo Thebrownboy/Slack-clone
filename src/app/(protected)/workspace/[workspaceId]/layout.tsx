@@ -11,15 +11,12 @@ import {
 import WorkspaceSidebar from "../_components/workspaceSidebar";
 import useWorkspaceGaurd from "@/features/workspaces/hooks/useWorkspaceGaurd";
 import useGetCurrentWorkSpace from "@/features/workspaces/hooks/useGetCurrentWorkSpace";
-import { useParams } from "next/navigation";
 import useGetCurrentUserData from "@/hooks/getCurrentUserData";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   // using this techinque here will not affect the performance cuz children can be server components as they wanna
-  const { workspaceId } = useParams();
-  const { currentWorkSpace, isLoading } = useGetCurrentWorkSpace(
-    workspaceId as string
-  );
+
+  const { currentWorkSpace, isLoading } = useGetCurrentWorkSpace();
   useGetCurrentUserData();
   const { loading } = useWorkspaceGaurd();
 

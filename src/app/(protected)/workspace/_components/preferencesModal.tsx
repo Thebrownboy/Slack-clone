@@ -14,7 +14,7 @@ import useConfirm from "@/hooks/useConfirm";
 import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { TrashIcon } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 interface PrefernceModalProps {
@@ -38,9 +38,10 @@ export default function PreferencesModal({
     setValue(initialValue);
   }, [initialValue]);
   const { user } = useCurrentUser((state) => state);
-  const { workspaceId } = useParams();
+
   const router = useRouter();
-  const { updateWorkspace } = useCurrentWorkspace((state) => state);
+  const { updateWorkspace, workSpace } = useCurrentWorkspace((state) => state);
+  const workspaceId = workSpace?.id;
   const { isPending: isUpdatingWorkspace, submitUpdateAction } =
     useUpdateWorkspace(user?.id, workspaceId as string, updateWorkspace);
   const { submitDeleteAction } = useDeleteWorkspace(

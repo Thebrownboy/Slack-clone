@@ -1,7 +1,6 @@
 import useGetCurrentMember from "@/features/members/hooks/useGetCurrentMember";
 import { tWorkspace } from "@/types/common-types";
 import { Loader } from "lucide-react";
-import { useParams } from "next/navigation";
 import WorkspaceHeader from "./workspaceHeader";
 import { useCurrentUser } from "@/state-store/store";
 
@@ -12,7 +11,7 @@ export default function WorkspaceSidebar({
   currentWorkSpace: tWorkspace | null;
   loading: boolean;
 }) {
-  const { workspaceId } = useParams();
+  const workspaceId = currentWorkSpace?.id;
   const { user } = useCurrentUser((state) => state);
   const { loading: memberLoading, member } = useGetCurrentMember(
     workspaceId as string,

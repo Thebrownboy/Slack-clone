@@ -1,13 +1,15 @@
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import { getMemberByUserIdAndWorkSpaceIdAction } from "@/utils/workspaces-actions";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function useWorkspaceGaurd() {
-  const { workspaceId } = useParams();
   const { user, loading: loadingCurrentUser } = useCurrentUser(
     (state) => state
   );
+
+  const { workSpace, isLoading: isCurrentWorkspaceLoading } =
+    useCurrentWorkspace((state) => state);
 
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function useWorkspaceGaurd() {
       // if exists so the user has the right to go to this workspace , if not the user is not allowed
       const member = await getMemberByUserIdAndWorkSpaceIdAction(
         user?.id || "",
-        workspaceId as string
+        workSpace?.id || ""
       );
       if (member) {
         setLoading(false);
@@ -26,8 +28,8 @@ export default function useWorkspaceGaurd() {
         router.push("/");
       }
     };
-    if (!loadingCurrentUser) getMember();
-  }, [router, workspaceId, user, loadingCurrentUser]);
+    if (!loadingCurrentUser && !isCurrentWorkspaceLoading) getMember();
+  }, [router, user, loadingCurrentUser, isCurrentWorkspaceLoading, workSpace]);
 
   return { loading };
 }

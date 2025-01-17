@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/../src/components/ui/dropdown-menu";
 import { Loader, Plus } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCreateWorkspaceModal, useCurrentUser } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
 import { tWorkspace } from "@/types/common-types";
@@ -18,7 +18,7 @@ export default function WorkSpaceSwitcher({
   isLoading: boolean;
   currentWorkSpace: tWorkspace | null;
 }) {
-  const { workspaceId } = useParams();
+  const workspaceId = currentWorkSpace?.id;
   const router = useRouter();
   const { user } = useCurrentUser((state) => state);
 
