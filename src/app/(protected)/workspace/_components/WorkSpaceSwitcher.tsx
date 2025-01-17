@@ -7,9 +7,8 @@ import {
   DropdownMenuTrigger,
 } from "@/../src/components/ui/dropdown-menu";
 import { Loader, Plus } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
-import { useCreateWorkspaceModal } from "@/state-store/store";
+import { useCreateWorkspaceModal, useCurrentUser } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
 import { tWorkspace } from "@/types/common-types";
 export default function WorkSpaceSwitcher({
@@ -21,10 +20,11 @@ export default function WorkSpaceSwitcher({
 }) {
   const { workspaceId } = useParams();
   const router = useRouter();
-  const { data } = useSession();
+  const { user } = useCurrentUser((state) => state);
+
   const setOpen = useCreateWorkspaceModal((state) => state.setOpen);
 
-  const { userWorkSpaces } = useGetCurrentUserWorkSpaces(data?.user.id || "");
+  const { userWorkSpaces } = useGetCurrentUserWorkSpaces(user?.id || "");
 
   const filteredWorkspaces = userWorkSpaces?.filter(
     (workspace) => workspace.id !== workspaceId

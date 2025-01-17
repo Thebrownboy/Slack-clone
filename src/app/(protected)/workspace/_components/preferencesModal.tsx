@@ -11,10 +11,9 @@ import { Input } from "@/components/ui/input";
 import useDeleteWorkspace from "@/features/workspaces/hooks/useDeleteWorkspace";
 import useUpdateWorkspace from "@/features/workspaces/hooks/useUpdateWorkspace";
 import useConfirm from "@/hooks/useConfirm";
-import { useCurrentWorkspace } from "@/state-store/store";
+import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { TrashIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
@@ -38,14 +37,14 @@ export default function PreferencesModal({
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
-  const { data } = useSession();
+  const { user } = useCurrentUser((state) => state);
   const { workspaceId } = useParams();
   const router = useRouter();
   const { updateWorkspace } = useCurrentWorkspace((state) => state);
   const { isPending: isUpdatingWorkspace, submitUpdateAction } =
-    useUpdateWorkspace(data?.user.id, workspaceId as string, updateWorkspace);
+    useUpdateWorkspace(user?.id, workspaceId as string, updateWorkspace);
   const { submitDeleteAction } = useDeleteWorkspace(
-    data?.user.id,
+    user?.id,
     workspaceId as string
   );
   return (

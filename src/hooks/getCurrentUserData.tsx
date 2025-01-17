@@ -1,26 +1,29 @@
-import { tUser } from "@/types/common-types";
+import { useCurrentUser } from "@/state-store/store";
 import { getUser } from "@/utils/authentication";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function useGetCurrentUserData() {
   const session = useSession();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<tUser | null>(null);
+  const { updateUser, user, loading, updateLoading } = useCurrentUser(
+    (state) => state
+  );
+
   useEffect(() => {
-    setLoading(true);
+    updateLoading(true);
     const getCurrentUser = async () => {
       try {
         const user = await getUser(session.data?.user?.id);
-        setUser(user);
-        setLoading(false);
+        console.log("I am here inside get CurrentUserdata ", user);
+        updateUser(user);
+        updateLoading(false);
       } catch (err) {
-        setLoading(false);
+        updateLoading(false);
         console.log(err);
       }
     };
     getCurrentUser();
-  }, [session]);
+  }, [session, updateLoading, updateUser]);
 
   return { user, loading };
 }

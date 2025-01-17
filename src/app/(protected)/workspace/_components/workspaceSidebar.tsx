@@ -1,9 +1,9 @@
 import useGetCurrentMember from "@/features/members/hooks/useGetCurrentMember";
 import { tWorkspace } from "@/types/common-types";
 import { Loader } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import WorkspaceHeader from "./workspaceHeader";
+import { useCurrentUser } from "@/state-store/store";
 
 export default function WorkspaceSidebar({
   currentWorkSpace,
@@ -13,10 +13,10 @@ export default function WorkspaceSidebar({
   loading: boolean;
 }) {
   const { workspaceId } = useParams();
-  const { data } = useSession();
+  const { user } = useCurrentUser((state) => state);
   const { loading: memberLoading, member } = useGetCurrentMember(
     workspaceId as string,
-    data?.user.id || ""
+    user?.id || ""
   );
   if (workspaceLoading || memberLoading) {
     <div className="flex flex-col bg-[#5E2C5F] h-full  items-center justify-center">

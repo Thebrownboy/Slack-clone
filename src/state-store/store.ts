@@ -4,13 +4,15 @@ import { create } from "zustand";
 interface iUser {
   email: string;
   id: string;
-  image: string;
-  name: string;
+  image: string | null;
+  name: string | null;
 }
 
 interface IUserStore {
-  user: iUser;
-  updateUser(user: iUser): void;
+  user: iUser | null;
+  updateUser(user: iUser | null): void;
+  loading: boolean;
+  updateLoading(loading: boolean): void;
 }
 interface iCreateWorkspaceModal {
   isOpen: boolean;
@@ -48,9 +50,13 @@ export const useCurrentWorkspace = create<iCurrentWorkspace>((set) => {
 
 export const useCurrentUser = create<IUserStore>((set) => {
   return {
-    updateUser(user: iUser) {
+    user: null,
+    loading: true,
+    updateLoading(loading: boolean) {
+      set((state) => ({ ...state, loading }));
+    },
+    updateUser(user: iUser | null) {
       set((state) => ({ ...state, user }));
     },
-    user: null,
   };
 });

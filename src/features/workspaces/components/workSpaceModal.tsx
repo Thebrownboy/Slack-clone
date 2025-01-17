@@ -5,29 +5,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useSession } from "next-auth/react";
 import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MdError } from "react-icons/md";
 import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
-import { useCreateWorkspaceModal } from "@/state-store/store";
+import { useCreateWorkspaceModal, useCurrentUser } from "@/state-store/store";
 import useCreateWorkspace from "../hooks/useCreateWorkspace";
 
 export default function WorkSpaceModal() {
   const { setOpen, isOpen: open } = useCreateWorkspaceModal((state) => state);
-  const { data } = useSession();
+  const { user } = useCurrentUser((state) => state);
+
   const { isFetching: fetching, userWorkSpaces: workSpaces } =
-    useGetCurrentUserWorkSpaces(data?.user.id || "");
+    useGetCurrentUserWorkSpaces(user?.id || "");
   const {
     errorMsg,
     isPending,
     submitCreateAction,
     updateWorkspaceName,
     workspaceName,
-  } = useCreateWorkspace(data?.user.id);
+  } = useCreateWorkspace(user?.id);
   useEffect(() => {
-    if (!data?.user) {
+    if (!user) {
       setOpen(false);
       return;
     }
@@ -36,7 +36,7 @@ export default function WorkSpaceModal() {
     } else {
       setOpen(true);
     }
-  }, [workSpaces, setOpen, data]);
+  }, [workSpaces, setOpen, user]);
   const handleClose = () => {
     setOpen(false);
     updateWorkspaceName("");
