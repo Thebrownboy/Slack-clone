@@ -5,20 +5,23 @@ import { useEffect } from "react";
 
 export default function useGetCurrentWorkSpace() {
   const { workspaceId } = useParams();
-  const { updateWorkspace, isLoading, workSpace, updateLoading } =
-    useCurrentWorkspace((state) => {
+  const { currentWorkspaceState, updateWorkspaceState } = useCurrentWorkspace(
+    (state) => {
       return state;
-    });
+    }
+  );
   useEffect(() => {
     const getCurrentWorkSpace = async () => {
       const currentWorkSpace = await getWorkSpaceByIdAction(
         workspaceId as string
       );
-      updateWorkspace(currentWorkSpace);
-      updateLoading(false);
+      updateWorkspaceState({ workSpace: currentWorkSpace, isLoading: false });
     };
-    getCurrentWorkSpace();
-  }, [workspaceId, updateWorkspace, updateLoading]);
+    if (!currentWorkspaceState.workSpace) getCurrentWorkSpace();
+  }, [workspaceId, updateWorkspaceState, currentWorkspaceState]);
 
-  return { currentWorkSpace: workSpace, isLoading };
+  return {
+    currentWorkSpace: currentWorkspaceState.workSpace,
+    isLoading: currentWorkspaceState.isLoading,
+  };
 }

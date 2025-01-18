@@ -17,7 +17,9 @@ export default function WorkspaceHeader({
 }: {
   readonly isAdmin: boolean;
 }) {
-  const { workSpace: workspace } = useCurrentWorkspace((state) => state);
+  const {
+    currentWorkspaceState: { workSpace: workspace },
+  } = useCurrentWorkspace((state) => state);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
   return (
     <>

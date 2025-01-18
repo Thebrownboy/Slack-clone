@@ -15,8 +15,8 @@ import useGetCurrentUserData from "@/hooks/getCurrentUserData";
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   // using this techinque here will not affect the performance cuz children can be server components as they wanna
 
-  useGetCurrentWorkSpace();
   useGetCurrentUserData();
+  useGetCurrentWorkSpace();
   useWorkspaceGaurd();
 
   console.log("layout  will be re-render");

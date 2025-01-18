@@ -4,12 +4,21 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function useWorkspaceGaurd() {
-  const { user, loading: loadingCurrentUser } = useCurrentUser(
-    (state) => state
-  );
+  const {
+    userState: { user, loading: loadingCurrentUser },
+  } = useCurrentUser((state) => state);
 
-  const { workSpace, isLoading: isCurrentWorkspaceLoading } =
-    useCurrentWorkspace((state) => state);
+  const {
+    currentWorkspaceState: { workSpace, isLoading: isCurrentWorkspaceLoading },
+  } = useCurrentWorkspace((state) => state);
+
+  console.log(
+    "Gaurd will be renderd",
+    "Loading current user ",
+    loadingCurrentUser,
+    "loading current workspace ",
+    isCurrentWorkspaceLoading
+  );
 
   const [loading, setLoading] = useState(true);
   const router = useRouter();

@@ -15,10 +15,14 @@ import {
 } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
 export default function WorkSpaceSwitcher() {
-  const { workSpace, isLoading } = useCurrentWorkspace((state) => state);
+  const {
+    currentWorkspaceState: { workSpace, isLoading },
+  } = useCurrentWorkspace((state) => state);
   const workspaceId = workSpace?.id;
   const router = useRouter();
-  const { user } = useCurrentUser((state) => state);
+  const {
+    userState: { user },
+  } = useCurrentUser((state) => state);
 
   const setOpen = useCreateWorkspaceModal((state) => state.setOpen);
 

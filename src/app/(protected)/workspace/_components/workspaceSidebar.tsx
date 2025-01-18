@@ -4,10 +4,16 @@ import WorkspaceHeader from "./workspaceHeader";
 import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 
 export default function WorkspaceSidebar() {
-  const { workSpace: currentWorkSpace, isLoading: workspaceLoading } =
-    useCurrentWorkspace((state) => state);
+  const {
+    currentWorkspaceState: {
+      isLoading: workspaceLoading,
+      workSpace: currentWorkSpace,
+    },
+  } = useCurrentWorkspace((state) => state);
   const workspaceId = currentWorkSpace?.id;
-  const { user } = useCurrentUser((state) => state);
+  const {
+    userState: { user },
+  } = useCurrentUser((state) => state);
   const { loading: memberLoading, member } = useGetCurrentMember(
     workspaceId as string,
     user?.id || ""

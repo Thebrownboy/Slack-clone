@@ -4,7 +4,9 @@ import { useCurrentWorkspace } from "@/state-store/store";
 import { Info, Search } from "lucide-react";
 
 export const Toolbar = () => {
-  const { workSpace } = useCurrentWorkspace((state) => state);
+  const {
+    currentWorkspaceState: { workSpace },
+  } = useCurrentWorkspace((state) => state);
   console.log("Toolbar will be re-renderd");
   return (
     <nav className="bg-[#481349] flex items-center justify-between h-10 p-1.5">
