@@ -15,7 +15,9 @@ import useCreateWorkspace from "../hooks/useCreateWorkspace";
 
 export default function WorkSpaceModal() {
   const { setOpen, isOpen: open } = useCreateWorkspaceModal((state) => state);
-  const { user } = useCurrentUser((state) => state);
+  const {
+    userState: { user },
+  } = useCurrentUser((state) => state);
 
   const { isFetching: fetching, userWorkSpaces: workSpaces } =
     useGetCurrentUserWorkSpaces(user?.id || "");

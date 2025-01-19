@@ -17,7 +17,8 @@ export default function useGetCurrentWorkSpace() {
       );
       updateWorkspaceState({ workSpace: currentWorkSpace, isLoading: false });
     };
-    if (!currentWorkspaceState.workSpace) getCurrentWorkSpace();
+    if (!(currentWorkspaceState.workSpace?.id === workspaceId))
+      getCurrentWorkSpace();
   }, [workspaceId, updateWorkspaceState, currentWorkspaceState]);
 
   return {

@@ -19,7 +19,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   useGetCurrentWorkSpace();
   useWorkspaceGaurd();
 
-  console.log("layout  will be re-render");
+  // console.log("layout  will be re-render");
 
   return (
     <div className=" h-full">
@@ -39,7 +39,9 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
             <WorkspaceSidebar />
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel minSize={20}>{children}</ResizablePanel>
+          <ResizablePanel defaultSize={20} minSize={20}>
+            {children}
+          </ResizablePanel>
         </ResizablePanelGroup>
       </div>
     </div>

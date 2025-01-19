@@ -6,7 +6,7 @@ import { useEffect } from "react";
 export default function useGetCurrentUserData() {
   const session = useSession();
   const { updateState, userState } = useCurrentUser((state) => state);
-  console.log("I will render ");
+  // console.log("I will render ");
   useEffect(() => {
     const getCurrentUser = async () => {
       try {

@@ -7,7 +7,7 @@ export const Toolbar = () => {
   const {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace((state) => state);
-  console.log("Toolbar will be re-renderd");
+  // console.log("Toolbar will be re-renderd");
   return (
     <nav className="bg-[#481349] flex items-center justify-between h-10 p-1.5">
       <div className="flex-1"></div>

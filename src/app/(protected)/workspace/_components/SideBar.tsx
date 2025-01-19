@@ -2,9 +2,10 @@
 import UserButton from "@/features/auth/components/userButton";
 import WorkSpaceSwitcher from "./WorkSpaceSwitcher";
 import SidebarButton from "@/components/sidebar-button";
+import React from "react";
 import { BellIcon, Home, MessagesSquare, MoreHorizontal } from "lucide-react";
 
-export default function SideBar() {
+function SideBar() {
   console.log("Sidebar will be re-render");
   return (
     <aside className="w-[70px] h-full bg-[#481349] flex flex-col gap-y-4 items-center pt-[9px] pb-[10px] justify-between">
@@ -21,3 +22,5 @@ export default function SideBar() {
     </aside>
   );
 }
+
+export default React.memo(SideBar);
