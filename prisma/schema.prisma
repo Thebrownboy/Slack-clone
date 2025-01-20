@@ -67,10 +67,11 @@ model Workspace {
   joinCode  String
   name      String
   userId    String
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String     @id @default(cuid())
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   Member    Members[]
+  Channels  Channels[]
 }
 
 model Members {
@@ -88,4 +89,13 @@ model Members {
   // this will optimize the queries that are using workspaceId in the where clause 
   @@index([workspaceId])
   @@index([userId, workspaceId])
+}
+
+model Channels {
+  id          String    @id @default(cuid())
+  name        String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
 }

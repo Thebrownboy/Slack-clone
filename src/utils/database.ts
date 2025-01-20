@@ -77,6 +77,14 @@ export async function addWorkSpace(name: string, userId: string) {
       workspaceId,
     },
   });
+
+  // at least one channel
+  await db.channels.create({
+    data: {
+      name: "general",
+      workspaceId,
+    },
+  });
 }
 
 export async function getAllWorkSpacesByUserId(userId: string) {
