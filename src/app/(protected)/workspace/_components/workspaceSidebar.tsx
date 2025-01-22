@@ -9,6 +9,7 @@ import WorkspaceHeader from "./workspaceHeader";
 import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import SidebarItem from "./sidebarItem";
 import useGetCurrentChannels from "@/features/channels/hooks/useGetCurrentChannels";
+import WorkspaceSection from "./workspaceSection";
 
 export default function WorkspaceSidebar() {
   const {
@@ -42,15 +43,16 @@ export default function WorkspaceSidebar() {
           label="Threads"
           icon={MessageSquareText}
           id="threads"
-          variant={"active"}
+          variant={"default"}
         />
         <SidebarItem
           label="Drafts & Sent"
           icon={SendHorizonal}
           id="draft"
-          variant={"active"}
+          variant={"default"}
         />
-
+      </div>
+      <WorkspaceSection label="channels" hint="New Channels" onNew={() => {}}>
         {currentChannels?.map((item) => {
           return (
             <SidebarItem
@@ -61,7 +63,7 @@ export default function WorkspaceSidebar() {
             />
           );
         })}
-      </div>
+      </WorkspaceSection>
     </div>
   );
 }
