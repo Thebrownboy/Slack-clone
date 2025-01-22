@@ -14,7 +14,6 @@ import {
   useCurrentWorkspace,
 } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 export default function WorkSpaceSwitcher() {
   const {
     currentWorkspaceState: { workSpace, isLoading },
@@ -56,16 +55,14 @@ export default function WorkSpaceSwitcher() {
         </DropdownMenuItem>
         {filteredWorkspaces?.map((item) => (
           <DropdownMenuItem
-            // onClick={() => router.push(`/workspace/${item.id}`)}
+            onClick={() => router.push(`/workspace/${item.id}`)}
             key={item.id}
-            className=" cursor-pointer capitalize"
+            className=" cursor-pointer capitalize "
           >
-            <Link href={`/workspace/${item.id}`}>
-              <div className="size-9 relative overflow-hidden bg-[] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
-                {item.name.charAt(0).toUpperCase()}
-              </div>
-              <p className=" max-w-full truncate"> {item?.name}</p>
-            </Link>
+            <div className="size-9 relative overflow-hidden bg-[] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
+              {item.name.charAt(0).toUpperCase()}
+            </div>
+            <p className=" max-w-full truncate"> {item?.name}</p>
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem

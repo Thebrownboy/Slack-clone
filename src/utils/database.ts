@@ -168,3 +168,31 @@ export async function deleteWorkSpace(userId: string, workspaceId: string) {
 
   return deleteWorkSpace;
 }
+
+export async function getWorkspaceChannels(
+  workspaceId: string,
+  userId: string
+) {
+  // you should authorize the user on every function , but why so while the function will not be called except from
+  // an authenticated user by the frontend?
+  // the action could also be called by any request sender like postman and thunder client
+  // so you should authorize every request by the user
+
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (!member) {
+    return null;
+  }
+
+  return await db.channels.findMany({
+    where: {
+      workspaceId,
+    },
+  });
+}

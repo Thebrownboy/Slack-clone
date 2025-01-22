@@ -20,3 +20,9 @@ export type tUpdatedWorkspace = {
   id?: string;
   createdAt?: Date;
 };
+
+export type tChannel = {
+  id: string;
+  name: string;
+  workspaceId: string;
+};
