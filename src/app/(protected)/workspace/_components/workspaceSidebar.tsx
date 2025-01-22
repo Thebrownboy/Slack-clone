@@ -10,6 +10,8 @@ import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import SidebarItem from "./sidebarItem";
 import useGetCurrentChannels from "@/features/channels/hooks/useGetCurrentChannels";
 import WorkspaceSection from "./workspaceSection";
+import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMembers";
+import UserItem from "./userItem";
 
 export default function WorkspaceSidebar() {
   const {
@@ -28,7 +30,15 @@ export default function WorkspaceSidebar() {
   );
   const { currentChannels, isLoading: isCurrentChannelsLoading } =
     useGetCurrentChannels(workspaceId as string, user?.id || "");
-  if (workspaceLoading || memberLoading || isCurrentChannelsLoading) {
+
+  const { currentWorkspaceMembers, isLoading: currentMembersLoading } =
+    useGetWorkspaceMembers(workspaceId as string, user?.id || "");
+  if (
+    workspaceLoading ||
+    memberLoading ||
+    isCurrentChannelsLoading ||
+    currentMembersLoading
+  ) {
     <div className="flex flex-col bg-[#5E2C5F] h-full  items-center justify-center">
       <Loader className="size-5 animate-spin text-white" />
     </div>;
@@ -60,6 +70,24 @@ export default function WorkspaceSidebar() {
               icon={HashIcon}
               label={item.name}
               id={item.id}
+            />
+          );
+        })}
+      </WorkspaceSection>
+
+      <WorkspaceSection
+        label="Direct Messages"
+        hint="New Direct Messages"
+        onNew={() => {}}
+      >
+        {currentWorkspaceMembers?.map((item) => {
+          return (
+            <UserItem
+              id={item.user.id || ""}
+              image={item.user.image || ""}
+              label={item.user.name || ""}
+              variant={"default"}
+              key={item.user.id}
             />
           );
         })}
