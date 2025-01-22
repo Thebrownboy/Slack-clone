@@ -237,3 +237,33 @@ export async function getWorkspaceMembers(workspaceId: string, userId: string) {
 
   return members;
 }
+
+export async function createChannel(
+  workspaceId: string,
+  userId: string,
+  channelName: string
+) {
+  if (!userId) return null;
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+  // if the user pypasses the rules
+  const parsedName = channelName.replace(/\s+/g, "-").toLowerCase();
+
+  const channel = await db.channels.create({
+    data: {
+      name: parsedName,
+      workspaceId,
+    },
+  });
+
+  return channel;
+}

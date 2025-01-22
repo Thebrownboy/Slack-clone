@@ -6,7 +6,11 @@ import {
   SendHorizonal,
 } from "lucide-react";
 import WorkspaceHeader from "./workspaceHeader";
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
+import {
+  useCreateChannelModal,
+  useCurrentUser,
+  useCurrentWorkspace,
+} from "@/state-store/store";
 import SidebarItem from "./sidebarItem";
 import useGetCurrentChannels from "@/features/channels/hooks/useGetCurrentChannels";
 import WorkspaceSection from "./workspaceSection";
@@ -14,6 +18,7 @@ import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMemb
 import UserItem from "./userItem";
 
 export default function WorkspaceSidebar() {
+  const { setOpen } = useCreateChannelModal((state) => state);
   const {
     currentWorkspaceState: {
       isLoading: workspaceLoading,
@@ -62,7 +67,17 @@ export default function WorkspaceSidebar() {
           variant={"default"}
         />
       </div>
-      <WorkspaceSection label="channels" hint="New Channels" onNew={() => {}}>
+      <WorkspaceSection
+        label="channels"
+        hint="New Channels"
+        onNew={
+          member?.role === "admin"
+            ? () => {
+                setOpen(true);
+              }
+            : undefined
+        }
+      >
         {currentChannels?.map((item) => {
           return (
             <SidebarItem
@@ -75,11 +90,7 @@ export default function WorkspaceSidebar() {
         })}
       </WorkspaceSection>
 
-      <WorkspaceSection
-        label="Direct Messages"
-        hint="New Direct Messages"
-        onNew={() => {}}
-      >
+      <WorkspaceSection label="Direct Messages" hint="New Direct Messages">
         {currentWorkspaceMembers?.map((item) => {
           return (
             <UserItem

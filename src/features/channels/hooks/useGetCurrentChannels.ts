@@ -1,36 +1,26 @@
-import { tChannel } from "@/types/common-types";
+import { useCurrentChannels } from "@/state-store/store";
 import { getcurrentChannelsAction } from "@/utils/channels-actions";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function useGetCurrentChannels(
   workspaceId: string,
   userId: string
 ) {
-  const [currentChannelsState, updateCurrentChannelState] = useState<{
-    isLoading: boolean;
-    currentChannels: tChannel[] | null;
-  }>({
-    isLoading: true,
-    currentChannels: [],
-  });
+  const { currentChannlesState, updateCurrentChannels } = useCurrentChannels(
+    (state) => state
+  );
 
   useEffect(() => {
     const getChannels = async () => {
       try {
         const response = await getcurrentChannelsAction(workspaceId, userId);
-        updateCurrentChannelState((state) => ({
-          ...state,
-          isLoading: false,
-          currentChannels: response,
-        }));
-      } catch {
-        updateCurrentChannelState((state) => ({ ...state, isLoading: false }));
-      }
+        updateCurrentChannels(response);
+      } catch {}
     };
-    getChannels();
-  }, [workspaceId, userId]);
+    if (!currentChannlesState.currentChannels) getChannels();
+  }, [workspaceId, userId, updateCurrentChannels, currentChannlesState]);
 
   return {
-    ...currentChannelsState,
+    ...currentChannlesState,
   };
 }

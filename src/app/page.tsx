@@ -1,7 +1,6 @@
 "use server";
 import { auth } from "@/auth";
 import UserButton from "@/features/auth/components/userButton";
-import WorkSpaceModal from "@/features/workspaces/components/workSpaceModal";
 import Link from "next/link";
 
 export default async function Home() {
@@ -17,8 +16,8 @@ export default async function Home() {
   return (
     <div>
       {JSON.stringify(session)}
-      <WorkSpaceModal />
-
+      {/* <WorkSpaceModal />
+      <CreateChannelModal /> */}
       <Link href={"/workspace/cm5tjkucy0007usi4bik199kw"}>
         {" "}
         go to workspace

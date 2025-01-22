@@ -4,6 +4,7 @@ import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import WorkSpaceModal from "@/features/workspaces/components/workSpaceModal";
+import CreateChannelModal from "@/features/channels/components/createChannelModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default async function RootLayout({
           {children}
           {/* draw it here also cuz the this layout overrides the main one  */}
           <WorkSpaceModal />
+          <CreateChannelModal />
         </SessionProvider>
       </body>
     </html>
