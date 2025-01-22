@@ -1,8 +1,8 @@
 export type tUser = {
-  email: string;
-  name: string | null;
-  id: string;
-  image: string | null;
+  email: string | undefined;
+  name: string | null | undefined;
+  id: string | undefined;
+  image: string | null | undefined;
 };
 
 export type tWorkspace = {
@@ -25,4 +25,15 @@ export type tChannel = {
   id: string;
   name: string;
   workspaceId: string;
+};
+
+type tMember = {
+  userId: string;
+  workspaceId: string;
+  role: "admin" | "member";
+};
+
+export type tWorkspaceMembers = {
+  user: tUser;
+  member: tMember;
 };

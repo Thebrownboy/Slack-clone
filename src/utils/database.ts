@@ -196,3 +196,44 @@ export async function getWorkspaceChannels(
     },
   });
 }
+
+const populateUser = async (userId: string) => {
+  const user = await db.user.findUnique({ where: { id: userId } });
+  return user;
+};
+export async function getWorkspaceMembers(workspaceId: string, userId: string) {
+  if (!workspaceId || !userId) {
+    return null;
+  }
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (!member) {
+    return null;
+  }
+  const data = await db.members.findMany({
+    where: {
+      workspaceId,
+    },
+  });
+  const members = [];
+  for (const member of data) {
+    const user = await populateUser(member.userId);
+    members.push({
+      member,
+      user: {
+        email: user?.email,
+        name: user?.name,
+        id: user?.id,
+        image: user?.image,
+      },
+    });
+  }
+
+  return members;
+}
