@@ -37,13 +37,18 @@ export default function PreferencesModal({
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);
-  const { user } = useCurrentUser((state) => state);
+  const {
+    userState: { user },
+  } = useCurrentUser((state) => state);
 
   const router = useRouter();
-  const { updateWorkspace, workSpace } = useCurrentWorkspace((state) => state);
+  const {
+    updateWorkspaceState,
+    currentWorkspaceState: { workSpace },
+  } = useCurrentWorkspace((state) => state);
   const workspaceId = workSpace?.id;
   const { isPending: isUpdatingWorkspace, submitUpdateAction } =
-    useUpdateWorkspace(user?.id, workspaceId as string, updateWorkspace);
+    useUpdateWorkspace(user?.id, workspaceId as string, updateWorkspaceState);
   const { submitDeleteAction } = useDeleteWorkspace(
     user?.id,
     workspaceId as string

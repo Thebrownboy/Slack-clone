@@ -4,6 +4,7 @@ import "server-only";
 import {
   addWorkSpace,
   deleteWorkSpace,
+  generateNewJoinCode,
   getAllWorkSpacesByUserId,
   getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
@@ -85,6 +86,26 @@ export async function deleteWorkSpaceAction(
     return {
       success: false,
       msg: "Unauthorized",
+    };
+  }
+}
+
+export async function generateNewJoinCodeAction(
+  userId: string,
+  workspaceId: string
+) {
+  const updatedWorkSpace = await generateNewJoinCode(userId, workspaceId);
+  if (updatedWorkSpace) {
+    return {
+      success: true,
+      updatedWorkSpace,
+      msg: "",
+    };
+  } else {
+    return {
+      success: false,
+      msg: "",
+      updatedWorkSpace: null,
     };
   }
 }

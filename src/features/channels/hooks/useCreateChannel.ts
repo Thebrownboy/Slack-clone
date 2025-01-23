@@ -30,12 +30,13 @@ export default function useCreateChannel(
           ...currentChannlesState.currentChannels,
         ]);
       }
-
+      // redirect to channel
       updateCreateChannelState((prevState) => ({
         ...prevState,
         errorMsg: response.err,
         isPending: false,
       }));
+      updateName("");
       setOpen(false);
     }
   };

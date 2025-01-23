@@ -52,16 +52,15 @@ export async function getWorkSpaces() {
   return await db.workspace.findMany({});
 }
 
-export async function addWorkSpace(name: string, userId: string) {
-  const generateCode = () => {
-    const code = Array.from(
-      { length: 6 },
-      () =>
-        "0123456789abcdefjhijklmnopqrstuvwxyz"[Math.floor(Math.random() * 36)]
-    ).join("");
+const generateCode = () => {
+  const code = Array.from(
+    { length: 6 },
+    () => "0123456789abcdefjhijklmnopqrstuvwxyz"[Math.floor(Math.random() * 36)]
+  ).join("");
 
-    return code;
-  };
+  return code;
+};
+export async function addWorkSpace(name: string, userId: string) {
   const { id: workspaceId } = await db.workspace.create({
     data: {
       name,
@@ -167,6 +166,33 @@ export async function deleteWorkSpace(userId: string, workspaceId: string) {
   });
 
   return deleteWorkSpace;
+}
+export async function generateNewJoinCode(userId: string, workspaceId: string) {
+  if (!userId) return null;
+
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+  const newJoinCode = generateCode();
+
+  const updatedWorkspace = await db.workspace.update({
+    where: {
+      id: workspaceId,
+    },
+    data: {
+      joinCode: newJoinCode,
+    },
+  });
+
+  return updatedWorkspace;
 }
 
 export async function getWorkspaceChannels(

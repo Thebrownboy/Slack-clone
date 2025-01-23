@@ -1,10 +1,10 @@
-import { tUpdatedWorkspace, tWorkspace } from "@/types/common-types";
-import { updateWorkSpaceAction } from "@/utils/workspaces-actions";
+import { tWorkspace } from "@/types/common-types";
+import { generateNewJoinCodeAction } from "@/utils/workspaces-actions";
 import { useState } from "react";
 
-export default function useUpdateWorkspace(
-  userId: string | undefined,
-  workspaceId: string = "",
+function useNewJoinCode(
+  userId: string,
+  workspaceId: string,
   updateCurrentWorkspace: (updatedWorkspaceState: {
     workSpace: tWorkspace | null;
     isLoading: boolean;
@@ -12,16 +12,12 @@ export default function useUpdateWorkspace(
 ) {
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
-  const submitUpdateAction = async (
-    event: React.FormEvent<HTMLFormElement>,
-    data: tUpdatedWorkspace
-  ) => {
-    event.preventDefault();
+  const submitUpdateAction = async () => {
     if (userId) {
       updateIsPending(true);
-      const response = await updateWorkSpaceAction(userId, workspaceId, data);
+      const response = await generateNewJoinCodeAction(userId, workspaceId);
       updateCurrentWorkspace({
-        workSpace: response.updatedWorkspace,
+        workSpace: response.updatedWorkSpace,
         isLoading: false,
       });
       if (!response.success) {
@@ -37,3 +33,5 @@ export default function useUpdateWorkspace(
     isPending,
   };
 }
+
+export default useNewJoinCode;

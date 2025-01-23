@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import WorkSpaceModal from "@/features/workspaces/components/workSpaceModal";
 import CreateChannelModal from "@/features/channels/components/createChannelModal";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider session={session}>
+          <Toaster />
           {children}
           {/* draw it here also cuz the this layout overrides the main one  */}
           <WorkSpaceModal />
