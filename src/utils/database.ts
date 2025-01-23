@@ -195,6 +195,44 @@ export async function generateNewJoinCode(userId: string, workspaceId: string) {
   return updatedWorkspace;
 }
 
+export async function makeUserJoin(
+  userId: string,
+  workspaceId: string,
+  joinCode: string
+) {
+  if (!userId) {
+    return null;
+  }
+  const workspace = await db.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  if (workspace?.joinCode !== joinCode.toLowerCase()) {
+    return "join code mismatch";
+  }
+  const existingMembmer = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (existingMembmer) {
+    return "Already a member of this workspace";
+  }
+  await db.members.create({
+    data: {
+      userId,
+      workspaceId,
+      role: "member",
+    },
+  });
+  return workspace.id;
+}
+
 export async function getWorkspaceChannels(
   workspaceId: string,
   userId: string

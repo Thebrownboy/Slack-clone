@@ -9,6 +9,7 @@ import {
   getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
   getWorkSpaces,
+  makeUserJoin,
   updateWorkSpace,
 } from "./database";
 import { tUpdatedWorkspace } from "@/types/common-types";
@@ -108,4 +109,29 @@ export async function generateNewJoinCodeAction(
       updatedWorkSpace: null,
     };
   }
+}
+
+export async function makeUserJoinAction(
+  userId: string,
+  workspaceId: string,
+  joinCode: string
+) {
+  const response = await makeUserJoin(userId, workspaceId, joinCode);
+  if (!response) {
+    return {
+      success: false,
+      msg: "Unkown error happened",
+    };
+  }
+  if (typeof response == "string") {
+    return {
+      success: false,
+      msg: response,
+    };
+  }
+
+  return {
+    success: true,
+    msg: "Succefully join",
+  };
 }
