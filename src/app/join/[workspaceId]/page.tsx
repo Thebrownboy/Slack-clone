@@ -8,15 +8,14 @@ import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import VerificationInput from "react-verification-input";
 import { toast } from "sonner";
 interface JoinPageProps {
-  params: {
-    workspaceId: string;
-  };
+  params: Promise<{ workspaceId: string }>;
 }
-export default function JoinPage({ params: { workspaceId } }: JoinPageProps) {
+export default function JoinPage({ params }: JoinPageProps) {
+  const { workspaceId } = React.use(params);
   const { user } = useGetCurrentUserData();
   const router = useRouter();
   const { currentWorkSpaceInfo, loading } = useGetWorkspaceInfo(
