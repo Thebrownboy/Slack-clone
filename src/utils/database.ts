@@ -195,6 +195,32 @@ export async function generateNewJoinCode(userId: string, workspaceId: string) {
   return updatedWorkspace;
 }
 
+export async function getWorkspaceNaiveInfo(
+  userId: string,
+  workspaceId: string
+) {
+  if (!userId) return null;
+
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  const workspace = await db.workspace.findUnique({
+    where: {
+      id: workspaceId,
+    },
+  });
+
+  return {
+    workspaceName: workspace?.name,
+    isMember: !!member,
+  };
+}
+
 export async function makeUserJoin(
   userId: string,
   workspaceId: string,

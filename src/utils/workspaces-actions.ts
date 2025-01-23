@@ -8,6 +8,7 @@ import {
   getAllWorkSpacesByUserId,
   getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
+  getWorkspaceNaiveInfo,
   getWorkSpaces,
   makeUserJoin,
   updateWorkSpace,
@@ -132,6 +133,25 @@ export async function makeUserJoinAction(
 
   return {
     success: true,
-    msg: "Succefully join",
+    msg: "",
   };
+}
+
+export async function getWorkspaceNaiveInfoAction(
+  userId: string,
+  workspaceId: string
+) {
+  const response = await getWorkspaceNaiveInfo(userId, workspaceId);
+
+  if (response) {
+    return {
+      success: true,
+      data: response,
+    };
+  } else {
+    return {
+      success: false,
+      data: response,
+    };
+  }
 }
