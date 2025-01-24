@@ -14,7 +14,6 @@ import {
   updateWorkSpace,
 } from "./database";
 import { tUpdatedWorkspace } from "@/types/common-types";
-
 // these files are treated as server actions
 
 export async function getWorkAllWorkSpacesAction() {
@@ -40,7 +39,12 @@ export async function createNewWorkspace(name: string, id: string) {
 // another layer of abstraction
 // even if the function is just a single line , but it's essential to have this level of abstraction
 export async function getAllWorkSpacesOfUserAction(userId: string) {
-  return await getAllWorkSpacesByUserId(userId);
+  try {
+    const response = await getAllWorkSpacesByUserId(userId);
+    return response;
+  } catch {
+    return null;
+  }
 }
 
 export async function getWorkSpaceByIdAction(id: string) {

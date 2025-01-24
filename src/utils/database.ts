@@ -61,6 +61,7 @@ const generateCode = () => {
   return code;
 };
 export async function addWorkSpace(name: string, userId: string) {
+  if (!userId) return null;
   const { id: workspaceId } = await db.workspace.create({
     data: {
       name,
@@ -87,18 +88,27 @@ export async function addWorkSpace(name: string, userId: string) {
 }
 
 export async function getAllWorkSpacesByUserId(userId: string) {
-  return await db.workspace.findMany({
-    where: {
-      Member: {
-        some: {
-          userId,
+  if (!userId) {
+    return null;
+  }
+
+  try {
+    return await db.workspace.findMany({
+      where: {
+        Member: {
+          some: {
+            userId,
+          },
         },
       },
-    },
-  });
+    });
+  } catch {
+    return null;
+  }
 }
 
 export async function getWorkSpaceById(id: string) {
+  if (!id) return null;
   return await db.workspace.findUnique({
     where: {
       id,
@@ -125,6 +135,7 @@ export async function updateWorkSpace(
   workspaceId: string,
   data: tUpdatedWorkspace
 ) {
+  if (!userId || !workspaceId) return null;
   const member = await db.members.findUnique({
     where: {
       userId_workspaceId: {
@@ -147,6 +158,7 @@ export async function updateWorkSpace(
 }
 
 export async function deleteWorkSpace(userId: string, workspaceId: string) {
+  if (!userId || !workspaceId) return null;
   const member = await db.members.findUnique({
     where: {
       userId_workspaceId: {
@@ -356,4 +368,29 @@ export async function createChannel(
   });
 
   return channel;
+}
+
+export async function getChannelNumber(userId: string, workspaceId: string) {
+  if (!userId) {
+    return null;
+  }
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+  if (!member) return null;
+
+  const channelsNumber = await db.channels.count({
+    where: {
+      workspaceId,
+    },
+  });
+
+  return {
+    num: channelsNumber,
+  };
 }

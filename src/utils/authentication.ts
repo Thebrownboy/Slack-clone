@@ -61,6 +61,7 @@ export async function onLoginSubmit(email: string, password: string) {
 export async function getUser(id: string | undefined) {
   // this function will be treated as a server action , so this is why I will not call
   // the findUserById method directly
+  console.log("This is the user ", id);
   if (id) {
     const user = await findUserById(id);
     if (user) {

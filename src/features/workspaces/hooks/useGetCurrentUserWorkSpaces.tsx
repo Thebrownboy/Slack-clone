@@ -14,7 +14,7 @@ export default function useGetCurrentUserWorkSpaces(userId: string) {
       updateUserWorkSpaces(allWorkSpaces);
       updateFetching(false);
     };
-    getAllWorkSpacesForUser();
+    if (userId) getAllWorkSpacesForUser();
   }, [userId]);
 
   return { userWorkSpaces, isFetching: fetching };
