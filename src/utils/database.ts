@@ -417,3 +417,42 @@ export async function getChannelById(userId: string, channelId: string) {
 
   return channel;
 }
+
+export async function editChannelName(
+  userId: string,
+  channelId: string,
+  channelName: string
+) {
+  if (!userId || !channelId) return null;
+  if (!channelName || channelName.length < 3) return null;
+  const channel = await db.channels.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
+  if (!channel) return null;
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId: channel?.workspaceId,
+      },
+    },
+  });
+
+  // any confirmation here is done for the case when the user is able to bypass the UI
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+
+  const updatedChannel = await db.channels.update({
+    where: {
+      id: channelId,
+    },
+    data: {
+      name: channelName,
+    },
+  });
+
+  return updatedChannel;
+}

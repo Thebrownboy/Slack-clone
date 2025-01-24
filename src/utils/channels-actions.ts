@@ -2,6 +2,7 @@
 import "server-only";
 import {
   createChannel,
+  editChannelName,
   getChannelById,
   getWorkspaceChannels,
 } from "./database";
@@ -37,4 +38,25 @@ export async function createChannelAction(
 
 export async function getChannelByIdAction(userId: string, channelId: string) {
   return await getChannelById(userId, channelId);
+}
+
+export async function editChannelNameAction(
+  userId: string,
+  channelId: string,
+  channelName: string
+) {
+  const updatedChannel = await editChannelName(userId, channelId, channelName);
+  if (updatedChannel) {
+    return {
+      success: true,
+      channel: updatedChannel,
+      msg: "",
+    };
+  } else {
+    return {
+      success: false,
+      channel: null,
+      msg: "An error happened",
+    };
+  }
 }

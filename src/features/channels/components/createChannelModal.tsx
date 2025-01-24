@@ -32,6 +32,7 @@ export default function CreateChannelModal() {
     const value = e.target.value.replace(/\s+/g, "-").toLowerCase();
     updateName(value);
   };
+
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>

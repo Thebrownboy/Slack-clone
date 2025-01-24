@@ -1,29 +1,22 @@
-import { tChannel } from "@/types/common-types";
-import { getChannelByIdAction } from "@/utils/channels-actions";
-import { useEffect, useState } from "react";
+import { useCurrentChannels } from "@/state-store/store";
+
+import { useMemo } from "react";
 
 export default function useGetChannelById(userId: string, channelId: string) {
-  const [currentChannelState, updateCurrentChannelState] = useState<{
-    loading: boolean;
-    channel: tChannel | null;
-  }>({ channel: null, loading: true });
-  useEffect(() => {
-    const getChannels = async () => {
-      try {
-        const channel = await getChannelByIdAction(userId, channelId);
-        updateCurrentChannelState({
-          channel,
-          loading: false,
-        });
-      } catch {
-        updateCurrentChannelState({
-          loading: false,
-          channel: null,
-        });
+  const { currentChannlesState } = useCurrentChannels((state) => state);
+  const currentChannel = useMemo(() => {
+    if (currentChannlesState.currentChannels) {
+      for (const channel of currentChannlesState.currentChannels) {
+        if (channel.id === channelId) return channel;
       }
-    };
-    getChannels();
-  }, [userId, channelId]);
-
-  return { currentChannelState };
+    } else {
+      return null;
+    }
+  }, [channelId, currentChannlesState.currentChannels]);
+  return {
+    currentChannelState: {
+      loading: currentChannlesState.isLoading,
+      channel: currentChannel,
+    },
+  };
 }

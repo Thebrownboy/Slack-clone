@@ -40,7 +40,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   }
   return (
     <div className="flex flex-col h-full ">
-      <ChannelHeader channelName={channel.name} />
+      <ChannelHeader channelName={channel.name} channelId={channel.id} />
     </div>
   );
 }
