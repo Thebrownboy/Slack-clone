@@ -2,6 +2,7 @@
 import "server-only";
 import {
   createChannel,
+  deleteChannel,
   editChannelName,
   getChannelById,
   getWorkspaceChannels,
@@ -50,6 +51,23 @@ export async function editChannelNameAction(
     return {
       success: true,
       channel: updatedChannel,
+      msg: "",
+    };
+  } else {
+    return {
+      success: false,
+      channel: null,
+      msg: "An error happened",
+    };
+  }
+}
+
+export async function deleteChannelAction(userId: string, channelId: string) {
+  const deletedChannel = await deleteChannel(userId, channelId);
+  if (deletedChannel) {
+    return {
+      success: true,
+      channel: deletedChannel,
       msg: "",
     };
   } else {

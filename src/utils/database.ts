@@ -456,3 +456,34 @@ export async function editChannelName(
 
   return updatedChannel;
 }
+
+export async function deleteChannel(userId: string, channelId: string) {
+  if (!userId || !channelId) return null;
+  const channel = await db.channels.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
+  if (!channel) return null;
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId: channel?.workspaceId,
+      },
+    },
+  });
+
+  // any confirmation here is done for the case when the user is able to bypass the UI
+  if (!member || member.role !== "admin") {
+    return null;
+  }
+
+  const deletedChannel = await db.channels.delete({
+    where: {
+      id: channelId,
+    },
+  });
+
+  return deletedChannel;
+}
