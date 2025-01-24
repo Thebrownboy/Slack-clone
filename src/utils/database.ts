@@ -394,3 +394,26 @@ export async function getChannelNumber(userId: string, workspaceId: string) {
     num: channelsNumber,
   };
 }
+
+export async function getChannelById(userId: string, channelId: string) {
+  if (!userId) return null;
+
+  const channel = await db.channels.findUnique({
+    where: {
+      id: channelId,
+    },
+  });
+  if (!channel) return null;
+
+  const member = await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId: channel?.workspaceId,
+      },
+    },
+  });
+  if (!member) return null;
+
+  return channel;
+}

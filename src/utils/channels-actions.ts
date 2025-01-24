@@ -1,6 +1,10 @@
 "use server";
 import "server-only";
-import { createChannel, getWorkspaceChannels } from "./database";
+import {
+  createChannel,
+  getChannelById,
+  getWorkspaceChannels,
+} from "./database";
 import { tChannel } from "@/types/common-types";
 
 export async function getcurrentChannelsAction(
@@ -29,4 +33,8 @@ export async function createChannelAction(
       err: "Error happens while creating the channel",
     };
   }
+}
+
+export async function getChannelByIdAction(userId: string, channelId: string) {
+  return await getChannelById(userId, channelId);
 }
