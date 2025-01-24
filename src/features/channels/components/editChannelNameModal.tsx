@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useEditChannel from "../hooks/useEditChannelName";
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentMember, useCurrentUser } from "@/state-store/store";
 
 export default function EditChannelNameModal({
   channelName,
@@ -19,6 +19,9 @@ export default function EditChannelNameModal({
   channelName: string;
   channelId: string;
 }) {
+  const {
+    currentMemberState: { member },
+  } = useCurrentMember((state) => state);
   const {
     userState: { user },
   } = useCurrentUser((state) => state);
@@ -45,9 +48,11 @@ export default function EditChannelNameModal({
         <div className="px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50">
           <div className="flex items-center justify-between">
             <p className=" text-sm font-semibold">channel name</p>
-            <p className="text-sm text-[#1264a3] hover:underline font-semibold">
-              Edit
-            </p>
+            {member?.role === "admin" && (
+              <p className="text-sm text-[#1264a3] hover:underline font-semibold">
+                Edit
+              </p>
+            )}
           </div>
 
           <p className="text-sm "># {channelName}</p>

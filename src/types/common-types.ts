@@ -37,3 +37,9 @@ export type tWorkspaceMembers = {
   user: tUser;
   member: tMember;
 };
+
+export type tmember = {
+  userId: string;
+  workspaceId: string;
+  role: "member" | "admin";
+};

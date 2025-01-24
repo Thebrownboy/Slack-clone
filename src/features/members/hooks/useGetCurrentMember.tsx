@@ -1,18 +1,15 @@
+import { useCurrentMember } from "@/state-store/store";
 import { getMemberByUserIdAndWorkSpaceIdAction } from "@/utils/workspaces-actions";
-import { useEffect, useState } from "react";
-
-type tmember = {
-  userId: string;
-  workspaceId: string;
-  role: "member" | "admin";
-};
+import { useEffect } from "react";
 
 export default function useGetCurrentMember(
   workspaceId: string,
   userId: string
 ) {
-  const [member, setMember] = useState<null | tmember>(null);
-  const [loading, setLoading] = useState(true);
+  const { updateCurrentMemberState, currentMemberState } = useCurrentMember(
+    (state) => state
+  );
+
   useEffect(() => {
     const getMember = async () => {
       // you have userId and workspace id , the only thing you should do is to look at the member table with both userId and workspaceId
@@ -21,10 +18,12 @@ export default function useGetCurrentMember(
         userId,
         workspaceId
       );
-      setMember(member);
-      setLoading(false);
+      updateCurrentMemberState(member);
     };
     if (workspaceId) getMember();
-  }, [workspaceId, userId]);
-  return { member, loading };
+  }, [workspaceId, userId, updateCurrentMemberState]);
+  return {
+    member: currentMemberState.member,
+    loading: currentMemberState.loading,
+  };
 }

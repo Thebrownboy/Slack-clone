@@ -1,4 +1,4 @@
-import { tChannel, tWorkspace } from "@/types/common-types";
+import { tChannel, tmember, tWorkspace } from "@/types/common-types";
 import { create } from "zustand";
 
 interface iCreateWorkspaceModal {
@@ -110,6 +110,28 @@ export const useCurrentChannels = create<iCurrentChannels>((set) => {
           currentChannels: channels,
           isLoading: false,
         },
+      }));
+    },
+  };
+});
+
+interface iCurrentMember {
+  currentMemberState: {
+    loading: boolean;
+    member: null | tmember;
+  };
+  updateCurrentMemberState(member: tmember | null): void;
+}
+
+export const useCurrentMember = create<iCurrentMember>((set) => {
+  return {
+    currentMemberState: {
+      loading: false,
+      member: null,
+    },
+    updateCurrentMemberState(member) {
+      set((state) => ({
+        currentMemberState: { ...state, loading: false, member },
       }));
     },
   };
