@@ -2,9 +2,10 @@ import dynamic from "next/dynamic";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 // import Editor from "@/components/editor";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type Quill from "quill";
 import useCreateMessage from "@/features/messages/useCreateMessage";
+import { uploadImageAction } from "@/utils/messages-actions";
 // quills does not working correclty with the server-side rendering
 // even if the component is a client componet , but next will render it once on the server
 // so we should have some work-around
@@ -20,7 +21,7 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
   const { handleSubmit: createMessage, loading } = useCreateMessage(channelId);
 
   // forcing the editor to re-render trick
-  // const [editorKey, updateEditorKey] = useState(0);
+  const [editorKey, updateEditorKey] = useState(0);
   const handleSubmit = async ({
     body,
     images,
@@ -28,16 +29,19 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
     body: string;
     images: File[] | null;
   }) => {
-    console.log(body, images);
+    editorRef?.current?.enable(false);
+    await uploadImageAction(images?.[0] || null);
     const message = await createMessage(body, undefined, undefined);
-    // updateEditorKey((prev) => prev + 1);
+    updateEditorKey((prev) => prev + 1);
+    editorRef?.current?.enable(true);
     console.log(message);
-    editorRef?.current?.setContents([]);
+
+    // editorRef?.current?.setContents([]);
   };
   return (
     <div className=" px-5 w-full">
       <Editor
-        // key={editorKey}
+        key={editorKey}
         placeholder={placeholder}
         onSumbit={handleSubmit}
         disabled={loading}

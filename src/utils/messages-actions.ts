@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
 
-import { createMessage } from "./database";
+import { createMessage, uploadImage } from "./database";
 
 export async function createMessageAction(messageData: {
   userId: string;
@@ -25,4 +25,8 @@ export async function createMessageAction(messageData: {
       message,
     };
   }
+}
+
+export async function uploadImageAction(file: File | null) {
+  return await uploadImage(file);
 }

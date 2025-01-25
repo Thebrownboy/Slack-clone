@@ -532,3 +532,20 @@ export async function createMessage({
 
   return message;
 }
+
+export async function uploadImage(file: File | null) {
+  if (!file) return;
+  const formData = new FormData();
+  formData.append("file", file); // 'file' is your File object from input
+  formData.append("upload_preset", "ml_default"); // Replace with your preset name
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/upload`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+  const uploadedImage = await response.json();
+
+  return uploadedImage.url;
+}

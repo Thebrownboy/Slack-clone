@@ -105,7 +105,8 @@ model Channels {
 model Message {
   id          String    @id @default(cuid())
   body        String
-  image       String?
+  imageId     String?
+  image       Images?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
   memberId    String
   workspaceId String
   member      Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
@@ -116,4 +117,15 @@ model Message {
   parentMessageId String?
   parentMessage   Message?  @relation("messageReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
   replies         Message[] @relation("messageReplies")
+}
+
+model Images {
+  id          String    @id
+  publicId    String
+  width       Int
+  height      Int
+  createdAt   DateTime  @default(now())
+  URL         String
+  displayName String
+  Message     Message[]
 }
