@@ -17,7 +17,10 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
   const editorRef = useRef<Quill | null>(null);
-  const { handleSubmit: createMessage } = useCreateMessage(channelId);
+  const { handleSubmit: createMessage, loading } = useCreateMessage(channelId);
+
+  // forcing the editor to re-render trick
+  // const [editorKey, updateEditorKey] = useState(0);
   const handleSubmit = async ({
     body,
     images,
@@ -27,15 +30,17 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
   }) => {
     console.log(body, images);
     const message = await createMessage(body, undefined, undefined);
-
+    // updateEditorKey((prev) => prev + 1);
     console.log(message);
+    editorRef?.current?.setContents([]);
   };
   return (
     <div className=" px-5 w-full">
       <Editor
+        // key={editorKey}
         placeholder={placeholder}
         onSumbit={handleSubmit}
-        disabled={false}
+        disabled={loading}
         innerRef={editorRef}
         variant="create"
       />
