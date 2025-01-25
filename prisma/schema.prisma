@@ -82,6 +82,7 @@ model Members {
   user      User      @relation(fields: [userId], references: [id])
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   // this will optimize the queries that are using userId and workspaceId in the where clause 
+  Message   Message[]
 
   @@id([userId, workspaceId])
   // this will optimize the queries that are using userId in the where clause 
@@ -96,6 +97,23 @@ model Channels {
   name        String
   workspaceId String
   workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  Message     Message[]
 
   @@index([workspaceId])
+}
+
+model Message {
+  id          String    @id @default(cuid())
+  body        String
+  image       String?
+  memberId    String
+  workspaceId String
+  member      Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
+  channelId   String?
+  channel     Channels? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  updatedAt   DateTime  @updatedAt
+
+  parentMessageId String?
+  parentMessage   Message?  @relation("messageReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
+  replies         Message[] @relation("messageReplies")
 }
