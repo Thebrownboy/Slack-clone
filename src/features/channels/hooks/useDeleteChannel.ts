@@ -27,20 +27,12 @@ export default function useDeleteChannel(
             if (channel.id === response.channel?.id) {
               // if you are delete the last channel  , you should be redirected to the workspace page ,
               // to re-create the genreal page automatically
-              if (currentChannlesState.currentChannels.length === 1) {
-                router.replace(
-                  `/workspace/${currentWorkspaceState.workSpace?.id}`
-                );
-              } else {
-                updateCurrentChannels([
-                  ...currentChannlesState.currentChannels.slice(0, index),
-                  ...currentChannlesState.currentChannels.slice(index),
-                ]);
-
-                router.push(
-                  `/workspace/${currentWorkspaceState.workSpace?.id}`
-                );
-              }
+              console.log("I will deletet the last one ");
+              router.push(`/workspace/${currentWorkspaceState.workSpace?.id}`);
+              updateCurrentChannels([
+                ...currentChannlesState.currentChannels.slice(0, index),
+                ...currentChannlesState.currentChannels.slice(index + 1),
+              ]);
             }
             index++;
           }
