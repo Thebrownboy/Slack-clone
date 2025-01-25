@@ -35,7 +35,6 @@ export default function InviteModal({
     const inviteLink = `${window.location.origin}/join/${workspaceId}`;
 
     navigator.clipboard.writeText(inviteLink).then(() => {
-      console.log("I am here ");
       toast.success("Invite link copied to clipbaord");
     });
   };

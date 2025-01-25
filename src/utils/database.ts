@@ -19,8 +19,7 @@ export const addNewUser = async (
     return {
       success: true,
     };
-  } catch (error) {
-    console.log(error);
+  } catch {
     return {
       sucess: false,
     };
@@ -33,8 +32,7 @@ export async function findUserByEmail(email: string) {
       where: { email },
     });
     return user;
-  } catch (error) {
-    console.log(error);
+  } catch {
     return null;
   }
 }
@@ -523,7 +521,7 @@ export async function createMessage({
     data: {
       memberId: member.userId,
       body: body,
-      image: imageId || null,
+      imageId,
       channelId: channelId || null,
       workspaceId: workspaceId,
       parentMessageId: parentMessageId || null,
@@ -537,15 +535,30 @@ export async function uploadImage(file: File | null) {
   if (!file) return;
   const formData = new FormData();
   formData.append("file", file); // 'file' is your File object from input
-  formData.append("upload_preset", "ml_default"); // Replace with your preset name
-  const response = await fetch(
-    `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/upload`,
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
-  const uploadedImage = await response.json();
+  formData.append("upload_preset", process.env.CLOUDINARY_PRESET_NAME || "");
 
-  return uploadedImage.url;
+  try {
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const uploadedImage = await response.json();
+
+    const image = await db.images.create({
+      data: {
+        displayName: uploadedImage.display_name,
+        height: uploadedImage.height,
+        width: uploadedImage.width,
+        publicId: uploadedImage.public_id,
+        URL: uploadedImage.url,
+        id: uploadedImage.asset_id,
+      },
+    });
+    return image;
+  } catch {
+    return null;
+  }
 }

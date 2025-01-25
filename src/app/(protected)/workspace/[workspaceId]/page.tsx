@@ -34,7 +34,6 @@ export default async function WorkSpace({
         "general"
       );
       if (channelCreated) {
-        console.log("I will log ");
         return redirect(
           `/workspace/${workspaceId}/channel/${channelCreated?.id}`
         );

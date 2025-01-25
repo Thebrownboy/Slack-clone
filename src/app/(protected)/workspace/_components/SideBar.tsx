@@ -6,7 +6,6 @@ import React from "react";
 import { BellIcon, Home, MessagesSquare, MoreHorizontal } from "lucide-react";
 
 function SideBar() {
-  console.log("Sidebar will be re-render");
   return (
     <aside className="w-[70px] h-full bg-[#481349] flex flex-col gap-y-4 items-center pt-[9px] pb-[10px] justify-between">
       <div className=" flex flex-col gap-7">

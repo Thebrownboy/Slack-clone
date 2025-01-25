@@ -30,13 +30,14 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
     images: File[] | null;
   }) => {
     editorRef?.current?.enable(false);
-    await uploadImageAction(images?.[0] || null);
-    const message = await createMessage(body, undefined, undefined);
+    const uploadedImage = await uploadImageAction(images?.[0] || null);
+    let imageId = undefined;
+    if (uploadedImage) {
+      imageId = uploadedImage.id;
+    }
+    await createMessage(body, imageId, undefined);
     updateEditorKey((prev) => prev + 1);
     editorRef?.current?.enable(true);
-    console.log(message);
-
-    // editorRef?.current?.setContents([]);
   };
   return (
     <div className=" px-5 w-full">

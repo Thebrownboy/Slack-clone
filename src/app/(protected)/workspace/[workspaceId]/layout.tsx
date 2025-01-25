@@ -19,8 +19,6 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   useGetCurrentWorkSpace();
   useWorkspaceGaurd();
 
-  // console.log("layout  will be re-render");
-
   return (
     <div className=" h-full">
       <Toolbar />
