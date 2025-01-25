@@ -63,35 +63,6 @@ enum Role {
   member
 }
 
-model Workspace {
-  joinCode  String
-  name      String
-  userId    String
-  id        String     @id @default(cuid())
-  createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Member    Members[]
-  Channels  Channels[]
-}
-
-model Members {
-  userId      String
-  workspaceId String
-  role        Role
-
-  user      User      @relation(fields: [userId], references: [id])
-  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
-  // this will optimize the queries that are using userId and workspaceId in the where clause 
-  Message   Message[]
-
-  @@id([userId, workspaceId])
-  // this will optimize the queries that are using userId in the where clause 
-  @@index([userId])
-  // this will optimize the queries that are using workspaceId in the where clause 
-  @@index([workspaceId])
-  @@index([userId, workspaceId])
-}
-
 model Channels {
   id          String    @id @default(cuid())
   name        String
@@ -117,6 +88,16 @@ model Message {
   parentMessageId String?
   parentMessage   Message?  @relation("messageReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
   replies         Message[] @relation("messageReplies")
+
+  conversationId String?
+  converstion    Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  reactions      reactions[]
+
+  @@index([workspaceId])
+  @@index([memberId])
+  @@index([channelId])
+  @@index([conversationId])
+  @@index([channelId, parentMessageId, conversationId])
 }
 
 model Images {
@@ -128,4 +109,74 @@ model Images {
   URL         String
   displayName String
   Message     Message[]
+}
+
+model Workspace {
+  joinCode     String
+  name         String
+  userId       String
+  id           String         @id @default(cuid())
+  createdAt    DateTime       @default(now())
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Member       Members[]
+  Channels     Channels[]
+  Conversation Conversation[]
+  reactions    reactions[]
+}
+
+model Members {
+  userId      String
+  workspaceId String
+  role        Role
+
+  user                User                  @relation(fields: [userId], references: [id])
+  workspace           Workspace             @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  // this will optimize the queries that are using userId and workspaceId in the where clause 
+  Message             Message[]
+  ConversationMembers ConversationMembers[]
+  reactions           reactions[]
+
+  @@id([userId, workspaceId])
+  // this will optimize the queries that are using userId in the where clause 
+  @@index([userId])
+  // this will optimize the queries that are using workspaceId in the where clause 
+  @@index([workspaceId])
+  @@index([userId, workspaceId])
+}
+
+model Conversation {
+  id          String    @id @default(cuid()) // Unique conversation ID
+  memberOneId String
+  memberTwoId String
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  ConversationMembers ConversationMembers[]
+  Message             Message[]
+}
+
+model ConversationMembers {
+  conversationId String // Foreign key to the Conversation model
+  memberId       String // Foreign key to the Members model
+  workspaceId    String // Foreign key to the Workspace model
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  member       Members      @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
+
+  @@id([conversationId, memberId, workspaceId]) // Composite primary key
+}
+
+model reactions {
+  id          String @id @default(cuid())
+  workspaceId String
+  messageId   String
+  memberId    String
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  message   Message   @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  member    Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([messageId])
+  @@index([memberId])
 }
