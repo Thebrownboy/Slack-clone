@@ -487,3 +487,48 @@ export async function deleteChannel(userId: string, channelId: string) {
 
   return deletedChannel;
 }
+
+const getMember = async (userId: string, workspaceId: string) => {
+  return await db.members.findUnique({
+    where: {
+      userId_workspaceId: {
+        userId,
+        workspaceId,
+      },
+    },
+  });
+};
+
+export async function createMessage({
+  body,
+  userId,
+  workspaceId,
+  channelId,
+  imageId,
+  parentMessageId,
+}: {
+  userId: string;
+  workspaceId: string;
+  channelId?: string;
+  parentMessageId?: string;
+  body: string;
+  imageId?: string;
+}) {
+  if (!userId) return null;
+
+  const member = await getMember(userId, workspaceId);
+  if (!member) return null;
+
+  const message = await db.message.create({
+    data: {
+      memberId: member.userId,
+      body: body,
+      image: imageId || null,
+      channelId: channelId || null,
+      workspaceId: workspaceId,
+      parentMessageId: parentMessageId || null,
+    },
+  });
+
+  return message;
+}
