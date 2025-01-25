@@ -1,3 +1,6 @@
+"use server";
+import "server-only";
+
 import { createMessage } from "./database";
 
 export async function createMessageAction(messageData: {

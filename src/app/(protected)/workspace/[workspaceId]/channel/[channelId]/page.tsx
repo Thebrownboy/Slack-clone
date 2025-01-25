@@ -43,7 +43,10 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />
       <div className="flex-1"></div>
-      <ChatInput placeholder={`Message # ${channel.name}`} />
+      <ChatInput
+        channelId={channelId}
+        placeholder={`Message # ${channel.name}`}
+      />
     </div>
   );
 }

@@ -514,7 +514,7 @@ export async function createMessage({
   body: string;
   imageId?: string;
 }) {
-  if (!userId) return null;
+  if (!userId || !workspaceId) return null;
 
   const member = await getMember(userId, workspaceId);
   if (!member) return null;
