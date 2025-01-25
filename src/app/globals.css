@@ -120,3 +120,7 @@ html {
   /* this will apply the css properties of truncate here also */
   @apply truncate;
 }
+
+.ql-tooltip .ql-hidden {
+  display: none !important;
+}
