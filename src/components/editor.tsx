@@ -43,7 +43,7 @@ const Editor = ({
   // it will not be a controlled component , but we will be use for other things
   // remember that refs does not rerneder , so we have to save the state to control the look and feel
   const [text, setText] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[] | null>(null);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -157,32 +157,46 @@ const Editor = ({
         type="file"
         accept="image/*"
         ref={imageElementRef}
-        onChange={(event) => setImage(event.target.files![0])}
+        onChange={(event) =>
+          setImages([...(images || []), event.target.files![0]])
+        }
         className="hidden"
       />
       <div className="flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm trasnition bg-white">
         <div ref={containerRef} className=" h-full ql-custom" />
-        {!!image && (
-          <div className=" relative size-[62px] items-center flex justify-center group/image">
-            <Hint label="Remove Image">
-              <button
-                className=" hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-2 border-white items-center  justify-center"
-                onClick={() => {
-                  setImage(null);
-                  imageElementRef.current!.value = "";
-                }}
-              >
-                <XIcon className="size-3.5" />
-              </button>
-            </Hint>
-            <Image
-              src={URL.createObjectURL(image)}
-              fill
-              className="rounded-xl overflow-hidden border object-cover "
-              alt={"Uploaded"}
-            />
-          </div>
-        )}
+        <div className=" flex gap-2 flex-wrap">
+          {images?.map((item, index) => {
+            {
+              return (
+                <div
+                  key={index}
+                  className=" relative size-[62px] items-center flex justify-center group/image"
+                >
+                  <Hint label="Remove Image">
+                    <button
+                      className=" hidden group-hover/image:flex rounded-full bg-black/70 hover:bg-black absolute -top-2.5 -right-2.5 text-white size-6 z-[4] border-2 border-white items-center  justify-center"
+                      onClick={() => {
+                        setImages([
+                          ...images.slice(0, index),
+                          ...images.slice(index + 1),
+                        ]);
+                        // imageElementRef.current!.value = "";
+                      }}
+                    >
+                      <XIcon className="size-3.5" />
+                    </button>
+                  </Hint>
+                  <Image
+                    src={URL.createObjectURL(item)}
+                    fill
+                    className="rounded-xl overflow-hidden border object-cover "
+                    alt={"Uploaded"}
+                  />
+                </div>
+              );
+            }
+          })}
+        </div>
         <div className="flex px-2 pb-2 z-[5]">
           <Hint
             label={isToolbarVisible ? "Hide formatting" : "Show formatting"}
