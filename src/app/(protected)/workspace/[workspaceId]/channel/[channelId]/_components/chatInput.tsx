@@ -15,12 +15,20 @@ export default function ChatInput({ placeholder }: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
   const editorRef = useRef<Quill | null>(null);
-
+  const handleSubmit = ({
+    body,
+    images,
+  }: {
+    body: string;
+    images: File[] | null;
+  }) => {
+    console.log(body, images);
+  };
   return (
     <div className=" px-5 w-full">
       <Editor
         placeholder={placeholder}
-        onSumbit={() => {}}
+        onSumbit={handleSubmit}
         disabled={false}
         innerRef={editorRef}
         variant="create"

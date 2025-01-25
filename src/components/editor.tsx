@@ -18,12 +18,12 @@ import EmojiPopOver from "./emojiPopOver";
 import Image from "next/image";
 
 type EditorValue = {
-  image: File | null;
+  images: File[] | null;
   body: string;
 };
 interface EditorProps {
   variant?: "create" | "update";
-  onSumbit: ({ body, image }: EditorValue) => void;
+  onSumbit: ({ body, images }: EditorValue) => void;
   onCancel?: () => void;
   placeholder?: string;
   defautValue?: Delta | Op[];
@@ -85,7 +85,17 @@ const Editor = ({
             enter: {
               key: "Enter",
               handler: () => {
-                return;
+                const text = quill.getText();
+                const addedImage = imageElementRef.current?.files?.[0] || null;
+                const imagesAdded = addedImage ? [addedImage] : null;
+                const isEmpty =
+                  !addedImage &&
+                  text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+
+                if (isEmpty) return;
+                const body = JSON.stringify(quill.getContents());
+
+                submitRef.current?.({ body, images: imagesAdded });
               },
             },
             shift_enter: {
@@ -140,13 +150,15 @@ const Editor = ({
     }
   };
 
-  const onEmojiSelect = (emoji: never) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onEmojiSelect = (emoji: any) => {
     const quill = quillRef.current;
     quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
   };
 
   // cuz quill may have empty HTML tags or \n new line  , they are not content
-  const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
+  const isEmpty =
+    !images && text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
   // this will not renered
   // quillRef.current.getText().trim().length===0
 
@@ -180,7 +192,7 @@ const Editor = ({
                           ...images.slice(0, index),
                           ...images.slice(index + 1),
                         ]);
-                        // imageElementRef.current!.value = "";
+                        imageElementRef.current!.value = "";
                       }}
                     >
                       <XIcon className="size-3.5" />
@@ -234,7 +246,7 @@ const Editor = ({
               <Button
                 variant={"outline"}
                 size={"sm"}
-                onClick={() => {}}
+                onClick={onCancel}
                 disabled={disabled}
               >
                 Cancel
@@ -242,7 +254,12 @@ const Editor = ({
               <Button
                 variant={"outline"}
                 size={"sm"}
-                onClick={() => {}}
+                onClick={() => {
+                  onSumbit({
+                    images: images,
+                    body: JSON.stringify(quillRef.current?.getContents()),
+                  });
+                }}
                 disabled={disabled || isEmpty}
                 className=" bg-[#007a5a] hover:bg-[#007a5a]/80 text-white"
               >
@@ -261,7 +278,12 @@ const Editor = ({
               size={"iconSm"}
               // the disabled here is not disabledRef cuz it will not cause re-render
               disabled={disabled || isEmpty}
-              onClick={() => {}}
+              onClick={() => {
+                onSumbit({
+                  images: images,
+                  body: JSON.stringify(quillRef.current?.getContents()),
+                });
+              }}
             >
               <MdSend />
             </Button>
