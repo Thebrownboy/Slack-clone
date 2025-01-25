@@ -5,6 +5,7 @@ import { useCurrentUser } from "@/state-store/store";
 import { Loader, TriangleAlert } from "lucide-react";
 import React from "react";
 import ChannelHeader from "./_components/channelHeader";
+import ChatInput from "./_components/chatInput";
 
 interface ChannelPageProps {
   params: Promise<{
@@ -41,6 +42,8 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   return (
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />
+      <div className="flex-1"></div>
+      <ChatInput placeholder={`Message # ${channel.name}`} />
     </div>
   );
 }
