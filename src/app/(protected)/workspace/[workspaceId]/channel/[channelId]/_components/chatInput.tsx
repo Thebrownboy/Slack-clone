@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
-// const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
-import Editor from "@/components/editor";
+const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
+// import Editor from "@/components/editor";
 import { useRef } from "react";
 import type Quill from "quill";
 // quills does not working correclty with the server-side rendering
