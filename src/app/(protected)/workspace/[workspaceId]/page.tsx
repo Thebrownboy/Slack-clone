@@ -2,9 +2,10 @@
 import { auth } from "@/auth";
 import {
   createChannel,
-  getMemberByUserIdAndWorkSpaceId,
   getWorkspaceChannels,
-} from "@/utils/database";
+} from "@/utils/database-utils/channels-utils";
+import { getMemberByUserIdAndWorkSpaceId } from "@/utils/database-utils/workspaces-utils";
+
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import "server-only";

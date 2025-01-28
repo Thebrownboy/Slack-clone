@@ -191,5 +191,75 @@ export const getMessages = async (
     take,
   });
 
-  return results;
+  return {
+    page: await Promise.all(
+      results.map(async (message) => {
+        const member = await getMember(message.memberId, message.workspaceId);
+        const user = member ? await populateUser(message.memberId) : null;
+
+        if (!member || !user) {
+          return null;
+        }
+
+        const reactions = await populateReactions(message.id);
+        const thread = await populateThread(message.id);
+        const image = await db.images.findUnique({
+          where: {
+            id: message.id,
+          },
+        });
+        const URL = image?.URL;
+
+        // normalizing the reactions
+        //O(N)
+        const reactionsMap: {
+          [key: string]: { count: number; membersIds: string[] };
+        } = {};
+        for (let i = 0; i < reactions.length; i++) {
+          if (reactionsMap[reactions[i].value]) {
+            reactionsMap[reactions[i].value] = {
+              count: 1,
+              membersIds: [reactions[i].id],
+            };
+          } else {
+            reactionsMap[reactions[i].value].count++;
+            reactionsMap[reactions[i].value].membersIds.push(
+              reactions[i].memberId
+            );
+          }
+        }
+        // O(N^2)
+        // const reactionsWithCount = reactions.map((reaction) => {
+        //   return {
+        //     ...reaction,
+        //     count: reactions.filter((r) => reaction.value === reaction.value),
+        //   };
+        // });
+        const normalizedReactions: {
+          value: string;
+          count: number;
+          membersIds: string[];
+        }[] = [];
+
+        for (const key of Object.keys(reactionsMap)) {
+          normalizedReactions.push({
+            value: key,
+            count: reactionsMap[key].count,
+            membersIds: reactionsMap[key].membersIds,
+          });
+        }
+
+        return {
+          ...message,
+          URL,
+          member,
+          user,
+          reactions: normalizedReactions,
+          threadCount: thread.count,
+          threadImage: thread.image,
+          threadTimestamp: thread.timestamp,
+        };
+      })
+    ),
+  };
 };

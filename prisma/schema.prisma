@@ -175,6 +175,7 @@ model reactions {
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   message   Message   @relation(fields: [messageId], references: [id], onDelete: Cascade)
   member    Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
+  value     String
 
   @@index([workspaceId])
   @@index([messageId])

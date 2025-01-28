@@ -4,7 +4,7 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import { signInValidationSchema } from "./lib/validation-schemas";
-import { findUserByEmail } from "./utils/database";
+import { findUserByEmail } from "./utils/database-utils/user-utils";
 import bycrpt from "bcryptjs";
 export default {
   providers: [
