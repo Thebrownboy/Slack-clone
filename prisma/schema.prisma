@@ -74,17 +74,17 @@ model Channels {
 }
 
 model Message {
-  id          String    @id @default(cuid())
-  body        String
-  imageId     String?
-  image       Images?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  memberId    String
-  workspaceId String
-  member      Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
-  channelId   String?
-  channel     Channels? @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  updatedAt   DateTime  @updatedAt
-
+  id              String    @id @default(cuid())
+  body            String
+  imageId         String?
+  image           Images?   @relation(fields: [imageId], references: [id], onDelete: Cascade)
+  memberId        String
+  workspaceId     String
+  member          Members   @relation(fields: [memberId, workspaceId], references: [userId, workspaceId], onDelete: Cascade)
+  channelId       String?
+  channel         Channels? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  updatedAt       DateTime  @updatedAt
+  creationTime    DateTime  @default(now())
   parentMessageId String?
   parentMessage   Message?  @relation("messageReplies", fields: [parentMessageId], references: [id], onDelete: Cascade)
   replies         Message[] @relation("messageReplies")

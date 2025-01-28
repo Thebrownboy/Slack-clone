@@ -12,6 +12,71 @@ const getMember = async (userId: string, workspaceId: string) => {
   });
 };
 
+const populateUser = async (userId: string | null) => {
+  if (!userId) return null;
+  const user = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+  if (user) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, updatedAt, emailVerified, createdAt, ...restData } = user;
+    return restData;
+  } else {
+    return null;
+  }
+};
+
+const populateReactions = async (messageId: string) => {
+  return db.reactions.findMany({
+    where: {
+      messageId,
+    },
+  });
+};
+
+//  if we have replies sent to a message we have to add these repiles to the body of the returned message
+const populateThread = async (messageId: string) => {
+  // getting the messages that thier parent Id is the messages iteself , 'the repiles of a message with id ' = 'the messages with parentId = id '
+  const messages = await db.message.findMany({
+    where: {
+      parentMessageId: messageId,
+    },
+  });
+  // instead of adding a replies table , we can have a parentId insie the messages table
+
+  if (messages.length === 0) {
+    // we will return an object for the repiles
+    // count of the repiles , the image of the last one put a reply (just for UI ) and the timpestamp for the last message
+    return {
+      count: 0,
+      image: undefined,
+      timestamp: 0,
+    };
+  }
+  const lastMessage = messages[messages.length - 1];
+  // memberId and workspaceId , will not be null at all
+  const lastMessageMember = await getMember(
+    lastMessage.memberId,
+    lastMessage.workspaceId
+  );
+
+  if (!lastMessageMember) {
+    return {
+      count: 0,
+      image: undefined,
+      timestamp: 0,
+    };
+  }
+
+  const lastMessageUser = await populateUser(lastMessageMember.userId);
+  return {
+    count: messages.length,
+    image: lastMessageUser?.image,
+    timestamp: lastMessage.creationTime,
+  };
+};
 export async function createMessage({
   body,
   userId,
