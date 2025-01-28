@@ -95,7 +95,6 @@ export async function createChannel(
       workspaceId,
     },
   });
-
   return channel;
 }
 

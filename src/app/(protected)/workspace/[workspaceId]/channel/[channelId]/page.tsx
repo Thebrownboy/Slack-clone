@@ -21,7 +21,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   const {
     currentChannelState: { channel, loading },
   } = useGetChannelById(userState.user?.id || "", channelId);
-  const { currentMessages } = useGetMessages(
+  const { currentMessages, loading: messagesLoading } = useGetMessages(
     userState.user?.id || null,
     channelId,
     undefined,
@@ -29,7 +29,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   );
 
   console.log(currentMessages);
-  if (loading) {
+  if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
         <Loader className=" animate-spin size-6 text-muted-foreground" />
@@ -51,7 +51,14 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   return (
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />
-      <div className="flex-1">{JSON.stringify(currentMessages)}</div>
+      <MessageList
+        channelName={channel.name}
+        channelCreationTime={channel.creationTime}
+        data={currentMessages}
+        loadMore={false}
+        isLoadingMore={false}
+        canLoadMore={false}
+      />
       <ChatInput
         channelId={channelId}
         placeholder={`Message # ${channel.name}`}

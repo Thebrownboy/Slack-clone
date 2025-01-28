@@ -25,6 +25,7 @@ export type tChannel = {
   id: string;
   name: string;
   workspaceId: string;
+  creationTime: Date;
 };
 
 type tMember = {
