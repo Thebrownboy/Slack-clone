@@ -6,7 +6,7 @@ import {
   editChannelName,
   getChannelById,
   getWorkspaceChannels,
-} from "./database";
+} from "./database-utils/channels-utils";
 import { tChannel } from "@/types/common-types";
 
 export async function getcurrentChannelsAction(

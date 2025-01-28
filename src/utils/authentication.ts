@@ -3,7 +3,11 @@
 // so it will not be a server side by default because you used it in  a client component
 // so server only will raise an error , but using "server" mode will make it server side
 import "server-only";
-import { addNewUser, findUserByEmail, findUserById } from "./database";
+import {
+  addNewUser,
+  findUserByEmail,
+  findUserById,
+} from "./database-utils/user-utils";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 

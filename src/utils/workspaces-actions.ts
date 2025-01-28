@@ -12,7 +12,7 @@ import {
   getWorkSpaces,
   makeUserJoin,
   updateWorkSpace,
-} from "./database";
+} from "./database-utils/workspaces-utils";
 import { tUpdatedWorkspace } from "@/types/common-types";
 // these files are treated as server actions
 

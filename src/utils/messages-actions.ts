@@ -1,7 +1,7 @@
 "use server";
 import "server-only";
 
-import { createMessage, uploadImage } from "./database";
+import { createMessage, uploadImage } from "./database-utils/messages-utils";
 
 export async function createMessageAction(messageData: {
   userId: string;
