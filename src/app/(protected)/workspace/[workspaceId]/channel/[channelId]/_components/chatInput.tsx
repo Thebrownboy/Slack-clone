@@ -4,7 +4,7 @@ const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 // import Editor from "@/components/editor";
 import { useRef, useState } from "react";
 import type Quill from "quill";
-import useCreateMessage from "@/features/messages/useCreateMessage";
+import useCreateMessage from "@/features/messages/hooks/useCreateMessage";
 import { uploadImageAction } from "@/utils/messages-actions";
 // quills does not working correclty with the server-side rendering
 // even if the component is a client componet , but next will render it once on the server

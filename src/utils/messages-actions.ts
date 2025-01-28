@@ -1,7 +1,11 @@
 "use server";
 import "server-only";
 
-import { createMessage, uploadImage } from "./database-utils/messages-utils";
+import {
+  createMessage,
+  getMessages,
+  uploadImage,
+} from "./database-utils/messages-utils";
 
 export async function createMessageAction(messageData: {
   userId: string;
@@ -29,4 +33,22 @@ export async function createMessageAction(messageData: {
 
 export async function uploadImageAction(file: File | null) {
   return await uploadImage(file);
+}
+
+export async function getMessagesAction(
+  userId: string | null,
+  channelId: string | undefined,
+  conversationId: string | undefined,
+  parentMessageId: string | undefined,
+  skip: number,
+  take: number = 10
+) {
+  return await getMessages(
+    userId,
+    channelId,
+    conversationId,
+    parentMessageId,
+    skip,
+    take
+  );
 }

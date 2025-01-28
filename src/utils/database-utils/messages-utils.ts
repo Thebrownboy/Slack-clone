@@ -36,6 +36,7 @@ const populateReactions = async (messageId: string) => {
   });
 };
 
+// TODO : to be improved , instead of getting all the message to get the count of the replies , you can only get the last message , by the creation time and get the count only
 //  if we have replies sent to a message we have to add these repiles to the body of the returned message
 const populateThread = async (messageId: string) => {
   // getting the messages that thier parent Id is the messages iteself , 'the repiles of a message with id ' = 'the messages with parentId = id '
@@ -142,3 +143,53 @@ export async function uploadImage(file: File | null) {
     return null;
   }
 }
+
+export const getMessages = async (
+  userId: string | null,
+  channelId: string | undefined,
+  conversationId: string | undefined,
+  parentMessageId: string | undefined,
+  skip: number,
+  take = 10
+) => {
+  /**
+   * I have only three options
+   *  1- message in a channel , so I have the channel id
+   *  2- message in a conversation , so I have the conversation id
+   *  3- message that is a reply to another message , so I will have the parentMessage Id
+   */
+  if (!userId) return null;
+
+  // TODO : edge case of the conversation id
+  // it has no meaning !!
+  let _conversationId = conversationId;
+
+  //I a requesting the replies on a specific message
+  if (!conversationId && !channelId && parentMessageId) {
+    const parentMessage = await db.message.findUnique({
+      where: {
+        id: parentMessageId,
+      },
+    });
+    // there is no situation that could have this combination
+    if (!parentMessage) return null;
+
+    _conversationId = parentMessage.conversationId || undefined;
+  }
+
+  console.log(_conversationId);
+  const results = await db.message.findMany({
+    where: {
+      channelId,
+      parentMessageId,
+      conversationId,
+    },
+    orderBy: {
+      creationTime: "asc",
+    },
+    skip,
+    take,
+  });
+
+  return results;
+};
