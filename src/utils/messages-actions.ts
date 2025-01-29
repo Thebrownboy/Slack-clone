@@ -3,6 +3,7 @@ import "server-only";
 
 import {
   createMessage,
+  editMessage,
   getMessages,
   uploadImage,
 } from "./database-utils/messages-utils";
@@ -53,4 +54,17 @@ export async function getMessagesAction(
       take
     )
   )?.page;
+}
+
+export async function editMessageAction(messageData: {
+  userId: string;
+  workspaceId: string;
+  body: string;
+  messageId: string;
+}) {
+  const updatedMessage = await editMessage(messageData);
+  return {
+    success: !!updatedMessage,
+    message: updatedMessage,
+  };
 }

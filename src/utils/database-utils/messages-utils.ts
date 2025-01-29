@@ -144,6 +144,43 @@ export async function uploadImage(file: File | null) {
   }
 }
 
+export async function editMessage({
+  messageId,
+  body,
+  userId,
+  workspaceId,
+}: {
+  messageId: string;
+  body: string;
+  userId: string;
+  workspaceId: string;
+}) {
+  if (!userId) return null;
+
+  const message = await db.message.findUnique({
+    where: {
+      id: messageId,
+    },
+  });
+  if (!message) {
+    return null;
+  }
+
+  const member = await getMember(userId, workspaceId);
+
+  if (!member || member.userId !== message.memberId) return null;
+
+  const updatedMessage = await db.message.update({
+    where: {
+      id: messageId,
+    },
+    data: {
+      body,
+    },
+  });
+  return updatedMessage;
+}
+
 export const getMessages = async (
   userId: string | null,
   channelId: string | undefined,
