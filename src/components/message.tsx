@@ -64,16 +64,13 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
-  const { handleSubmit, loading: isEditingMessage } = useEditMessage();
+  const { handleSubmit, loading: isEditingMessage, error } = useEditMessage();
 
   const hanleEditMessage = async ({ body }: { body: string }) => {
-    try {
-      await handleSubmit(body, id);
-      toast.success("Message Updated");
-      setEditingId(null);
-    } catch {
-      toast.error("Fail to update Message");
-    }
+    await handleSubmit(body, id);
+    if (!error) toast.success("Message Updated");
+    else toast.error("Fail to update Message");
+    setEditingId(null);
   };
 
   const avatarFallback = authorName?.charAt(0).toUpperCase();

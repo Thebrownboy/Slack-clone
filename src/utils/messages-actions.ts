@@ -3,6 +3,7 @@ import "server-only";
 
 import {
   createMessage,
+  deleteMessage,
   editMessage,
   getMessages,
   uploadImage,
@@ -66,5 +67,17 @@ export async function editMessageAction(messageData: {
   return {
     success: !!updatedMessage,
     message: updatedMessage,
+  };
+}
+
+export async function deleteMessageAction(messageData: {
+  userId: string;
+  workspaceId: string;
+  messageId: string;
+}) {
+  const message = await deleteMessage(messageData);
+  return {
+    success: !!message,
+    message: message,
   };
 }

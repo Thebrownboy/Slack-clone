@@ -300,3 +300,40 @@ export const getMessages = async (
     ),
   };
 };
+
+export async function deleteMessage({
+  messageId,
+  userId,
+  workspaceId,
+}: {
+  messageId: string;
+  userId: string;
+  workspaceId: string;
+}) {
+  if (!userId) return null;
+
+  const message = await db.message.findUnique({
+    where: {
+      id: messageId,
+    },
+  });
+  if (!message) {
+    return null;
+  }
+
+  const member = await getMember(userId, workspaceId);
+  // admin can delete any message
+  if (
+    !member ||
+    (member.userId !== message.memberId && member.role !== "admin")
+  )
+    return null;
+
+  const deletedMessage = db.message.delete({
+    where: {
+      id: messageId,
+    },
+  });
+
+  return deletedMessage;
+}
