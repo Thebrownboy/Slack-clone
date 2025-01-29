@@ -1,4 +1,7 @@
 import React from "react";
+import dynamic from "next/dynamic";
+
+const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 interface messageProps {
   id: string;
   memberId: string;
@@ -41,7 +44,11 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
-  return <div>{JSON.stringify(body)}</div>;
+  return (
+    <div>
+      <Renderer value={body} />
+    </div>
+  );
 }
 
 export default Message;

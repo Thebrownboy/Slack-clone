@@ -185,7 +185,7 @@ export const getMessages = async (
       conversationId,
     },
     orderBy: {
-      creationTime: "asc",
+      creationTime: "desc",
     },
     skip,
     take,
