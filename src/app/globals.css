@@ -124,3 +124,8 @@ html {
 .ql-tooltip .ql-hidden {
   display: none !important;
 }
+
+.messages-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #dcdcdc #f8f8f8;
+}

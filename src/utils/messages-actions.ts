@@ -43,12 +43,14 @@ export async function getMessagesAction(
   skip: number,
   take: number = 10
 ) {
-  return await getMessages(
-    userId,
-    channelId,
-    conversationId,
-    parentMessageId,
-    skip,
-    take
-  );
+  return (
+    await getMessages(
+      userId,
+      channelId,
+      conversationId,
+      parentMessageId,
+      skip,
+      take
+    )
+  )?.page;
 }

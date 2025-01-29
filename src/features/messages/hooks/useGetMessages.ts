@@ -1,13 +1,15 @@
+import { tFulldataMessage } from "@/types/common-types";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useState } from "react";
-import type { Message as tMessage } from "@prisma/client";
 export default function useGetMessages(
   userId: string | null,
   channelId: string | undefined,
   conversationId: string | undefined,
   parentMessageId: string | undefined
 ) {
-  const [currentMessages, updateCurrentMessages] = useState<tMessage[]>([]);
+  const [currentMessages, updateCurrentMessages] = useState<tFulldataMessage[]>(
+    []
+  );
   const [loading, updateLoading] = useState(false);
   const [skip, updateSkip] = useState(0);
   const [take, updateTake] = useState(10);

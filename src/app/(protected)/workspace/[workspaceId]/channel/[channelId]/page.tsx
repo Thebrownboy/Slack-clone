@@ -7,6 +7,7 @@ import React from "react";
 import ChannelHeader from "./_components/channelHeader";
 import ChatInput from "./_components/chatInput";
 import useGetMessages from "@/features/messages/hooks/useGetMessages";
+import MessagesList from "@/components/messagesList";
 
 interface ChannelPageProps {
   params: Promise<{
@@ -51,11 +52,11 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   return (
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />
-      <MessageList
+      <MessagesList
         channelName={channel.name}
         channelCreationTime={channel.creationTime}
         data={currentMessages}
-        loadMore={false}
+        loadMore={() => {}}
         isLoadingMore={false}
         canLoadMore={false}
       />

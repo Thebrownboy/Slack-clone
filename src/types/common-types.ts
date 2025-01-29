@@ -1,3 +1,4 @@
+import type { Message as tMessage } from "@prisma/client";
 export type tUser = {
   email: string | undefined;
   name: string | null | undefined;
@@ -44,3 +45,28 @@ export type tmember = {
   workspaceId: string;
   role: "member" | "admin";
 };
+
+export type tFulldataMessage =
+  | (tMessage & {
+      URL: string | undefined;
+      member: {
+        workspaceId: string;
+        role: "admin" | "member";
+        userId: string;
+      };
+      user: {
+        name: string | null;
+        id: string;
+        image: string | null;
+        email: string;
+      };
+      reactions: {
+        value: string;
+        count: number;
+        membersIds: string[];
+      }[];
+      threadCount: number;
+      threadImage: string | null | undefined;
+      threadTimestamp: number | Date;
+    })
+  | null;
