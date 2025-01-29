@@ -6,13 +6,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useDeleteWorkspace from "@/features/workspaces/hooks/useDeleteWorkspace";
 import useUpdateWorkspace from "@/features/workspaces/hooks/useUpdateWorkspace";
 import useConfirm from "@/hooks/useConfirm";
 import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
-import { DialogTrigger } from "@radix-ui/react-dialog";
 import { TrashIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";

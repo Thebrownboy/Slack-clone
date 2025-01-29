@@ -1,6 +1,6 @@
 import React from "react";
 import { tFulldataMessage } from "@/types/common-types";
-import { format, isToday, isYesterday } from "date-fns";
+import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import Message from "./message";
 interface MessageListProps {
   memberName?: string;
@@ -13,6 +13,8 @@ interface MessageListProps {
   isLoadingMore: boolean;
   canLoadMore: boolean;
 }
+
+const TIME_THRESHOLD = 5;
 
 const formatDateLabel = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -52,7 +54,15 @@ export default function MessagesList({
                 {formatDateLabel(dateKey)}
               </span>
             </div>
-            {messages.map((message) => {
+            {messages.map((message, index) => {
+              const preveMessage = messages[index - 1];
+              const isCompact =
+                preveMessage &&
+                preveMessage.user.id === message?.user.id &&
+                differenceInMinutes(
+                  new Date(message.creationTime),
+                  new Date(preveMessage.creationTime)
+                ) < TIME_THRESHOLD;
               if (message)
                 return (
                   <Message
@@ -71,7 +81,7 @@ export default function MessagesList({
                     threadTimestamp={message.threadTimestamp}
                     setEditing={false}
                     setEditingId={() => {}}
-                    isCompact={false}
+                    isCompact={isCompact || false}
                     hideThreadButton={false}
                     isAuthor={false}
                   />

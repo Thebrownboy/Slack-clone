@@ -193,7 +193,7 @@ export const getMessages = async (
 
   return {
     page: await Promise.all(
-      results.map(async (message) => {
+      results?.map(async (message) => {
         const member = await getMember(message.memberId, message.workspaceId);
         const user = member ? await populateUser(message.memberId) : null;
 
@@ -205,7 +205,7 @@ export const getMessages = async (
         const thread = await populateThread(message.id);
         const image = await db.images.findUnique({
           where: {
-            id: message.id,
+            id: message.imageId || "",
           },
         });
         const URL = image?.URL;
