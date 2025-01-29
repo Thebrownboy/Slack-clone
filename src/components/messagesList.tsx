@@ -2,6 +2,7 @@ import React from "react";
 import { tFulldataMessage } from "@/types/common-types";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import Message from "./message";
+import ChannelHero from "./channelHero";
 interface MessageListProps {
   memberName?: string;
   memberImage?: string;
@@ -91,6 +92,12 @@ export default function MessagesList({
           </div>
         );
       })}
+      {variant === "channel" && channelName && channelCreationTime && (
+        <ChannelHero
+          name={channelName}
+          creationTime={channelCreationTime}
+        ></ChannelHero>
+      )}
     </div>
   );
 }

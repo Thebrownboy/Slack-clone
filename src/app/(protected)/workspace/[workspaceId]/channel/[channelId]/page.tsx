@@ -59,6 +59,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
         loadMore={() => {}}
         isLoadingMore={false}
         canLoadMore={false}
+        variant="channel"
       />
       <ChatInput
         channelId={channelId}
