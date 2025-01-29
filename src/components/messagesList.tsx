@@ -65,7 +65,7 @@ export default function MessagesList({
                     body={message.body}
                     image={message.URL}
                     updatedAt={message.updatedAt}
-                    createAt={message.creationTime}
+                    createdAt={message.creationTime}
                     threadCount={message.threadCount}
                     threadImage={message.threadImage}
                     threadTimestamp={message.threadTimestamp}
