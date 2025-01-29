@@ -87,7 +87,7 @@ export default function MessagesList({
                     threadCount={message.threadCount}
                     threadImage={message.threadImage}
                     threadTimestamp={message.threadTimestamp}
-                    setEditing={editingId === message.id}
+                    isEditing={editingId === message.id}
                     setEditingId={setEditingId}
                     isCompact={isCompact || false}
                     hideThreadButton={variant === "thread"}

@@ -4,6 +4,7 @@ import { format, isEqual, isToday, isYesterday } from "date-fns";
 import { Hint } from "./ui/hint";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Thumbnail from "./thumbnail";
+import Toolbar from "./toolbar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 interface messageProps {
@@ -23,7 +24,7 @@ interface messageProps {
   threadCount: number;
   threadImage: string | null | undefined;
   threadTimestamp: number | Date;
-  setEditing: boolean;
+  isEditing: boolean;
   setEditingId: (id: string | null) => void;
   isCompact: boolean;
   hideThreadButton: boolean;
@@ -49,7 +50,7 @@ function Message({
   isCompact,
   hideThreadButton,
   reactions,
-  setEditing,
+  isEditing,
   setEditingId,
   threadCount,
   threadImage,
@@ -123,6 +124,18 @@ function Message({
             )}
           </div>
         </div>
+        {!isEditing && (
+          <Toolbar
+            isAuthor={isAuthor}
+            isPending={false}
+            handleEdit={() => setEditingId(id)}
+            handleThread={() => {}}
+            handleDelete={() => {}}
+            hideThreadButton={hideThreadButton}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            handleReaction={(emoji: any) => {}}
+          />
+        )}
       </div>
     );
   }

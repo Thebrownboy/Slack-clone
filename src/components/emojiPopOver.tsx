@@ -11,7 +11,8 @@ import data from "@emoji-mart/data";
 interface EmojiPopoverProps {
   children: React.ReactNode;
   hint?: string;
-  onEmojiSelect: (emoji: never) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onEmojiSelect: (emoji: any) => void;
 }
 export default function EmojiPopOver({
   children,
@@ -20,7 +21,8 @@ export default function EmojiPopOver({
 }: EmojiPopoverProps) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
-  const onSelect = (emoji: never) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onSelect = (emoji: any) => {
     onEmojiSelect(emoji);
     setPopoverOpen(false);
 
