@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { tFulldataMessage } from "@/types/common-types";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import Message from "./message";
 import ChannelHero from "./channelHero";
+import { useParams } from "next/navigation";
+import { useCurrentMember } from "@/state-store/store";
 interface MessageListProps {
   memberName?: string;
   memberImage?: string;
@@ -34,6 +36,7 @@ export default function MessagesList({
   memberName,
   variant,
 }: MessageListProps) {
+  const [editingId, setEditingId] = useState<string | null>(null);
   const groupedMessages = data?.reduce((groups, message) => {
     const date = new Date(message?.creationTime || "");
     const dateKey = format(date, "yyyy-MM-dd");
@@ -44,6 +47,10 @@ export default function MessagesList({
 
     return groups;
   }, {} as Record<string, typeof data>);
+  const { workspaceId } = useParams();
+  const {
+    currentMemberState: { member },
+  } = useCurrentMember((state) => state);
   return (
     <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
       {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => {
@@ -80,11 +87,11 @@ export default function MessagesList({
                     threadCount={message.threadCount}
                     threadImage={message.threadImage}
                     threadTimestamp={message.threadTimestamp}
-                    setEditing={false}
-                    setEditingId={() => {}}
+                    setEditing={editingId === message.id}
+                    setEditingId={setEditingId}
                     isCompact={isCompact || false}
-                    hideThreadButton={false}
-                    isAuthor={false}
+                    hideThreadButton={variant === "thread"}
+                    isAuthor={member?.userId === message.user.id}
                   />
                 );
               else return <></>;
