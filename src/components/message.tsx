@@ -5,6 +5,11 @@ import { Hint } from "./ui/hint";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Thumbnail from "./thumbnail";
 import Toolbar from "./toolbar";
+import useEditMessage from "@/features/messages/hooks/useUpdateMessage";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 interface messageProps {
@@ -59,35 +64,83 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
-  console.log(image);
+  const { handleSubmit, loading: isEditingMessage } = useEditMessage();
+
+  const hanleEditMessage = async ({ body }: { body: string }) => {
+    try {
+      await handleSubmit(body, id);
+      toast.success("Message Updated");
+      setEditingId(null);
+    } catch {
+      toast.error("Fail to update Message");
+    }
+  };
+
   const avatarFallback = authorName?.charAt(0).toUpperCase();
 
   // when will we use compact
   // if the same user send a series of messages , only the first message will be not compact and the rest should be compact
   if (isCompact) {
     return (
-      <div className="flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative">
+      <div
+        className={cn(
+          "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
+          isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]  "
+        )}
+      >
         <div className=" flex items-start gap-2">
           <Hint label={formatFullTime(new Date(createdAt))}>
             <button className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 w-[40px] leading-[22px] text-center hover:underline">
               {format(new Date(createdAt), "hh:mm")}
             </button>
           </Hint>
-          <div className="flex flex-col w-full ">
-            <Renderer value={body} />
-            <Thumbnail url={image} />
-            {!isEqual(updatedAt, createdAt) ? (
-              <span className=" text-xs text-muted-foreground"> (edited)</span>
-            ) : (
-              <></>
-            )}
-          </div>
+          {isEditing ? (
+            <div className="w-full h-full">
+              <Editor
+                variant="update"
+                onSumbit={hanleEditMessage}
+                disabled={isEditingMessage}
+                defautValue={JSON.parse(body)}
+                onCancel={() => setEditingId(null)}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-col w-full ">
+              <Renderer value={body} />
+              <Thumbnail url={image} />
+              {!isEqual(updatedAt, createdAt) ? (
+                <span className=" text-xs text-muted-foreground">
+                  {" "}
+                  (edited)
+                </span>
+              ) : (
+                <></>
+              )}
+            </div>
+          )}
         </div>
+        {!isEditing && (
+          <Toolbar
+            isAuthor={isAuthor}
+            isPending={false}
+            handleEdit={() => setEditingId(id)}
+            handleThread={() => {}}
+            handleDelete={() => {}}
+            hideThreadButton={hideThreadButton}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            handleReaction={(emoji: any) => {}}
+          />
+        )}
       </div>
     );
   } else {
     return (
-      <div className="flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative">
+      <div
+        className={cn(
+          "flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative",
+          isEditing && "bg-[#f2c74433] hover:bg-[#f2c74433]  "
+        )}
+      >
         <div className="flex items-start gap-2">
           <button>
             <Avatar className=" rounded-md ">
@@ -100,29 +153,44 @@ function Message({
               </AvatarFallback>
             </Avatar>
           </button>
-          <div className="flex flex-col w-full overflow-hidden">
-            <div className="text-sm">
-              <button
-                onClick={() => {}}
-                className=" font-bold text-primary hover:underline"
-              >
-                {authorName}
-              </button>
-              <span>&nbsp;&nbsp;</span>
-              <Hint label={formatFullTime(new Date(createdAt))}>
-                <button className="text-xs text-muted-foreground hover:underline">
-                  {format(new Date(createdAt), "h:mm a ")}
-                </button>
-              </Hint>
+          {isEditing ? (
+            <div className="w-full h-full">
+              <Editor
+                variant="update"
+                onSumbit={hanleEditMessage}
+                disabled={isEditingMessage}
+                defautValue={JSON.parse(body)}
+                onCancel={() => setEditingId(null)}
+              />
             </div>
-            <Renderer value={body} />
-            <Thumbnail url={image} />
-            {!isEqual(updatedAt, createdAt) ? (
-              <span className=" text-xs text-muted-foreground"> (edited)</span>
-            ) : (
-              <></>
-            )}
-          </div>
+          ) : (
+            <div className="flex flex-col w-full overflow-hidden">
+              <div className="text-sm">
+                <button
+                  onClick={() => {}}
+                  className=" font-bold text-primary hover:underline"
+                >
+                  {authorName}
+                </button>
+                <span>&nbsp;&nbsp;</span>
+                <Hint label={formatFullTime(new Date(createdAt))}>
+                  <button className="text-xs text-muted-foreground hover:underline">
+                    {format(new Date(createdAt), "h:mm a ")}
+                  </button>
+                </Hint>
+              </div>
+              <Renderer value={body} />
+              <Thumbnail url={image} />
+              {!isEqual(updatedAt, createdAt) ? (
+                <span className=" text-xs text-muted-foreground">
+                  {" "}
+                  (edited)
+                </span>
+              ) : (
+                <></>
+              )}
+            </div>
+          )}
         </div>
         {!isEditing && (
           <Toolbar

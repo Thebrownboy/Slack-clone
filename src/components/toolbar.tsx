@@ -37,7 +37,12 @@ export default function Toolbar({
 
         {!hideThreadButton && (
           <Hint label="Reply on thread">
-            <Button variant={"ghost"} size={"iconSm"} disabled={isPending}>
+            <Button
+              variant={"ghost"}
+              onClick={handleThread}
+              size={"iconSm"}
+              disabled={isPending}
+            >
               <MessageSquareTextIcon className="size-4" />
             </Button>
           </Hint>
@@ -45,12 +50,22 @@ export default function Toolbar({
         {isAuthor && (
           <>
             <Hint label="Edit Message">
-              <Button variant={"ghost"} size={"iconSm"} disabled={isPending}>
+              <Button
+                variant={"ghost"}
+                size={"iconSm"}
+                disabled={isPending}
+                onClick={handleEdit}
+              >
                 <Pencil className="size-4" />
               </Button>
             </Hint>
             <Hint label="Delete Message">
-              <Button variant={"ghost"} size={"iconSm"} disabled={isPending}>
+              <Button
+                variant={"ghost"}
+                onClick={handleDelete}
+                size={"iconSm"}
+                disabled={isPending}
+              >
                 <Trash className="size-4" />
               </Button>
             </Hint>

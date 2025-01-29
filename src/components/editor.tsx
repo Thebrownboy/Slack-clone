@@ -18,7 +18,7 @@ import EmojiPopOver from "./emojiPopOver";
 import Image from "next/image";
 
 type EditorValue = {
-  images: File[] | null;
+  images?: File[] | null;
   body: string;
 };
 interface EditorProps {
