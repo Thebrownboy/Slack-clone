@@ -242,7 +242,7 @@ export const getMessages = async (
           [key: string]: { count: number; membersIds: string[] };
         } = {};
         for (let i = 0; i < reactions.length; i++) {
-          if (reactionsMap[reactions[i].value]) {
+          if (!reactionsMap[reactions[i].value]) {
             reactionsMap[reactions[i].value] = {
               count: 1,
               membersIds: [reactions[i].id],

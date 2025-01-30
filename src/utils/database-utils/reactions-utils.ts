@@ -1,3 +1,4 @@
+"use server";
 import "server-only";
 import { getMember } from "./general-utils";
 import { db } from "@/lib/db";
@@ -27,8 +28,8 @@ export const toggleReaction = async ({
   const messageReactionFromUser = await db.reactions.findMany({
     where: {
       workspaceId,
-      memberId: message.memberId,
-      messageId: message.id,
+      memberId: userId,
+      messageId: messageId,
       value: value,
     },
   });
@@ -49,7 +50,7 @@ export const toggleReaction = async ({
       data: {
         value,
         messageId,
-        memberId: message.memberId,
+        memberId: member.userId,
         workspaceId,
       },
     });

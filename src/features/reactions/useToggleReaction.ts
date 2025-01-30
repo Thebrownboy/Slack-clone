@@ -2,7 +2,7 @@ import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import { toggleReactionAction } from "@/utils/reactions-actions";
 import { useState } from "react";
 
-export default function useCreateMessage() {
+export default function useToggleReaction() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
 

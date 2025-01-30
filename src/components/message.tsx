@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
+import useToggleReaction from "@/features/reactions/useToggleReaction";
+import Reactions from "./reactions";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -66,6 +68,11 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
+  const {
+    handleSubmit: toggleReaction,
+    error: toggleError,
+    loading: toggleLoading,
+  } = useToggleReaction();
   const { handleSubmit, loading: isEditingMessage, error } = useEditMessage();
   const {
     handleSubmit: handleDelete,
@@ -77,7 +84,12 @@ function Message({
     "Delete message",
     "Are you sure ? this can not be undone "
   );
-
+  const handleReaction = async (value: string) => {
+    toggleReaction({ messageId: id, value });
+    if (toggleError) {
+      toast.error(toggleError);
+    }
+  };
   const handleDeleteMessage = async () => {
     const ok = await confirm();
     if (!ok) return;
@@ -141,6 +153,7 @@ function Message({
                 ) : (
                   <></>
                 )}
+                <Reactions data={reactions} onChange={handleReaction} />
               </div>
             )}
           </div>
@@ -153,8 +166,7 @@ function Message({
               handleThread={() => {}}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              handleReaction={(emoji: any) => {}}
+              handleReaction={handleReaction}
             />
           )}
         </div>
@@ -218,8 +230,9 @@ function Message({
                     (edited)
                   </span>
                 ) : (
-                  <></>
+                  <p></p>
                 )}
+                <Reactions data={reactions} onChange={handleReaction} />
               </div>
             )}
           </div>
@@ -231,8 +244,7 @@ function Message({
               handleThread={() => {}}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              handleReaction={(emoji: any) => {}}
+              handleReaction={handleReaction}
             />
           )}
         </div>

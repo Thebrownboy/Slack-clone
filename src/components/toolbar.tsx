@@ -10,8 +10,7 @@ interface ToolbarProps {
   handleThread: () => void;
   handleDelete: () => void;
   hideThreadButton: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleReaction: (emoji: any) => void;
+  handleReaction: (value: string) => void;
 }
 
 export default function Toolbar({
