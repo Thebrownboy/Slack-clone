@@ -1,17 +1,6 @@
 import { db } from "@/lib/db";
 import "server-only";
-
-const getMember = async (userId: string, workspaceId: string) => {
-  return await db.members.findUnique({
-    where: {
-      userId_workspaceId: {
-        userId,
-        workspaceId,
-      },
-    },
-  });
-};
-
+import { getMember } from "./general-utils";
 const populateUser = async (userId: string | null) => {
   if (!userId) return null;
   const user = await db.user.findUnique({
