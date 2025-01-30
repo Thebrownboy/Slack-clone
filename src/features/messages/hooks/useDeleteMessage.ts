@@ -2,7 +2,7 @@ import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import { deleteMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
-export default function useEditMessage() {
+export default function useRemoveMessage() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
 
@@ -13,7 +13,7 @@ export default function useEditMessage() {
   const {
     userState: { user },
   } = useCurrentUser((state) => state);
-  const handleSubmit = async (body: string, messageId: string) => {
+  const handleSubmit = async (messageId: string) => {
     updateLoading(true);
     const message = await deleteMessageAction({
       userId: user?.id || "",
