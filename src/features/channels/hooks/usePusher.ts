@@ -24,11 +24,6 @@ export default function usePusher() {
       pusherChannel.bind("toggle-reaction", (data: any) => {
         if (channelId === data.channelId) {
           toggleReactionOnMessage(data.messageIndex, data.value, data.userId);
-          console.log(
-            "I am here toggleing the reaction ",
-            channelId,
-            data.channelId
-          );
         }
       });
 

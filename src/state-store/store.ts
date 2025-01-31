@@ -162,9 +162,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
     editMessage(index, newBody, updateTime: Date) {
       set((state) => {
-        const messagesLength = state.currentChannelMessages.messages.length;
-        const editedMessage =
-          state.currentChannelMessages.messages[messagesLength - index - 1];
+        const editedMessage = state.currentChannelMessages.messages[index];
         if (editedMessage?.body) {
           editedMessage.body = newBody;
           editedMessage.updatedAt = updateTime;
@@ -175,14 +173,9 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           currentChannelMessages: {
             channelId: state.currentChannelMessages.channelId,
             messages: [
-              ...state.currentChannelMessages.messages.slice(
-                0,
-                messagesLength - index - 1
-              ),
+              ...state.currentChannelMessages.messages.slice(0, index),
               editedMessage,
-              ...state.currentChannelMessages.messages.slice(
-                messagesLength - index
-              ),
+              ...state.currentChannelMessages.messages.slice(index + 1),
             ],
           },
         };
@@ -190,17 +183,13 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
     },
     deleteMessage(index) {
       set((state) => {
-        const length = state.currentChannelMessages.messages.length;
         return {
           ...state,
           currentChannelMessages: {
             channelId: state.currentChannelMessages.channelId,
             messages: [
-              ...state.currentChannelMessages.messages.slice(
-                0,
-                length - index - 1
-              ),
-              ...state.currentChannelMessages.messages.slice(length - index),
+              ...state.currentChannelMessages.messages.slice(0, index),
+              ...state.currentChannelMessages.messages.slice(index + 1),
             ],
           },
         };
@@ -222,7 +211,6 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
     toggleReactionOnMessage: (index, value, memberId) => {
       set((state) => {
         console.log(index, value, memberId);
-        const messagesLength = state.currentChannelMessages.messages.length;
         const editedMessage = state.currentChannelMessages.messages[index];
         const reactionSize = editedMessage?.reactions.length || 0;
 
