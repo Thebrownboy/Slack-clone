@@ -148,6 +148,11 @@ interface IChannelMesages {
     messages: tFulldataMessage[];
   };
   addNewMessage: (message: tFulldataMessage) => void;
+  toggleReactionOnMessage: (
+    index: number,
+    value: string,
+    memberId: string
+  ) => void;
   updateMessages: (messages: tFulldataMessage[]) => void;
 }
 
@@ -165,6 +170,75 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
     currentChannelMessages: {
       channelId: null,
       messages: [],
+    },
+    toggleReactionOnMessage: (index, value, memberId) => {
+      set((state) => {
+        const messagesLength = state.currentChannelMessages.messages.length;
+        const editedMessage =
+          state.currentChannelMessages.messages[messagesLength - index - 1];
+        const reactionSize = editedMessage?.reactions.length || 0;
+
+        if (!reactionSize) {
+          editedMessage?.reactions.push({
+            count: 1,
+            membersIds: [memberId],
+            value,
+          });
+        } else {
+          let found = false;
+          for (let i = 0; i < reactionSize; i++) {
+            if (editedMessage?.reactions[i].value === value) {
+              found = true;
+              // console.log(
+              //   "I am here this is the value ",
+              //   value,
+              //   editedMessage?.reactions[i].membersIds.includes(memberId)
+              // );
+              if (editedMessage?.reactions[i].membersIds.includes(memberId)) {
+                const deletedIndex =
+                  editedMessage?.reactions[i].membersIds.indexOf(memberId);
+                editedMessage?.reactions[i].membersIds.splice(deletedIndex);
+                if (editedMessage && editedMessage.reactions) {
+                  editedMessage.reactions[i].count--;
+                  if (editedMessage.reactions[i].count === 0) {
+                    editedMessage.reactions = [
+                      ...editedMessage.reactions.slice(0, i),
+                      ...editedMessage.reactions.slice(i + 1),
+                    ];
+                  }
+                }
+              } else {
+                editedMessage?.reactions[i].membersIds.push(memberId);
+              }
+              break;
+            }
+          }
+          if (!found) {
+            editedMessage?.reactions.push({
+              count: 1,
+              membersIds: [memberId],
+              value,
+            });
+          }
+        }
+
+        return {
+          ...state,
+          currentChannelMessages: {
+            channelId: state.currentChannelMessages.channelId,
+            messages: [
+              ...state.currentChannelMessages.messages.slice(
+                0,
+                messagesLength - index - 1
+              ),
+              editedMessage,
+              ...state.currentChannelMessages.messages.slice(
+                messagesLength - index
+              ),
+            ],
+          },
+        };
+      });
     },
     addNewMessage: (message: tFulldataMessage) => {
       set((state) => ({

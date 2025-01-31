@@ -29,7 +29,6 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     undefined
   );
 
-  console.log(currentChannelMessages);
   if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">

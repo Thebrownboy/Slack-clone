@@ -12,6 +12,7 @@ import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
 import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
+import { useCurrentMessages } from "@/state-store/store";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -38,6 +39,7 @@ interface messageProps {
   isCompact: boolean;
   hideThreadButton: boolean;
   isAuthor: boolean;
+  messageIndex: number;
 }
 
 const formatFullTime = (date: Date) => {
@@ -50,6 +52,7 @@ const formatFullTime = (date: Date) => {
   } at ${format(date, "h:mm:ss a ")}`;
 };
 function Message({
+  messageIndex,
   id,
   isAuthor,
   memberId,
@@ -68,6 +71,7 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
+  const { toggleReactionOnMessage } = useCurrentMessages();
   const {
     handleSubmit: toggleReaction,
     error: toggleError,
@@ -88,6 +92,8 @@ function Message({
     toggleReaction({ messageId: id, value });
     if (toggleError) {
       toast.error(toggleError);
+    } else {
+      toggleReactionOnMessage(messageIndex, value, memberId);
     }
   };
   const handleDeleteMessage = async () => {
@@ -153,7 +159,11 @@ function Message({
                 ) : (
                   <></>
                 )}
-                <Reactions data={reactions} onChange={handleReaction} />
+                <Reactions
+                  messageIndex={messageIndex}
+                  data={reactions}
+                  onChange={handleReaction}
+                />
               </div>
             )}
           </div>
@@ -232,7 +242,11 @@ function Message({
                 ) : (
                   <p></p>
                 )}
-                <Reactions data={reactions} onChange={handleReaction} />
+                <Reactions
+                  messageIndex={messageIndex}
+                  data={reactions}
+                  onChange={handleReaction}
+                />
               </div>
             )}
           </div>

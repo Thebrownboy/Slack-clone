@@ -203,7 +203,6 @@ export const getMessages = async (
     _conversationId = parentMessage.conversationId || undefined;
   }
 
-  console.log(_conversationId);
   const results = await db.message.findMany({
     where: {
       channelId,

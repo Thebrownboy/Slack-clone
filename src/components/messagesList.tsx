@@ -92,6 +92,7 @@ export default function MessagesList({
                     isCompact={isCompact || false}
                     hideThreadButton={variant === "thread"}
                     isAuthor={member?.userId === message.user.id}
+                    messageIndex={index}
                   />
                 );
               else return <></>;

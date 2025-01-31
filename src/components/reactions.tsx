@@ -5,6 +5,7 @@ import EmojiPopOver from "./emojiPopOver";
 import { MdOutlineAddReaction } from "react-icons/md";
 
 interface ReactionsProps {
+  messageIndex: number;
   data: {
     value: string;
     count: number;
@@ -13,8 +14,11 @@ interface ReactionsProps {
   onChange: (value: string) => void;
 }
 
-export default function Reactions({ data, onChange }: ReactionsProps) {
-  console.log("This is the length", data.length);
+export default function Reactions({
+  data,
+  onChange,
+  messageIndex,
+}: ReactionsProps) {
   const {
     currentMemberState: { member, loading },
   } = useCurrentMember();
