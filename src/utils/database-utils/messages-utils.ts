@@ -244,7 +244,7 @@ export const getMessages = async (
           if (!reactionsMap[reactions[i].value]) {
             reactionsMap[reactions[i].value] = {
               count: 1,
-              membersIds: [reactions[i].id],
+              membersIds: [reactions[i].memberId],
             };
           } else {
             reactionsMap[reactions[i].value].count++;

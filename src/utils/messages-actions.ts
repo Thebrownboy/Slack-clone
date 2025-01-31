@@ -85,6 +85,8 @@ export async function deleteMessageAction(messageData: {
 }
 
 export async function triggerMessageEvent(message: tFulldataMessage) {
-  if (message?.channelId)
-    pusherServer.trigger(message?.channelId, "incomming-message", message);
+  if (message?.channelId) {
+    // sending the message on the workspace instead of just channel
+    pusherServer.trigger(message.workspaceId, "incomming-message", message);
+  }
 }

@@ -12,7 +12,9 @@ import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
 import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
-import { useCurrentMessages } from "@/state-store/store";
+import { useCurrentMember, useCurrentMessages } from "@/state-store/store";
+import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
+import { useParams } from "next/navigation";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -40,6 +42,7 @@ interface messageProps {
   hideThreadButton: boolean;
   isAuthor: boolean;
   messageIndex: number;
+  channelId: string;
 }
 
 const formatFullTime = (date: Date) => {
@@ -70,6 +73,7 @@ function Message({
   updatedAt,
   authorImage,
   image,
+  channelId,
 }: messageProps) {
   const { toggleReactionOnMessage, deleteMessage, editMessage } =
     useCurrentMessages();
@@ -78,6 +82,10 @@ function Message({
     error: toggleError,
     loading: toggleLoading,
   } = useToggleReaction();
+  const { workspaceId } = useParams();
+  const {
+    currentMemberState: { member },
+  } = useCurrentMember();
   const { handleSubmit, loading: isEditingMessage, error } = useEditMessage();
   const {
     handleSubmit: handleDelete,
@@ -94,7 +102,15 @@ function Message({
     if (toggleError) {
       toast.error(toggleError);
     } else {
-      toggleReactionOnMessage(messageIndex, value, memberId);
+      // toggleReactionOnMessage(messageIndex, value, memberId);
+      triggertoggleReactionEvent({
+        messageIndex,
+        messageId: id,
+        channelId,
+        userId: member?.userId || "",
+        value,
+        workspaceId: workspaceId as string,
+      });
     }
   };
   const handleDeleteMessage = async () => {

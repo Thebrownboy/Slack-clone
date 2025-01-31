@@ -254,6 +254,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
                 }
               } else {
                 editedMessage?.reactions[i].membersIds.push(memberId);
+                editedMessage.reactions[i].count++;
               }
               break;
             }

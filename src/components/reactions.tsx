@@ -28,6 +28,7 @@ export default function Reactions({
   return (
     <div className=" flex items-center gap-1 mt-1 mb-1 ">
       {data.map((reaction, index) => {
+        console.log(reaction.membersIds, member.userId);
         return (
           <Hint
             key={index}

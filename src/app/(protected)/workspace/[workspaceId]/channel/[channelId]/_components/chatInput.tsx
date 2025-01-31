@@ -60,7 +60,7 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
         user,
         URL: uploadedImage?.URL,
       });
-      addNewMessage(messageObject);
+      // addNewMessage(messageObject);
       triggerMessageEvent(messageObject);
     }
   };

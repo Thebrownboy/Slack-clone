@@ -15,6 +15,7 @@ interface MessageListProps {
   loadMore: () => void;
   isLoadingMore: boolean;
   canLoadMore: boolean;
+  channelId: string;
 }
 
 const TIME_THRESHOLD = 5;
@@ -35,6 +36,7 @@ export default function MessagesList({
   memberImage,
   memberName,
   variant,
+  channelId,
 }: MessageListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const groupedMessages = data?.reduce((groups, message) => {
@@ -47,7 +49,6 @@ export default function MessagesList({
 
     return groups;
   }, {} as Record<string, typeof data>);
-  const { workspaceId } = useParams();
   const {
     currentMemberState: { member },
   } = useCurrentMember((state) => state);
@@ -74,6 +75,7 @@ export default function MessagesList({
               if (message)
                 return (
                   <Message
+                    channelId={channelId}
                     key={message.id}
                     id={message.id}
                     memberId={message?.memberId}

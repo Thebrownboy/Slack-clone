@@ -1,7 +1,11 @@
 "use client";
 
 import useGetChannelById from "@/features/channels/hooks/useGetChannelById";
-import { useCurrentMessages, useCurrentUser } from "@/state-store/store";
+import {
+  useCurrentMessages,
+  useCurrentUser,
+  useCurrentWorkspace,
+} from "@/state-store/store";
 import { Loader, TriangleAlert } from "lucide-react";
 import React, { useEffect } from "react";
 import ChannelHeader from "./_components/channelHeader";
@@ -29,23 +33,33 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     undefined,
     undefined
   );
-  const { addNewMessage } = useCurrentMessages();
-
+  const { addNewMessage, toggleReactionOnMessage } = useCurrentMessages();
+  const {
+    currentWorkspaceState: { workSpace },
+  } = useCurrentWorkspace();
   useEffect(() => {
-    if (channelId && userState.user?.id) {
-      const pusherChannel = pusherClient.subscribe(channelId);
+    if (channelId && userState.user?.id && workSpace) {
+      const pusherChannel = pusherClient.subscribe(workSpace.id);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
         // the message is comming from another user
-        if (data.memberId !== userState.user?.id) {
+        // console.log(userState.user?.id);
+        if (channelId === data.channelId) {
           addNewMessage(data);
+        }
+      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("toggle-reaction", (data: any) => {
+        // console.log(userState.user?.id);
+        if (channelId === data.channelId) {
+          toggleReactionOnMessage(data.messageIndex, data.value, data.userId);
         }
       });
     }
     return () => {
-      pusherClient.unsubscribe(channelId);
+      if (workSpace) pusherClient.unsubscribe(workSpace.id);
     };
-  }, [channelId, addNewMessage, userState]);
+  }, [channelId, addNewMessage, userState, workSpace, toggleReactionOnMessage]);
   if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
@@ -70,6 +84,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />
       <MessagesList
+        channelId={channel.id}
         channelName={channel.name}
         channelCreationTime={channel.creationTime}
         data={currentChannelMessages.messages}
