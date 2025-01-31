@@ -147,6 +147,7 @@ interface IChannelMesages {
     channelId: string | null;
     messages: tFulldataMessage[];
   };
+  editMessage: (index: number, newBody: string) => void;
   deleteMessage: (index: number) => void;
   addNewMessage: (message: tFulldataMessage) => void;
   toggleReactionOnMessage: (
@@ -159,6 +160,42 @@ interface IChannelMesages {
 
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
+    editMessage(index, newBody) {
+      set((state) => {
+        const messagesLength = state.currentChannelMessages.messages.length;
+        const editedMessage =
+          state.currentChannelMessages.messages[messagesLength - index - 1];
+        if (editedMessage?.body) editedMessage.body = newBody;
+
+        console.log(editedMessage);
+        console.log([
+          ...state.currentChannelMessages.messages.slice(
+            0,
+            messagesLength - index - 1
+          ),
+          editedMessage,
+          ...state.currentChannelMessages.messages.slice(
+            messagesLength - index
+          ),
+        ]);
+        return {
+          ...state,
+          currentChannelMessages: {
+            channelId: state.currentChannelMessages.channelId,
+            messages: [
+              ...state.currentChannelMessages.messages.slice(
+                0,
+                messagesLength - index - 1
+              ),
+              editedMessage,
+              ...state.currentChannelMessages.messages.slice(
+                messagesLength - index
+              ),
+            ],
+          },
+        };
+      });
+    },
     deleteMessage(index) {
       set((state) => {
         const length = state.currentChannelMessages.messages.length;

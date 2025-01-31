@@ -71,7 +71,8 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
-  const { toggleReactionOnMessage, deleteMessage } = useCurrentMessages();
+  const { toggleReactionOnMessage, deleteMessage, editMessage } =
+    useCurrentMessages();
   const {
     handleSubmit: toggleReaction,
     error: toggleError,
@@ -111,8 +112,10 @@ function Message({
   };
   const hanleEditMessage = async ({ body }: { body: string }) => {
     await handleSubmit(body, id);
-    if (!error) toast.success("Message Updated");
-    else toast.error("Fail to update Message");
+    if (!error) {
+      toast.success("Message Updated");
+      editMessage(messageIndex, body);
+    } else toast.error("Fail to update Message");
     setEditingId(null);
   };
 
