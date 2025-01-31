@@ -1,11 +1,12 @@
+import useGetUserId from "@/hooks/useGetUserId";
+import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { useCreateChannelModal, useCurrentChannels } from "@/state-store/store";
 import { createChannelAction } from "@/utils/channels-actions";
 import React, { useState } from "react";
 
-export default function useCreateChannel(
-  workdspaceId: string,
-  userId: string | undefined
-) {
+export default function useCreateChannel() {
+  const { workspaceId } = useGetWorkspaceId();
+  const { userId } = useGetUserId();
   const { isOpen, setOpen } = useCreateChannelModal((state) => state);
   const [name, updateName] = useState("");
   const [createChannelState, updateCreateChannelState] = useState({
@@ -21,7 +22,11 @@ export default function useCreateChannel(
     if (userId) {
       updateCreateChannelState((state) => ({ ...state, isPending: true }));
       event.preventDefault();
-      const response = await createChannelAction(workdspaceId, userId, name);
+      const response = await createChannelAction(
+        workspaceId as string,
+        userId,
+        name
+      );
       if (response.success && !currentChannlesState.currentChannels) {
         updateCurrentChannels([response.channel]);
       } else if (response.success && currentChannlesState.currentChannels) {

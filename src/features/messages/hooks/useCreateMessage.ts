@@ -1,4 +1,5 @@
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
+import useGetUserId from "@/hooks/useGetUserId";
+import { useCurrentWorkspace } from "@/state-store/store";
 import { createMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
@@ -10,9 +11,7 @@ export default function useCreateMessage(channelId: string | undefined) {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace((state) => state);
 
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
+  const { userId } = useGetUserId();
   const handleSubmit = async (
     body: string,
     imageId: string | undefined,
@@ -22,7 +21,7 @@ export default function useCreateMessage(channelId: string | undefined) {
     const message = await createMessageAction({
       body,
       imageId,
-      userId: user?.id || "",
+      userId: userId as string,
       workspaceId: workSpace?.id || "",
       channelId,
       parentMessageId,

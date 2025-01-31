@@ -1,13 +1,11 @@
+import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentChannels } from "@/state-store/store";
 import { editChannelNameAction } from "@/utils/channels-actions";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-export default function useEditChannel(
-  userId: string | undefined,
-  channelName: string,
-  channelId: string
-) {
+export default function useEditChannel(channelName: string, channelId: string) {
+  const { userId } = useGetUserId();
   const [editOpen, setEditOpen] = useState(false);
   const [value, setValue] = useState(channelName);
   const [editChannelState, updateEditChannelState] = useState({

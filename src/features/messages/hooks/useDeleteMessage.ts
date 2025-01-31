@@ -1,4 +1,5 @@
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
+import useGetUserId from "@/hooks/useGetUserId";
+import { useCurrentWorkspace } from "@/state-store/store";
 import { deleteMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
@@ -10,13 +11,11 @@ export default function useRemoveMessage() {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace((state) => state);
 
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
+  const { userId } = useGetUserId();
   const handleSubmit = async (messageId: string) => {
     updateLoading(true);
     const message = await deleteMessageAction({
-      userId: user?.id || "",
+      userId: userId as string,
       messageId,
       workspaceId: workSpace?.id || "",
     });

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useEditChannel from "../hooks/useEditChannelName";
-import { useCurrentMember, useCurrentUser } from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/store";
 
 export default function EditChannelNameModal({
   channelName,
@@ -22,9 +22,7 @@ export default function EditChannelNameModal({
   const {
     currentMemberState: { member },
   } = useCurrentMember((state) => state);
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
+
   const {
     editChannelState,
     editOpen,
@@ -32,7 +30,7 @@ export default function EditChannelNameModal({
     setValue,
     value,
     submitEditNameAction,
-  } = useEditChannel(user?.id || "", channelName, channelId);
+  } = useEditChannel(channelName, channelId);
   const handleClose = () => {
     setValue(channelName);
     setEditOpen(!editOpen);

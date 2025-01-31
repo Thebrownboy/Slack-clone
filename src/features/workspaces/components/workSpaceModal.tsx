@@ -10,26 +10,25 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MdError } from "react-icons/md";
 import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
-import { useCreateWorkspaceModal, useCurrentUser } from "@/state-store/store";
+import { useCreateWorkspaceModal } from "@/state-store/store";
 import useCreateWorkspace from "../hooks/useCreateWorkspace";
+import useGetUserId from "@/hooks/useGetUserId";
 
 export default function WorkSpaceModal() {
   const { setOpen, isOpen: open } = useCreateWorkspaceModal((state) => state);
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
+  const { userId } = useGetUserId();
 
   const { isFetching: fetching, userWorkSpaces: workSpaces } =
-    useGetCurrentUserWorkSpaces(user?.id || "");
+    useGetCurrentUserWorkSpaces();
   const {
     errorMsg,
     isPending,
     submitCreateAction,
     updateWorkspaceName,
     workspaceName,
-  } = useCreateWorkspace(user?.id);
+  } = useCreateWorkspace();
   useEffect(() => {
-    if (!user) {
+    if (userId) {
       setOpen(false);
       return;
     }
@@ -38,7 +37,7 @@ export default function WorkSpaceModal() {
     } else {
       setOpen(true);
     }
-  }, [workSpaces, setOpen, user]);
+  }, [workSpaces, setOpen, userId]);
   const handleClose = () => {
     setOpen(false);
     updateWorkspaceName("");

@@ -1,4 +1,5 @@
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
+import useGetUserId from "@/hooks/useGetUserId";
+import { useCurrentWorkspace } from "@/state-store/store";
 import { editMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
@@ -10,15 +11,13 @@ export default function useEditMessage() {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace((state) => state);
 
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
+  const { userId } = useGetUserId();
   const handleSubmit = async (body: string, messageId: string) => {
     updateLoading(true);
     const message = await editMessageAction({
       body,
       messageId,
-      userId: user?.id || "",
+      userId: userId as string,
       workspaceId: workSpace?.id || "",
     });
     updateLoading(false);

@@ -7,12 +7,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import useCreateChannel from "../hooks/useCreateChannel";
 
 export default function CreateChannelModal() {
-  const { currentWorkspaceState } = useCurrentWorkspace((state) => state);
-  const { userState } = useCurrentUser((state) => state);
   const {
     channelName,
     updateName,
@@ -20,10 +17,7 @@ export default function CreateChannelModal() {
     setOpen,
     isPending,
     submitCreateAction,
-  } = useCreateChannel(
-    currentWorkspaceState.workSpace?.id || "",
-    userState.user?.id
-  );
+  } = useCreateChannel();
   const handleClose = () => {
     updateName("");
     setOpen(false);

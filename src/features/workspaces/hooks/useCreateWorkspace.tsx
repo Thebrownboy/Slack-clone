@@ -1,9 +1,10 @@
+import useGetUserId from "@/hooks/useGetUserId";
 import { createNewWorkspace } from "@/utils/workspaces-actions";
 import React, { useState } from "react";
 
-export default function useCreateWorkspace(userId: string | undefined) {
+export default function useCreateWorkspace() {
   const [workspaceName, updateWorkspaceName] = useState("");
-
+  const { userId } = useGetUserId();
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
   const submitCreateAction = async (
