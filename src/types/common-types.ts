@@ -1,4 +1,5 @@
 import type { Message as tMessage } from "@prisma/client";
+export type tMessagePlaceholder = tMessage;
 export type tUser = {
   email: string | undefined;
   name: string | null | undefined;

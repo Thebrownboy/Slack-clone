@@ -46,7 +46,7 @@ const formatFullTime = (date: Date) => {
       ? "Today"
       : isYesterday(date)
       ? "Yesterday"
-      : format(date, "MMM d, YYYY")
+      : format(date, "MMM d, yyyy")
   } at ${format(date, "h:mm:ss a ")}`;
 };
 function Message({

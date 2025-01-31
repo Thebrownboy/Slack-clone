@@ -1,4 +1,9 @@
-import { tChannel, tmember, tWorkspace } from "@/types/common-types";
+import {
+  tChannel,
+  tFulldataMessage,
+  tmember,
+  tWorkspace,
+} from "@/types/common-types";
 import { create } from "zustand";
 
 interface iCreateWorkspaceModal {
@@ -132,6 +137,42 @@ export const useCurrentMember = create<iCurrentMember>((set) => {
     updateCurrentMemberState(member) {
       set((state) => ({
         currentMemberState: { ...state, loading: false, member },
+      }));
+    },
+  };
+});
+
+interface IChannelMesages {
+  currentChannelMessages: {
+    channelId: string | null;
+    messages: tFulldataMessage[];
+  };
+  addNewMessage: (message: tFulldataMessage) => void;
+  updateMessages: (messages: tFulldataMessage[]) => void;
+}
+
+export const useCurrentMessages = create<IChannelMesages>((set) => {
+  return {
+    updateMessages(messages) {
+      set((state) => ({
+        ...state,
+        currentChannelMessages: {
+          channelId: state.currentChannelMessages.channelId,
+          messages,
+        },
+      }));
+    },
+    currentChannelMessages: {
+      channelId: null,
+      messages: [],
+    },
+    addNewMessage: (message: tFulldataMessage) => {
+      set((state) => ({
+        ...state,
+        currentChannelMessages: {
+          channelId: state.currentChannelMessages.channelId,
+          messages: [message, ...state.currentChannelMessages.messages],
+        },
       }));
     },
   };

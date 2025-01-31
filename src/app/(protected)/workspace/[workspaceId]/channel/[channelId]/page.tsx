@@ -22,14 +22,14 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   const {
     currentChannelState: { channel, loading },
   } = useGetChannelById(userState.user?.id || "", channelId);
-  const { currentMessages, loading: messagesLoading } = useGetMessages(
+  const { currentChannelMessages, loading: messagesLoading } = useGetMessages(
     userState.user?.id || null,
     channelId,
     undefined,
     undefined
   );
 
-  console.log(currentMessages);
+  console.log(currentChannelMessages);
   if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
@@ -55,7 +55,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
       <MessagesList
         channelName={channel.name}
         channelCreationTime={channel.creationTime}
-        data={currentMessages}
+        data={currentChannelMessages.messages}
         loadMore={() => {}}
         isLoadingMore={false}
         canLoadMore={false}
