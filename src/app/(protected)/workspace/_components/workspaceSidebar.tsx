@@ -35,7 +35,7 @@ export default function WorkspaceSidebar() {
     user?.id || ""
   );
   const { currentChannels, isLoading: isCurrentChannelsLoading } =
-    useGetCurrentChannels(workspaceId as string, user?.id || "");
+    useGetCurrentChannels();
 
   const { channelId } = useParams();
 

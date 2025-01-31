@@ -26,7 +26,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
   const { userState } = useCurrentUser((state) => state);
   const {
     currentChannelState: { channel, loading },
-  } = useGetChannelById(userState.user?.id || "", channelId);
+  } = useGetChannelById(channelId);
   const { currentChannelMessages, loading: messagesLoading } = useGetMessages(
     userState.user?.id || null,
     channelId,
@@ -87,6 +87,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     deleteMessage,
   ]);
   if (loading || messagesLoading) {
+    console.log(" Yess this is the problem", loading, messagesLoading);
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
         <Loader className=" animate-spin size-6 text-muted-foreground" />
