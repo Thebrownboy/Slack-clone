@@ -32,7 +32,6 @@ export default function useWorkspaceGaurd() {
         user?.id || "",
         workSpace?.id || ""
       );
-      console.log(member, user?.id, workSpace?.id);
       if (member) {
         setLoading(false);
         updateCurrentMemberState(member);
@@ -40,7 +39,6 @@ export default function useWorkspaceGaurd() {
         router.push("/");
       }
     };
-    console.log("hello i'm here  ");
     if (
       !loadingCurrentUser &&
       !isCurrentWorkspaceLoading &&

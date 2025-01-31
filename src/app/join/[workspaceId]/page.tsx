@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import useGetWorkspaceInfo from "@/features/workspaces/hooks/useGetWorkspaceInfo";
 import useJoinWorkspace from "@/features/workspaces/hooks/useJoinWorkspace";
-import useGetCurrentUserData from "@/hooks/getCurrentUserData";
+import { useCurrentUser } from "@/state-store/store";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,9 @@ interface JoinPageProps {
 }
 export default function JoinPage({ params }: JoinPageProps) {
   const { workspaceId } = React.use(params);
-  const { user } = useGetCurrentUserData();
+  const {
+    userState: { user },
+  } = useCurrentUser();
   const router = useRouter();
   const { currentWorkSpaceInfo, loading } = useGetWorkspaceInfo(
     workspaceId,

@@ -6,12 +6,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useGetCurrentUserData from "@/hooks/getCurrentUserData";
+import { useCurrentUser } from "@/state-store/store";
 import { Loader, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function UserButton() {
-  const { user, loading } = useGetCurrentUserData();
+  const {
+    userState: { user, loading },
+  } = useCurrentUser();
 
   if (loading) {
     return <Loader className="size-4 animate-spin text-muted-foreground" />;

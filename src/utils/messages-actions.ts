@@ -96,7 +96,6 @@ export async function triggerEditMessageEvent(
   message: tMessagePlaceholder
 ) {
   if (message?.channelId) {
-    console.log("I will trigger ");
     // sending the message on the workspace instead of just channel
     pusherServer.trigger(message.workspaceId, "edit-message", {
       messageIndex,

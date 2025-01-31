@@ -11,13 +11,21 @@ import WorkspaceSidebar from "../_components/workspaceSidebar";
 import useWorkspaceGaurd from "@/features/workspaces/hooks/useWorkspaceGaurd";
 import useGetCurrentWorkSpace from "@/features/workspaces/hooks/useGetCurrentWorkSpace";
 import useGetCurrentUserData from "@/hooks/getCurrentUserData";
+import { LoaderCircleIcon } from "lucide-react";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   // using this techinque here will not affect the performance cuz children can be server components as they wanna
 
-  useGetCurrentUserData();
-  useGetCurrentWorkSpace();
-  useWorkspaceGaurd();
+  const { loading } = useGetCurrentUserData();
+  const { isLoading } = useGetCurrentWorkSpace();
+  const { loading: GaurdLoading } = useWorkspaceGaurd();
+
+  if (loading || GaurdLoading || isLoading)
+    return (
+      <div className="w-[95%] h-[95%] flex  justify-center items-center">
+        <LoaderCircleIcon className="animate-spin" />
+      </div>
+    );
   return (
     <div className=" h-full">
       <Toolbar />
