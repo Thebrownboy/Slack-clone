@@ -1,11 +1,13 @@
+import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentChannels } from "@/state-store/store";
 import { editChannelNameAction } from "@/utils/channels-actions";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-export default function useEditChannel(channelName: string, channelId: string) {
+export default function useEditChannel(channelName: string) {
   const { userId } = useGetUserId();
+  const { channelId } = useGetChannelId();
   const [editOpen, setEditOpen] = useState(false);
   const [value, setValue] = useState(channelName);
   const [editChannelState, updateEditChannelState] = useState({
@@ -21,7 +23,11 @@ export default function useEditChannel(channelName: string, channelId: string) {
     if (userId) {
       updateEditChannelState((state) => ({ ...state, isPending: true }));
       event.preventDefault();
-      const response = await editChannelNameAction(userId, channelId, value);
+      const response = await editChannelNameAction(
+        userId,
+        channelId as string,
+        value
+      );
       if (
         response.success &&
         currentChannlesState.currentChannels &&

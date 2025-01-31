@@ -1,12 +1,13 @@
+import useGetChannelId from "@/hooks/useGetChannelId";
+import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentChannels, useCurrentWorkspace } from "@/state-store/store";
 import { deleteChannelAction } from "@/utils/channels-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function useDeleteChannel(
-  userId: string | undefined,
-  channelId: string = ""
-) {
+export default function useDeleteChannel() {
+  const { userId } = useGetUserId();
+  const { channelId } = useGetChannelId();
   const router = useRouter();
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
@@ -17,7 +18,7 @@ export default function useDeleteChannel(
   const submitDeleteAction = async () => {
     if (userId) {
       updateIsPending(true);
-      const response = await deleteChannelAction(userId, channelId);
+      const response = await deleteChannelAction(userId, channelId as string);
       if (!response.success) {
         updateErrorMsg(response.msg);
       } else {

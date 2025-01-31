@@ -1,12 +1,14 @@
+import useGetChannelId from "@/hooks/useGetChannelId";
+import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentMessages } from "@/state-store/store";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useState } from "react";
 export default function useGetMessages(
-  userId: string | null,
-  channelId: string | undefined,
   conversationId: string | undefined,
   parentMessageId: string | undefined
 ) {
+  const { channelId } = useGetChannelId();
+  const { userId } = useGetUserId();
   const { currentChannelMessages, updateMessages } = useCurrentMessages(
     (state) => state
   );
@@ -18,8 +20,8 @@ export default function useGetMessages(
     const getMessages = async () => {
       updateLoading(true);
       const messages = await getMessagesAction(
-        userId,
-        channelId,
+        userId as string,
+        channelId as string,
         conversationId,
         parentMessageId,
         skip,

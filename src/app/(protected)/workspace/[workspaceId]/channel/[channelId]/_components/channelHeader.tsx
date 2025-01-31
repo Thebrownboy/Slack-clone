@@ -9,30 +9,20 @@ import {
 import EditChannelNameModal from "@/features/channels/components/editChannelNameModal";
 import useDeleteChannel from "@/features/channels/hooks/useDeleteChannel";
 import useConfirm from "@/hooks/useConfirm";
-import { useCurrentMember, useCurrentUser } from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/store";
 import { TrashIcon } from "lucide-react";
 import { FaChevronDown } from "react-icons/fa";
 
 interface channelHeaderProps {
   channelName: string;
-  channelId: string;
 }
 
-export default function ChannelHeader({
-  channelName,
-  channelId,
-}: channelHeaderProps) {
+export default function ChannelHeader({ channelName }: channelHeaderProps) {
   const { confirm, ConfirmDialog } = useConfirm(
     "Are you sure",
     "This action is irreversible"
   );
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
-  const { submitDeleteAction, isPending } = useDeleteChannel(
-    user?.id,
-    channelId
-  );
+  const { submitDeleteAction, isPending } = useDeleteChannel();
   const {
     currentMemberState: { member },
   } = useCurrentMember((state) => state);
@@ -57,10 +47,7 @@ export default function ChannelHeader({
             </DialogHeader>
 
             <div className="px-4 pb-4 flex flex-col gap-y-2">
-              <EditChannelNameModal
-                channelName={channelName}
-                channelId={channelId}
-              />
+              <EditChannelNameModal channelName={channelName} />
               {member?.role === "admin" && (
                 <button
                   disabled={isPending}

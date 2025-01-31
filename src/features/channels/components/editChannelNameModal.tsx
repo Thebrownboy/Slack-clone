@@ -14,10 +14,8 @@ import { useCurrentMember } from "@/state-store/store";
 
 export default function EditChannelNameModal({
   channelName,
-  channelId,
 }: {
   channelName: string;
-  channelId: string;
 }) {
   const {
     currentMemberState: { member },
@@ -30,7 +28,7 @@ export default function EditChannelNameModal({
     setValue,
     value,
     submitEditNameAction,
-  } = useEditChannel(channelName, channelId);
+  } = useEditChannel(channelName);
   const handleClose = () => {
     setValue(channelName);
     setEditOpen(!editOpen);
