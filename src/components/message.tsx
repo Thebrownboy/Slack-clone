@@ -71,7 +71,7 @@ function Message({
   authorImage,
   image,
 }: messageProps) {
-  const { toggleReactionOnMessage } = useCurrentMessages();
+  const { toggleReactionOnMessage, deleteMessage } = useCurrentMessages();
   const {
     handleSubmit: toggleReaction,
     error: toggleError,
@@ -103,6 +103,7 @@ function Message({
     await handleDelete(id);
     if (!deleteError) {
       toast.success("message deleted successfully ");
+      deleteMessage(messageIndex);
       // TODO :Close thread if opened
     } else {
       toast.error("something went wrong ");
