@@ -1,5 +1,5 @@
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentWorkspace } from "@/state-store/store";
+import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { toggleReactionAction } from "@/utils/reactions-actions";
 import { useState } from "react";
 
@@ -7,9 +7,7 @@ export default function useToggleReaction() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
 
-  const {
-    currentWorkspaceState: { workSpace },
-  } = useCurrentWorkspace((state) => state);
+  const { workspaceId } = useGetWorkspaceId();
 
   const { userId } = useGetUserId();
   const handleSubmit = async ({
@@ -22,7 +20,7 @@ export default function useToggleReaction() {
     updateLoading(true);
     const reaction = await toggleReactionAction({
       userId: userId as string,
-      workspaceId: workSpace?.id || "",
+      workspaceId: workspaceId as string,
       messageId,
       value,
     });

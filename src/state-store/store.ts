@@ -221,9 +221,9 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
     },
     toggleReactionOnMessage: (index, value, memberId) => {
       set((state) => {
+        console.log(index, value, memberId);
         const messagesLength = state.currentChannelMessages.messages.length;
-        const editedMessage =
-          state.currentChannelMessages.messages[messagesLength - index - 1];
+        const editedMessage = state.currentChannelMessages.messages[index];
         const reactionSize = editedMessage?.reactions.length || 0;
 
         if (!reactionSize) {
@@ -237,11 +237,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           for (let i = 0; i < reactionSize; i++) {
             if (editedMessage?.reactions[i].value === value) {
               found = true;
-              // console.log(
-              //   "I am here this is the value ",
-              //   value,
-              //   editedMessage?.reactions[i].membersIds.includes(memberId)
-              // );
+
               if (editedMessage?.reactions[i].membersIds.includes(memberId)) {
                 const deletedIndex =
                   editedMessage?.reactions[i].membersIds.indexOf(memberId);
@@ -276,14 +272,9 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           currentChannelMessages: {
             channelId: state.currentChannelMessages.channelId,
             messages: [
-              ...state.currentChannelMessages.messages.slice(
-                0,
-                messagesLength - index - 1
-              ),
+              ...state.currentChannelMessages.messages.slice(0, index),
               editedMessage,
-              ...state.currentChannelMessages.messages.slice(
-                messagesLength - index
-              ),
+              ...state.currentChannelMessages.messages.slice(index + 1),
             ],
           },
         };

@@ -15,7 +15,6 @@ export default function useGetCurrentChannels() {
   } = useCurrentWorkspace();
   useEffect(() => {
     const getChannels = async () => {
-      console.log("I will fetch new channels");
       try {
         const response = await getcurrentChannelsAction(
           workSpace?.id as string,

@@ -13,7 +13,6 @@ import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   const { initalDataLoading } = useGetInitalData();
-  console.log(initalDataLoading);
   if (initalDataLoading) {
     return (
       <div className="w-[95%] h-[95%] flex justify-center items-center">

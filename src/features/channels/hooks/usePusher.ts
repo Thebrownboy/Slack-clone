@@ -16,17 +16,19 @@ export default function usePusher() {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
-        // the message is comming from another user
-        // console.log(userState.user?.id);
         if (channelId === data.channelId) {
           addNewMessage(data);
         }
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
-        // console.log(userState.user?.id);
         if (channelId === data.channelId) {
           toggleReactionOnMessage(data.messageIndex, data.value, data.userId);
+          console.log(
+            "I am here toggleing the reaction ",
+            channelId,
+            data.channelId
+          );
         }
       });
 

@@ -69,5 +69,6 @@ export type tFulldataMessage =
       threadCount: number;
       threadImage: string | null | undefined;
       threadTimestamp: number | Date;
+      messageIndex?: number;
     })
   | null;

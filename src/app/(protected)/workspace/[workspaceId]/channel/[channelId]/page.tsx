@@ -19,7 +19,6 @@ export default function ChannelPage() {
   );
   usePusher();
   if (loading || messagesLoading) {
-    console.log(" Yess this is the problem", loading, messagesLoading);
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
         <Loader className=" animate-spin size-6 text-muted-foreground" />

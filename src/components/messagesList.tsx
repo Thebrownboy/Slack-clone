@@ -39,12 +39,13 @@ export default function MessagesList({
   channelId,
 }: MessageListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const groupedMessages = data?.reduce((groups, message) => {
+  const groupedMessages = data?.reduce((groups, message, currentIndex) => {
     const date = new Date(message?.creationTime || "");
     const dateKey = format(date, "yyyy-MM-dd");
     if (!groups[dateKey]) {
       groups[dateKey] = [];
     }
+    if (message) message.messageIndex = currentIndex;
     groups[dateKey].unshift(message);
 
     return groups;
@@ -72,6 +73,7 @@ export default function MessagesList({
                   new Date(message.creationTime),
                   new Date(preveMessage.creationTime)
                 ) < TIME_THRESHOLD;
+
               if (message)
                 return (
                   <Message
@@ -94,7 +96,7 @@ export default function MessagesList({
                     isCompact={isCompact || false}
                     hideThreadButton={variant === "thread"}
                     isAuthor={member?.userId === message.user.id}
-                    messageIndex={index}
+                    messageIndex={message.messageIndex as number}
                   />
                 );
               else return <></>;

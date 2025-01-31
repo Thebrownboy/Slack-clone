@@ -31,8 +31,6 @@ export default function useGetInitalData() {
       finishLoading
     ) {
       updateInitialDataLoading(false);
-
-      console.log(userState, currentWorkspaceState, member);
     }
   }, [userState, currentWorkspaceState, memberLoading, member, finishLoading]);
   useEffect(() => {
@@ -53,13 +51,6 @@ export default function useGetInitalData() {
       const member = await getMemberByUserIdAndWorkSpaceIdAction(
         userState.user?.id as string,
         currentWorkSpace?.id as string
-      );
-      console.log(member);
-
-      console.log(
-        "this is the member",
-        userState.user?.id,
-        currentWorkSpace?.id
       );
 
       updateCurrentMemberState(member);

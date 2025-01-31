@@ -6,7 +6,6 @@ import { useMemo } from "react";
 export default function useGetChannelById() {
   const { channelId } = useGetChannelId();
   const { currentChannlesState } = useCurrentChannels((state) => state);
-  console.log(currentChannlesState);
   const currentChannel = useMemo(() => {
     if (currentChannlesState.currentChannels) {
       for (const channel of currentChannlesState.currentChannels) {
