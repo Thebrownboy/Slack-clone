@@ -16,6 +16,7 @@ import useGetCurrentChannels from "@/features/channels/hooks/useGetCurrentChanne
 import WorkspaceSection from "./workspaceSection";
 import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMembers";
 import UserItem from "./userItem";
+import { useParams } from "next/navigation";
 
 export default function WorkspaceSidebar() {
   const { setOpen } = useCreateChannelModal((state) => state);
@@ -35,6 +36,8 @@ export default function WorkspaceSidebar() {
   );
   const { currentChannels, isLoading: isCurrentChannelsLoading } =
     useGetCurrentChannels(workspaceId as string, user?.id || "");
+
+  const { channelId } = useParams();
 
   const { currentWorkspaceMembers, isLoading: currentMembersLoading } =
     useGetWorkspaceMembers(workspaceId as string, user?.id || "");
@@ -84,6 +87,7 @@ export default function WorkspaceSidebar() {
               icon={HashIcon}
               label={item.name}
               id={item.id}
+              variant={item.id === channelId ? "active" : "default"}
             />
           );
         })}

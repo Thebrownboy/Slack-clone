@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 export default function useGetCurrentUserData() {
   const session = useSession();
+
   const { updateState, userState } = useCurrentUser();
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -16,6 +17,10 @@ export default function useGetCurrentUserData() {
       });
     };
     if (!userState.user) getCurrentUser();
+    else {
+      if (userState.loading)
+        updateState({ loading: false, user: userState.user });
+    }
   }, [session, updateState, userState]);
 
   return { user: userState.user, loading: userState.loading };

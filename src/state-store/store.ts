@@ -131,7 +131,7 @@ interface iCurrentMember {
 export const useCurrentMember = create<iCurrentMember>((set) => {
   return {
     currentMemberState: {
-      loading: false,
+      loading: true,
       member: null,
     },
     updateCurrentMemberState(member) {

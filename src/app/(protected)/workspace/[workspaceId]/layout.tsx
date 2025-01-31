@@ -8,24 +8,19 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import WorkspaceSidebar from "../_components/workspaceSidebar";
-import useWorkspaceGaurd from "@/features/workspaces/hooks/useWorkspaceGaurd";
-import useGetCurrentWorkSpace from "@/features/workspaces/hooks/useGetCurrentWorkSpace";
-import useGetCurrentUserData from "@/hooks/getCurrentUserData";
 import { LoaderCircleIcon } from "lucide-react";
+import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
-  // using this techinque here will not affect the performance cuz children can be server components as they wanna
-
-  const { loading } = useGetCurrentUserData();
-  const { isLoading } = useGetCurrentWorkSpace();
-  const { loading: GaurdLoading } = useWorkspaceGaurd();
-
-  if (loading || GaurdLoading || isLoading)
+  const { initalDataLoading } = useGetInitalData();
+  console.log(initalDataLoading);
+  if (initalDataLoading) {
     return (
-      <div className="w-[95%] h-[95%] flex  justify-center items-center">
+      <div className="w-[95%] h-[95%] flex justify-center items-center">
         <LoaderCircleIcon className="animate-spin" />
       </div>
     );
+  }
   return (
     <div className=" h-full">
       <Toolbar />
