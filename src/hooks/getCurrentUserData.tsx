@@ -5,18 +5,18 @@ import { useEffect } from "react";
 
 export default function useGetCurrentUserData() {
   const session = useSession();
-  const { updateState, userState } = useCurrentUser((state) => state);
+  const { updateState, userState } = useCurrentUser();
   useEffect(() => {
     const getCurrentUser = async () => {
-      try {
-        const user = await getUser(session.data?.user?.id);
-        updateState({ loading: false, user });
-      } catch {
-        updateState({ ...userState, loading: false });
-      }
+      // whether the user is null or actual user , you will update the state with these values
+      const user = await getUser(session.data?.user?.id);
+      updateState({
+        loading: false,
+        user,
+      });
     };
     if (!userState.user) getCurrentUser();
-  }, [session, updateState, userState, userState.user, userState.loading]);
+  }, [session, updateState, userState]);
 
   return { user: userState.user, loading: userState.loading };
 }

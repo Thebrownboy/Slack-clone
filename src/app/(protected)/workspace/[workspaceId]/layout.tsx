@@ -18,7 +18,6 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   useGetCurrentUserData();
   useGetCurrentWorkSpace();
   useWorkspaceGaurd();
-
   return (
     <div className=" h-full">
       <Toolbar />

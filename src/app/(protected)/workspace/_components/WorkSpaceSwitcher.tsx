@@ -10,7 +10,6 @@ import { Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   useCreateWorkspaceModal,
-  useCurrentUser,
   useCurrentWorkspace,
 } from "@/state-store/store";
 import { Button } from "@/components/ui/button";
@@ -20,13 +19,10 @@ export default function WorkSpaceSwitcher() {
   } = useCurrentWorkspace((state) => state);
   const workspaceId = workSpace?.id;
   const router = useRouter();
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
 
   const setOpen = useCreateWorkspaceModal((state) => state.setOpen);
 
-  const { userWorkSpaces } = useGetCurrentUserWorkSpaces(user?.id || "");
+  const { userWorkSpaces } = useGetCurrentUserWorkSpaces();
   const filteredWorkspaces = userWorkSpaces?.filter(
     (workspace) => workspace.id !== workspaceId
   );

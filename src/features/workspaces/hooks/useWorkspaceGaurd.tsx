@@ -1,4 +1,8 @@
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
+import {
+  useCurrentMember,
+  useCurrentUser,
+  useCurrentWorkspace,
+} from "@/state-store/store";
 import { getMemberByUserIdAndWorkSpaceIdAction } from "@/utils/workspaces-actions";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +16,10 @@ export default function useWorkspaceGaurd() {
     currentWorkspaceState: { workSpace, isLoading: isCurrentWorkspaceLoading },
   } = useCurrentWorkspace((state) => state);
 
+  const {
+    updateCurrentMemberState,
+    currentMemberState: { member },
+  } = useCurrentMember();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -24,14 +32,32 @@ export default function useWorkspaceGaurd() {
         user?.id || "",
         workSpace?.id || ""
       );
+      console.log(member, user?.id, workSpace?.id);
       if (member) {
         setLoading(false);
+        updateCurrentMemberState(member);
       } else {
         router.push("/");
       }
     };
-    if (!loadingCurrentUser && !isCurrentWorkspaceLoading) getMember();
-  }, [router, user, loadingCurrentUser, isCurrentWorkspaceLoading, workSpace]);
+    console.log("hello i'm here  ");
+    if (
+      !loadingCurrentUser &&
+      !isCurrentWorkspaceLoading &&
+      user &&
+      workSpace &&
+      !member
+    )
+      getMember();
+  }, [
+    router,
+    user,
+    loadingCurrentUser,
+    isCurrentWorkspaceLoading,
+    workSpace,
+    updateCurrentMemberState,
+    member,
+  ]);
 
   return { loading };
 }

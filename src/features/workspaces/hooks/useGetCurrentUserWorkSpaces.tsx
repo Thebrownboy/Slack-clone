@@ -1,8 +1,12 @@
+import { useCurrentUser } from "@/state-store/store";
 import { tWorkspace } from "@/types/common-types";
 import { getAllWorkSpacesOfUserAction } from "@/utils/workspaces-actions";
 import { useEffect, useState } from "react";
 
-export default function useGetCurrentUserWorkSpaces(userId: string) {
+export default function useGetCurrentUserWorkSpaces() {
+  const {
+    userState: { user },
+  } = useCurrentUser();
   const [fetching, updateFetching] = useState(true);
   const [userWorkSpaces, updateUserWorkSpaces] = useState<tWorkspace[] | null>(
     null
@@ -10,12 +14,15 @@ export default function useGetCurrentUserWorkSpaces(userId: string) {
 
   useEffect(() => {
     const getAllWorkSpacesForUser = async () => {
-      const allWorkSpaces = await getAllWorkSpacesOfUserAction(userId);
+      // user id will not be null , cuz I will not call this function if it does not exist
+      const allWorkSpaces = await getAllWorkSpacesOfUserAction(
+        user?.id as string
+      );
       updateUserWorkSpaces(allWorkSpaces);
       updateFetching(false);
     };
-    if (userId) getAllWorkSpacesForUser();
-  }, [userId]);
+    if (user && user.id) getAllWorkSpacesForUser();
+  }, [user]);
 
   return { userWorkSpaces, isFetching: fetching };
 }
