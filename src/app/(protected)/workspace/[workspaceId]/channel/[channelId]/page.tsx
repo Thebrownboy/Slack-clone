@@ -33,7 +33,8 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     undefined,
     undefined
   );
-  const { addNewMessage, toggleReactionOnMessage } = useCurrentMessages();
+  const { addNewMessage, toggleReactionOnMessage, editMessage } =
+    useCurrentMessages();
   const {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace();
@@ -55,11 +56,29 @@ export default function ChannelPage({ params }: ChannelPageProps) {
           toggleReactionOnMessage(data.messageIndex, data.value, data.userId);
         }
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("edit-message", (data: any) => {
+        if (channelId === data.message.channelId) {
+          editMessage(
+            data.messageIndex,
+            data.message.body,
+            data.message.updatedAt
+          );
+        }
+      });
     }
     return () => {
       if (workSpace) pusherClient.unsubscribe(workSpace.id);
     };
-  }, [channelId, addNewMessage, userState, workSpace, toggleReactionOnMessage]);
+  }, [
+    channelId,
+    addNewMessage,
+    userState,
+    workSpace,
+    toggleReactionOnMessage,
+    editMessage,
+  ]);
   if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">

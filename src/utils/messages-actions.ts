@@ -8,7 +8,7 @@ import {
   getMessages,
   uploadImage,
 } from "./database-utils/messages-utils";
-import { tFulldataMessage } from "@/types/common-types";
+import { tFulldataMessage, tMessagePlaceholder } from "@/types/common-types";
 import pusherServer from "@/lib/pusher";
 
 export async function createMessageAction(messageData: {
@@ -88,5 +88,19 @@ export async function triggerMessageEvent(message: tFulldataMessage) {
   if (message?.channelId) {
     // sending the message on the workspace instead of just channel
     pusherServer.trigger(message.workspaceId, "incomming-message", message);
+  }
+}
+
+export async function triggerEditMessageEvent(
+  messageIndex: number,
+  message: tMessagePlaceholder
+) {
+  if (message?.channelId) {
+    console.log("I will trigger ");
+    // sending the message on the workspace instead of just channel
+    pusherServer.trigger(message.workspaceId, "edit-message", {
+      messageIndex,
+      message,
+    });
   }
 }

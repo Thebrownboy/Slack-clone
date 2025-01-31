@@ -15,6 +15,7 @@ import Reactions from "./reactions";
 import { useCurrentMember, useCurrentMessages } from "@/state-store/store";
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
 import { useParams } from "next/navigation";
+import { triggerEditMessageEvent } from "@/utils/messages-actions";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -127,10 +128,11 @@ function Message({
     }
   };
   const hanleEditMessage = async ({ body }: { body: string }) => {
-    await handleSubmit(body, id);
-    if (!error) {
+    const message = await handleSubmit(body, id);
+    if (!error && message.message) {
       toast.success("Message Updated");
-      editMessage(messageIndex, body);
+      // editMessage(messageIndex, body);
+      triggerEditMessageEvent(messageIndex, message.message);
     } else toast.error("Fail to update Message");
     setEditingId(null);
   };

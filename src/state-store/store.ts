@@ -147,7 +147,7 @@ interface IChannelMesages {
     channelId: string | null;
     messages: tFulldataMessage[];
   };
-  editMessage: (index: number, newBody: string) => void;
+  editMessage: (index: number, newBody: string, updateTime: Date) => void;
   deleteMessage: (index: number) => void;
   addNewMessage: (message: tFulldataMessage) => void;
   toggleReactionOnMessage: (
@@ -160,12 +160,15 @@ interface IChannelMesages {
 
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
-    editMessage(index, newBody) {
+    editMessage(index, newBody, updateTime: Date) {
       set((state) => {
         const messagesLength = state.currentChannelMessages.messages.length;
         const editedMessage =
           state.currentChannelMessages.messages[messagesLength - index - 1];
-        if (editedMessage?.body) editedMessage.body = newBody;
+        if (editedMessage?.body) {
+          editedMessage.body = newBody;
+          editedMessage.updatedAt = updateTime;
+        }
 
         return {
           ...state,
