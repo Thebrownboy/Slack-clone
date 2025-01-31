@@ -8,11 +8,7 @@ import {
   triggerMessageEvent,
   uploadImageAction,
 } from "@/utils/messages-actions";
-import {
-  useCurrentMember,
-  useCurrentMessages,
-  useCurrentUser,
-} from "@/state-store/store";
+import { useCurrentMember, useCurrentUser } from "@/state-store/store";
 import createNativeMessage from "@/lib/common-utils";
 // quills does not working correclty with the server-side rendering
 // even if the component is a client componet , but next will render it once on the server
@@ -20,15 +16,13 @@ import createNativeMessage from "@/lib/common-utils";
 
 interface ChantInputProps {
   placeholder: string;
-  channelId: string;
 }
 
-export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
+export default function ChatInput({ placeholder }: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
   const editorRef = useRef<Quill | null>(null);
-  const { handleSubmit: createMessage, loading } = useCreateMessage(channelId);
-  const { addNewMessage } = useCurrentMessages();
+  const { handleSubmit: createMessage, loading } = useCreateMessage();
   const {
     currentMemberState: { member },
   } = useCurrentMember();

@@ -52,10 +52,7 @@ export default function ChannelPage() {
         canLoadMore={false}
         variant="channel"
       />
-      <ChatInput
-        channelId={channel.id}
-        placeholder={`Message # ${channel.name}`}
-      />
+      <ChatInput placeholder={`Message # ${channel.name}`} />
     </div>
   );
 }

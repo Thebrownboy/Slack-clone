@@ -1,11 +1,12 @@
+import useGetUserId from "@/hooks/useGetUserId";
+import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { tWorkspaceMembers } from "@/types/common-types";
 import { getWorkspaceMembersAction } from "@/utils/members-actions";
 import { useEffect, useState } from "react";
 
-export default function useGetWorkspaceMembers(
-  workspaceId: string,
-  userId: string
-) {
+export default function useGetWorkspaceMembers() {
+  const { userId } = useGetUserId();
+  const { workspaceId } = useGetWorkspaceId();
   const [workspaceMembers, updateWorkspaceMembers] = useState<{
     currentWorkspaceMembers: tWorkspaceMembers[] | null;
     isLoading: boolean;
@@ -14,7 +15,10 @@ export default function useGetWorkspaceMembers(
   useEffect(() => {
     const getWorkspaceMembers = async () => {
       try {
-        const response = await getWorkspaceMembersAction(workspaceId, userId);
+        const response = await getWorkspaceMembersAction(
+          workspaceId as string,
+          userId as string
+        );
         updateWorkspaceMembers((state) => ({
           ...state,
           isLoading: false,

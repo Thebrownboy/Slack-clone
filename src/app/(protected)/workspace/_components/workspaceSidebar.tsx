@@ -8,7 +8,6 @@ import {
 import WorkspaceHeader from "./workspaceHeader";
 import {
   useCreateChannelModal,
-  useCurrentUser,
   useCurrentWorkspace,
 } from "@/state-store/store";
 import SidebarItem from "./sidebarItem";
@@ -21,26 +20,17 @@ import { useParams } from "next/navigation";
 export default function WorkspaceSidebar() {
   const { setOpen } = useCreateChannelModal((state) => state);
   const {
-    currentWorkspaceState: {
-      isLoading: workspaceLoading,
-      workSpace: currentWorkSpace,
-    },
+    currentWorkspaceState: { isLoading: workspaceLoading },
   } = useCurrentWorkspace((state) => state);
-  const workspaceId = currentWorkSpace?.id;
-  const {
-    userState: { user },
-  } = useCurrentUser((state) => state);
-  const { loading: memberLoading, member } = useGetCurrentMember(
-    workspaceId as string,
-    user?.id || ""
-  );
+
+  const { loading: memberLoading, member } = useGetCurrentMember();
   const { currentChannels, isLoading: isCurrentChannelsLoading } =
     useGetCurrentChannels();
 
   const { channelId } = useParams();
 
   const { currentWorkspaceMembers, isLoading: currentMembersLoading } =
-    useGetWorkspaceMembers(workspaceId as string, user?.id || "");
+    useGetWorkspaceMembers();
   if (
     workspaceLoading ||
     memberLoading ||

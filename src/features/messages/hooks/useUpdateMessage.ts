@@ -1,5 +1,5 @@
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentWorkspace } from "@/state-store/store";
+import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { editMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
@@ -7,9 +7,7 @@ export default function useEditMessage() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
 
-  const {
-    currentWorkspaceState: { workSpace },
-  } = useCurrentWorkspace((state) => state);
+  const { workspaceId } = useGetWorkspaceId();
 
   const { userId } = useGetUserId();
   const handleSubmit = async (body: string, messageId: string) => {
@@ -18,7 +16,7 @@ export default function useEditMessage() {
       body,
       messageId,
       userId: userId as string,
-      workspaceId: workSpace?.id || "",
+      workspaceId: workspaceId as string,
     });
     updateLoading(false);
     updateError(message.message ? "" : "Unexpected error happend");

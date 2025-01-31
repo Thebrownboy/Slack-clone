@@ -1,5 +1,5 @@
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentWorkspace } from "@/state-store/store";
+import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { deleteMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
@@ -7,17 +7,14 @@ export default function useRemoveMessage() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
 
-  const {
-    currentWorkspaceState: { workSpace },
-  } = useCurrentWorkspace((state) => state);
-
+  const { workspaceId } = useGetWorkspaceId();
   const { userId } = useGetUserId();
   const handleSubmit = async (messageId: string) => {
     updateLoading(true);
     const message = await deleteMessageAction({
       userId: userId as string,
       messageId,
-      workspaceId: workSpace?.id || "",
+      workspaceId: workspaceId as string,
     });
     updateLoading(false);
     updateError(message.message ? "" : "Unexpected error happend");

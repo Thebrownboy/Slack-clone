@@ -1,12 +1,13 @@
+import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentWorkspace } from "@/state-store/store";
 import { createMessageAction } from "@/utils/messages-actions";
 import { useState } from "react";
 
-export default function useCreateMessage(channelId: string | undefined) {
+export default function useCreateMessage() {
   const [error, updateError] = useState("");
   const [loading, updateLoading] = useState(false);
-
+  const { channelId } = useGetChannelId();
   const {
     currentWorkspaceState: { workSpace },
   } = useCurrentWorkspace((state) => state);
@@ -23,7 +24,7 @@ export default function useCreateMessage(channelId: string | undefined) {
       imageId,
       userId: userId as string,
       workspaceId: workSpace?.id || "",
-      channelId,
+      channelId: channelId as string,
       parentMessageId,
     });
     updateLoading(false);
