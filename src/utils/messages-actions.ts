@@ -8,6 +8,8 @@ import {
   getMessages,
   uploadImage,
 } from "./database-utils/messages-utils";
+import { tFulldataMessage } from "@/types/common-types";
+import pusherServer from "@/lib/pusher";
 
 export async function createMessageAction(messageData: {
   userId: string;
@@ -80,4 +82,9 @@ export async function deleteMessageAction(messageData: {
     success: !!message,
     message: message,
   };
+}
+
+export async function triggerMessageEvent(message: tFulldataMessage) {
+  if (message?.channelId)
+    pusherServer.trigger(message?.channelId, "incomming-message", message);
 }

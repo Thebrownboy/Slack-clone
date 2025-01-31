@@ -1,17 +1,19 @@
 import dynamic from "next/dynamic";
-import { tmember, tMessagePlaceholder, tUser } from "@/types/common-types";
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 // import Editor from "@/components/editor";
 import { useRef, useState } from "react";
 import type Quill from "quill";
 import useCreateMessage from "@/features/messages/hooks/useCreateMessage";
-import { uploadImageAction } from "@/utils/messages-actions";
+import {
+  triggerMessageEvent,
+  uploadImageAction,
+} from "@/utils/messages-actions";
 import {
   useCurrentMember,
   useCurrentMessages,
   useCurrentUser,
 } from "@/state-store/store";
-import { tFulldataMessage } from "@/types/common-types";
+import createNativeMessage from "@/lib/common-utils";
 // quills does not working correclty with the server-side rendering
 // even if the component is a client componet , but next will render it once on the server
 // so we should have some work-around
@@ -21,28 +23,6 @@ interface ChantInputProps {
   channelId: string;
 }
 
-const createNativeMessage = ({
-  message,
-  member,
-  user,
-  URL,
-}: {
-  member: tmember;
-  message: tMessagePlaceholder;
-  URL: string | undefined;
-  user: tUser;
-}) => {
-  return {
-    ...message,
-    URL,
-    member,
-    user,
-    reactions: [],
-    threadCount: 0,
-    threadImage: undefined,
-    threadTimestamp: 0,
-  } as tFulldataMessage;
-};
 export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
@@ -81,6 +61,7 @@ export default function ChatInput({ placeholder, channelId }: ChantInputProps) {
         URL: uploadedImage?.URL,
       });
       addNewMessage(messageObject);
+      triggerMessageEvent(messageObject);
     }
   };
   return (

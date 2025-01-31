@@ -1,13 +1,14 @@
 "use client";
 
 import useGetChannelById from "@/features/channels/hooks/useGetChannelById";
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentMessages, useCurrentUser } from "@/state-store/store";
 import { Loader, TriangleAlert } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 import ChannelHeader from "./_components/channelHeader";
 import ChatInput from "./_components/chatInput";
 import useGetMessages from "@/features/messages/hooks/useGetMessages";
 import MessagesList from "@/components/messagesList";
+import pusherClient from "@/lib/pusher-client";
 
 interface ChannelPageProps {
   params: Promise<{
@@ -28,7 +29,23 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     undefined,
     undefined
   );
+  const { addNewMessage } = useCurrentMessages();
 
+  useEffect(() => {
+    if (channelId && userState.user?.id) {
+      const pusherChannel = pusherClient.subscribe(channelId);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("incomming-message", (data: any) => {
+        // the message is comming from another user
+        if (data.memberId !== userState.user?.id) {
+          addNewMessage(data);
+        }
+      });
+    }
+    return () => {
+      pusherClient.unsubscribe(channelId);
+    };
+  }, [channelId, addNewMessage, userState]);
   if (loading || messagesLoading) {
     return (
       <div className=" h-full flex-1 flex items-center justify-center">
@@ -48,6 +65,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
       </div>
     );
   }
+
   return (
     <div className="flex flex-col h-full ">
       <ChannelHeader channelName={channel.name} channelId={channel.id} />

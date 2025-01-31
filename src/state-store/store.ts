@@ -167,17 +167,6 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           state.currentChannelMessages.messages[messagesLength - index - 1];
         if (editedMessage?.body) editedMessage.body = newBody;
 
-        console.log(editedMessage);
-        console.log([
-          ...state.currentChannelMessages.messages.slice(
-            0,
-            messagesLength - index - 1
-          ),
-          editedMessage,
-          ...state.currentChannelMessages.messages.slice(
-            messagesLength - index
-          ),
-        ]);
         return {
           ...state,
           currentChannelMessages: {
