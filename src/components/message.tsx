@@ -15,7 +15,10 @@ import Reactions from "./reactions";
 import { useCurrentMember, useCurrentMessages } from "@/state-store/store";
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
 import { useParams } from "next/navigation";
-import { triggerEditMessageEvent } from "@/utils/messages-actions";
+import {
+  triggerDeleteMessageEvent,
+  triggerEditMessageEvent,
+} from "@/utils/messages-actions";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -121,7 +124,7 @@ function Message({
     await handleDelete(id);
     if (!deleteError) {
       toast.success("message deleted successfully ");
-      deleteMessage(messageIndex);
+      triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
       // TODO :Close thread if opened
     } else {
       toast.error("something went wrong ");

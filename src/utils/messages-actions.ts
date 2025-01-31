@@ -104,3 +104,14 @@ export async function triggerEditMessageEvent(
     });
   }
 }
+
+export async function triggerDeleteMessageEvent(
+  messageIndex: number,
+  workspaceId: string,
+  channelId: string
+) {
+  pusherServer.trigger(workspaceId, "delete-message", {
+    messageIndex,
+    channelId,
+  });
+}

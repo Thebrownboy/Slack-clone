@@ -33,7 +33,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     undefined,
     undefined
   );
-  const { addNewMessage, toggleReactionOnMessage, editMessage } =
+  const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
   const {
     currentWorkspaceState: { workSpace },
@@ -67,6 +67,12 @@ export default function ChannelPage({ params }: ChannelPageProps) {
           );
         }
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("delete-message", (data: any) => {
+        if (channelId === data.channelId) {
+          deleteMessage(data.messageIndex);
+        }
+      });
     }
     return () => {
       if (workSpace) pusherClient.unsubscribe(workSpace.id);
@@ -78,6 +84,7 @@ export default function ChannelPage({ params }: ChannelPageProps) {
     workSpace,
     toggleReactionOnMessage,
     editMessage,
+    deleteMessage,
   ]);
   if (loading || messagesLoading) {
     return (
