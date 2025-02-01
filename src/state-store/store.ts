@@ -148,15 +148,25 @@ interface IChannelMesages {
     channelId: string,
     index: number,
     newBody: string,
-    updateTime: Date
+    updateTime: Date,
+    activeChannel: boolean
   ) => void;
-  deleteMessage: (channelId: string, index: number) => void;
-  addNewMessage: (channelId: string, message: tFulldataMessage) => void;
+  deleteMessage: (
+    channelId: string,
+    index: number,
+    activeChannel: boolean
+  ) => void;
+  addNewMessage: (
+    channelId: string,
+    message: tFulldataMessage,
+    activeChannel: boolean
+  ) => void;
   toggleReactionOnMessage: (
     channel: string,
     index: number,
     value: string,
-    memberId: string
+    memberId: string,
+    activeChannel: boolean
   ) => void;
   updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
 }
@@ -164,8 +174,12 @@ interface IChannelMesages {
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
     currentChannelsMessages: {},
-    editMessage(channelId, index, newBody, updateTime: Date) {
+    editMessage(channelId, index, newBody, updateTime: Date, activeChannel) {
       set((state) => {
+        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+          return state;
+        }
+
         const editedMessage = state.currentChannelsMessages[channelId][index];
         if (editedMessage?.body) {
           editedMessage.body = newBody;
@@ -186,8 +200,11 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         };
       });
     },
-    deleteMessage(channelId, index) {
+    deleteMessage(channelId, index, activeChannel) {
       set((state) => {
+        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+          return state;
+        }
         let channelMessages = state.currentChannelsMessages[channelId];
         channelMessages = [
           ...channelMessages.slice(0, index),
@@ -215,9 +232,18 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
       channelId: null,
       messages: [],
     },
-    toggleReactionOnMessage: (channelId, index, value, memberId) => {
+    toggleReactionOnMessage: (
+      channelId,
+      index,
+      value,
+      memberId,
+      activeChannel
+    ) => {
       set((state) => {
-        console.log(index, value, memberId);
+        // you are inactive and also , you did not load any messages
+        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+          return state;
+        }
         const editedMessage = state.currentChannelsMessages[channelId][index];
         const reactionSize = editedMessage?.reactions.length || 0;
 
@@ -276,18 +302,28 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         };
       });
     },
-
-    addNewMessage: (channelId, message: tFulldataMessage) => {
-      set((state) => ({
-        ...state,
-        currentChannelsMessages: {
-          ...state.currentChannelsMessages,
-          [channelId]: [
-            message,
-            ...(state.currentChannelsMessages[channelId] || []),
-          ],
-        },
-      }));
+    // active channel will be used for one case ,  if the user load some messages in a channel
+    // and then go to another channel in the same workspace, the channel will not be active in that case
+    // if the user previously visited this channel , then any comming messages will be inserted in the array of the messages ,
+    // however if the user did  not open the channel , all the messages will not be inserted and it will be updated after he visits the
+    // channel by the first data fetch
+    addNewMessage: (channelId, message: tFulldataMessage, activeChannel) => {
+      set((state) => {
+        // the user did not open the channel and not active
+        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+          return state;
+        }
+        return {
+          ...state,
+          currentChannelsMessages: {
+            ...state.currentChannelsMessages,
+            [channelId]: [
+              message,
+              ...(state.currentChannelsMessages[channelId] || []),
+            ],
+          },
+        };
+      });
     },
   };
 });

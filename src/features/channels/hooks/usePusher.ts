@@ -16,38 +16,40 @@ export default function usePusher() {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
-        if (channelId === data.channelId) {
-          addNewMessage(channelId as string, data);
-        }
+        addNewMessage(
+          data.channelId as string,
+          data,
+          data.channelId === channelId
+        );
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
-        if (channelId === data.channelId) {
-          toggleReactionOnMessage(
-            channelId as string,
-            data.messageIndex,
-            data.value,
-            data.userId
-          );
-        }
+        toggleReactionOnMessage(
+          data.channelId as string,
+          data.messageIndex,
+          data.value,
+          data.userId,
+          channelId === data.channelId
+        );
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("edit-message", (data: any) => {
-        if (channelId === data.message.channelId) {
-          editMessage(
-            channelId as string,
-            data.messageIndex,
-            data.message.body,
-            data.message.updatedAt
-          );
-        }
+        editMessage(
+          data.channelId as string,
+          data.messageIndex,
+          data.message.body,
+          data.message.updatedAt,
+          channelId === data.channelId
+        );
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
-        if (channelId === data.channelId) {
-          deleteMessage(channelId as string, data.messageIndex);
-        }
+        deleteMessage(
+          data.channelId as string,
+          data.messageIndex,
+          channelId === data.channelId
+        );
       });
     }
     return () => {

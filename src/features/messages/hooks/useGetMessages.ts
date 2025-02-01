@@ -33,9 +33,10 @@ export default function useGetMessages(
       if (messages && messages.length == 0) updateNoMore(true);
       updateLoading(false);
     };
-
-    getMessages();
+    // refetch only if you don't fetch previuosly
+    if (!currentChannelMessages) getMessages();
   }, [
+    currentChannelMessages,
     userId,
     channelId,
     conversationId,
