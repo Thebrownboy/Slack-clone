@@ -7,6 +7,7 @@ export default function useGetMessages(
   conversationId: string | undefined,
   parentMessageId: string | undefined
 ) {
+  const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
   const { currentChannelsMessages, updateMessages } = useCurrentMessages();
@@ -15,11 +16,18 @@ export default function useGetMessages(
   }, [channelId, currentChannelsMessages]);
   const [loading, updateLoading] = useState(false);
   const [skip, updateSkip] = useState(0);
-  const [take, updateTake] = useState(10);
+  const [take, updateTake] = useState(5);
   const [noMore, updateNoMore] = useState(false);
+  const [getMore, updateGetMore] = useState(false);
+
+  const getMoreMessages = () => {
+    console.log("I am here ");
+    updateGetMore(true);
+    updateSkip(skip + BATCH_SIZE);
+  };
   useEffect(() => {
     const getMessages = async () => {
-      updateLoading(true);
+      if (!getMore) updateLoading(true);
       const messages = await getMessagesAction(
         userId as string,
         channelId as string,
@@ -32,10 +40,12 @@ export default function useGetMessages(
         updateMessages(channelId as string, messages);
       if (messages && messages.length == 0) updateNoMore(true);
       updateLoading(false);
+      updateGetMore(false);
     };
     // refetch only if you don't fetch previuosly
-    if (!currentChannelMessages) getMessages();
+    if (!currentChannelMessages || getMore) getMessages();
   }, [
+    getMore,
     currentChannelMessages,
     userId,
     channelId,
@@ -54,5 +64,7 @@ export default function useGetMessages(
     currentChannelMessages,
     loading,
     noMore,
+    getMoreMessages,
+    getMore,
   };
 }

@@ -224,7 +224,10 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         ...state,
         currentChannelsMessages: {
           ...state.currentChannelsMessages,
-          [channelId]: messages,
+          [channelId]: [
+            ...(state.currentChannelsMessages[channelId] || []),
+            ...messages,
+          ],
         },
       }));
     },

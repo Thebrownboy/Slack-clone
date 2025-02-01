@@ -13,10 +13,13 @@ export default function ChannelPage() {
   const {
     currentChannelState: { channel, loading },
   } = useGetChannelById();
-  const { currentChannelMessages, loading: messagesLoading } = useGetMessages(
-    undefined,
-    undefined
-  );
+  const {
+    currentChannelMessages,
+    loading: messagesLoading,
+    getMoreMessages,
+    getMore,
+    noMore,
+  } = useGetMessages(undefined, undefined);
   usePusher();
   if (loading || messagesLoading) {
     return (
@@ -46,9 +49,9 @@ export default function ChannelPage() {
         channelName={channel.name}
         channelCreationTime={channel.creationTime}
         data={currentChannelMessages}
-        loadMore={() => {}}
-        isLoadingMore={false}
-        canLoadMore={false}
+        loadMore={getMoreMessages}
+        isLoadingMore={getMore}
+        canLoadMore={!getMore && !noMore}
         variant="channel"
       />
       <ChatInput placeholder={`Message # ${channel.name}`} />
