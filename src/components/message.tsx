@@ -19,6 +19,7 @@ import {
   triggerDeleteMessageEvent,
   triggerEditMessageEvent,
 } from "@/utils/messages-actions";
+import usePanel from "@/hooks/use-panel";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -79,6 +80,7 @@ function Message({
   image,
   channelId,
 }: messageProps) {
+  const { onOpenMessage, onCloseMessage } = usePanel();
   const { toggleReactionOnMessage, deleteMessage, editMessage } =
     useCurrentMessages();
   const {
@@ -198,7 +200,7 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => {}}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
@@ -280,7 +282,7 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => {}}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
