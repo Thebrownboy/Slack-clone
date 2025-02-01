@@ -2,16 +2,17 @@ import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentMessages } from "@/state-store/store";
 import { getMessagesAction } from "@/utils/messages-actions";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 export default function useGetMessages(
   conversationId: string | undefined,
   parentMessageId: string | undefined
 ) {
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const { currentChannelMessages, updateMessages } = useCurrentMessages(
-    (state) => state
-  );
+  const { currentChannelsMessages, updateMessages } = useCurrentMessages();
+  const currentChannelMessages = useMemo(() => {
+    return currentChannelsMessages[channelId as string];
+  }, [channelId, currentChannelsMessages]);
   const [loading, updateLoading] = useState(false);
   const [skip, updateSkip] = useState(0);
   const [take, updateTake] = useState(10);
@@ -27,7 +28,8 @@ export default function useGetMessages(
         skip,
         take
       );
-      if (messages && messages.length !== 0) updateMessages(messages);
+      if (messages && messages.length !== 0)
+        updateMessages(channelId as string, messages);
       if (messages && messages.length == 0) updateNoMore(true);
       updateLoading(false);
     };

@@ -143,64 +143,71 @@ export const useCurrentMember = create<iCurrentMember>((set) => {
 });
 
 interface IChannelMesages {
-  currentChannelMessages: {
-    channelId: string | null;
-    messages: tFulldataMessage[];
-  };
-  editMessage: (index: number, newBody: string, updateTime: Date) => void;
-  deleteMessage: (index: number) => void;
-  addNewMessage: (message: tFulldataMessage) => void;
+  currentChannelsMessages: Record<string, tFulldataMessage[]>;
+  editMessage: (
+    channelId: string,
+    index: number,
+    newBody: string,
+    updateTime: Date
+  ) => void;
+  deleteMessage: (channelId: string, index: number) => void;
+  addNewMessage: (channelId: string, message: tFulldataMessage) => void;
   toggleReactionOnMessage: (
+    channel: string,
     index: number,
     value: string,
     memberId: string
   ) => void;
-  updateMessages: (messages: tFulldataMessage[]) => void;
+  updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
 }
 
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
-    editMessage(index, newBody, updateTime: Date) {
+    currentChannelsMessages: {},
+    editMessage(channelId, index, newBody, updateTime: Date) {
       set((state) => {
-        const editedMessage = state.currentChannelMessages.messages[index];
+        const editedMessage = state.currentChannelsMessages[channelId][index];
         if (editedMessage?.body) {
           editedMessage.body = newBody;
           editedMessage.updatedAt = updateTime;
         }
-
+        let channelMessages = state.currentChannelsMessages[channelId];
+        channelMessages = [
+          ...channelMessages.slice(0, index),
+          editedMessage,
+          ...channelMessages.slice(index + 1),
+        ];
         return {
           ...state,
-          currentChannelMessages: {
-            channelId: state.currentChannelMessages.channelId,
-            messages: [
-              ...state.currentChannelMessages.messages.slice(0, index),
-              editedMessage,
-              ...state.currentChannelMessages.messages.slice(index + 1),
-            ],
+          currentChannelsMessages: {
+            ...state.currentChannelsMessages,
+            [channelId]: channelMessages,
           },
         };
       });
     },
-    deleteMessage(index) {
+    deleteMessage(channelId, index) {
       set((state) => {
+        let channelMessages = state.currentChannelsMessages[channelId];
+        channelMessages = [
+          ...channelMessages.slice(0, index),
+          ...channelMessages.slice(index + 1),
+        ];
         return {
           ...state,
-          currentChannelMessages: {
-            channelId: state.currentChannelMessages.channelId,
-            messages: [
-              ...state.currentChannelMessages.messages.slice(0, index),
-              ...state.currentChannelMessages.messages.slice(index + 1),
-            ],
+          currentChannelsMessages: {
+            ...state.currentChannelsMessages,
+            [channelId]: channelMessages,
           },
         };
       });
     },
-    updateMessages(messages) {
+    updateMessages(channelId, messages) {
       set((state) => ({
         ...state,
-        currentChannelMessages: {
-          channelId: state.currentChannelMessages.channelId,
-          messages,
+        currentChannelsMessages: {
+          ...state.currentChannelsMessages,
+          [channelId]: messages,
         },
       }));
     },
@@ -208,10 +215,10 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
       channelId: null,
       messages: [],
     },
-    toggleReactionOnMessage: (index, value, memberId) => {
+    toggleReactionOnMessage: (channelId, index, value, memberId) => {
       set((state) => {
         console.log(index, value, memberId);
-        const editedMessage = state.currentChannelMessages.messages[index];
+        const editedMessage = state.currentChannelsMessages[channelId][index];
         const reactionSize = editedMessage?.reactions.length || 0;
 
         if (!reactionSize) {
@@ -254,26 +261,31 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
             });
           }
         }
-
+        let channelMessages = state.currentChannelsMessages[channelId];
+        channelMessages = [
+          ...channelMessages.slice(0, index),
+          editedMessage,
+          ...channelMessages.slice(index + 1),
+        ];
         return {
           ...state,
-          currentChannelMessages: {
-            channelId: state.currentChannelMessages.channelId,
-            messages: [
-              ...state.currentChannelMessages.messages.slice(0, index),
-              editedMessage,
-              ...state.currentChannelMessages.messages.slice(index + 1),
-            ],
+          currentChannelsMessages: {
+            ...state.currentChannelsMessages,
+            [channelId]: channelMessages,
           },
         };
       });
     },
-    addNewMessage: (message: tFulldataMessage) => {
+
+    addNewMessage: (channelId, message: tFulldataMessage) => {
       set((state) => ({
         ...state,
-        currentChannelMessages: {
-          channelId: state.currentChannelMessages.channelId,
-          messages: [message, ...state.currentChannelMessages.messages],
+        currentChannelsMessages: {
+          ...state.currentChannelsMessages,
+          [channelId]: [
+            message,
+            ...(state.currentChannelsMessages[channelId] || []),
+          ],
         },
       }));
     },

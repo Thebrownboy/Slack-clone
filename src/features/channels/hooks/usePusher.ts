@@ -17,13 +17,18 @@ export default function usePusher() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
         if (channelId === data.channelId) {
-          addNewMessage(data);
+          addNewMessage(channelId as string, data);
         }
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
         if (channelId === data.channelId) {
-          toggleReactionOnMessage(data.messageIndex, data.value, data.userId);
+          toggleReactionOnMessage(
+            channelId as string,
+            data.messageIndex,
+            data.value,
+            data.userId
+          );
         }
       });
 
@@ -31,6 +36,7 @@ export default function usePusher() {
       pusherChannel.bind("edit-message", (data: any) => {
         if (channelId === data.message.channelId) {
           editMessage(
+            channelId as string,
             data.messageIndex,
             data.message.body,
             data.message.updatedAt
@@ -40,7 +46,7 @@ export default function usePusher() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
         if (channelId === data.channelId) {
-          deleteMessage(data.messageIndex);
+          deleteMessage(channelId as string, data.messageIndex);
         }
       });
     }

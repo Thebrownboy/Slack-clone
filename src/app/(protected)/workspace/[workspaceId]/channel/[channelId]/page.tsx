@@ -45,7 +45,7 @@ export default function ChannelPage() {
         channelId={channel.id}
         channelName={channel.name}
         channelCreationTime={channel.creationTime}
-        data={currentChannelMessages.messages}
+        data={currentChannelMessages}
         loadMore={() => {}}
         isLoadingMore={false}
         canLoadMore={false}
