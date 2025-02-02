@@ -36,7 +36,7 @@ export default function usePusher() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("edit-message", (data: any) => {
         editMessage(
-          data.channelId as string,
+          data.message.channelId as string,
           data.messageIndex,
           data.message.body,
           data.message.updatedAt,
@@ -45,6 +45,11 @@ export default function usePusher() {
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
+        console.log(
+          data.channelId as string,
+          data.messageIndex,
+          channelId === data.channelId
+        );
         deleteMessage(
           data.channelId as string,
           data.messageIndex,

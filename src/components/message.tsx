@@ -126,10 +126,10 @@ function Message({
     await handleDelete(id);
     if (!deleteError) {
       toast.success("message deleted successfully ");
-      triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
       if (parentMessageId) {
         onCloseMessage();
       }
+      triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
       // TODO :Close thread if opened
     } else {
       toast.error("something went wrong ");
