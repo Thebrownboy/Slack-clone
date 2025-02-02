@@ -80,7 +80,7 @@ function Message({
   image,
   channelId,
 }: messageProps) {
-  const { onOpenMessage, onCloseMessage } = usePanel();
+  const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
   const { toggleReactionOnMessage, deleteMessage, editMessage } =
     useCurrentMessages();
   const {
@@ -127,6 +127,9 @@ function Message({
     if (!deleteError) {
       toast.success("message deleted successfully ");
       triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
+      if (parentMessageId) {
+        onCloseMessage();
+      }
       // TODO :Close thread if opened
     } else {
       toast.error("something went wrong ");
@@ -200,7 +203,7 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => onOpenMessage(id)}
+              handleThread={() => onOpenMessage(id, messageIndex.toString())}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
@@ -282,7 +285,7 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => onOpenMessage(id)}
+              handleThread={() => onOpenMessage(id, messageIndex.toString())}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}

@@ -8,12 +8,13 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import WorkspaceSidebar from "../_components/workspaceSidebar";
-import { LoaderCircleIcon } from "lucide-react";
+import { Loader, LoaderCircleIcon } from "lucide-react";
 import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
 import usePanel from "@/hooks/use-panel";
+import { Thread } from "@/features/messages/components/thread";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
-  const { parentMessageId, onCloseMessage } = usePanel();
+  const { parentMessageId, onCloseMessage, parentMessageIndex } = usePanel();
 
   const showPanel = !!parentMessageId;
   const { initalDataLoading } = useGetInitalData();
@@ -49,7 +50,17 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
             <>
               <ResizableHandle withHandle />
               <ResizablePanel minSize={20} defaultSize={29}>
-                loadThread
+                {parentMessageId ? (
+                  <Thread
+                    messageId={parentMessageId as string}
+                    onClose={onCloseMessage}
+                    messageIndex={parentMessageIndex as string}
+                  />
+                ) : (
+                  <div className=" flex h-full justify-center items-center ">
+                    <Loader className=" size-5 animate-spin text-muted-foreground" />
+                  </div>
+                )}
               </ResizablePanel>
             </>
           )}

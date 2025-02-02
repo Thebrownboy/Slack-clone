@@ -6,19 +6,29 @@ function usePanel() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [parentMessageId, updateParentMessageId] = useState<string | null>("");
+  const [parentMessageIndex, updateParentMessageIndex] = useState<
+    string | null
+  >("");
   useEffect(() => {
-    if (searchParams.get("parentMessageId")) {
+    if (
+      searchParams.get("parentMessageId") &&
+      searchParams.get("parentMessageIndex")
+    ) {
       // do something
-      const id = searchParams.get("parentMessageId");
-      updateParentMessageId(id);
+      const parentId = searchParams.get("parentMessageId");
+      const parentIndex = searchParams.get("parentMessageIndex");
+      updateParentMessageId(parentId);
+      updateParentMessageIndex(parentIndex);
     } else {
       updateParentMessageId(null);
+      updateParentMessageIndex(null);
     }
   }, [searchParams]);
 
-  const onOpenMessage = (messageId: string) => {
+  const onOpenMessage = (messageId: string, messageIndex: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("parentMessageId", messageId);
+    params.set("parentMessageIndex", messageIndex);
 
     router.push(pathname + "?" + params.toString());
   };
@@ -26,6 +36,7 @@ function usePanel() {
   const onCloseMessage = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("parentMessageId");
+    params.delete("parentMessageIndexs");
     router.push(pathname + "?" + params.toString());
   };
 
@@ -33,6 +44,7 @@ function usePanel() {
     parentMessageId,
     onCloseMessage,
     onOpenMessage,
+    parentMessageIndex,
   };
 }
 
