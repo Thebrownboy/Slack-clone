@@ -3,7 +3,6 @@ import { tFulldataMessage } from "@/types/common-types";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import Message from "./message";
 import ChannelHero from "./channelHero";
-import { useParams } from "next/navigation";
 import { useCurrentMember } from "@/state-store/store";
 import { Loader } from "lucide-react";
 interface MessageListProps {

@@ -1,6 +1,7 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentMessages } from "@/state-store/store";
+import { tFulldataMessage } from "@/types/common-types";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useMemo, useState } from "react";
 export default function useGetMessages(
@@ -10,6 +11,9 @@ export default function useGetMessages(
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
+  const [currentThreadMessages, updateCurrentThreadMessage] = useState<
+    tFulldataMessage[] | undefined
+  >([]);
   const { currentChannelsMessages, updateMessages } = useCurrentMessages();
   const currentChannelMessages = useMemo(() => {
     return currentChannelsMessages[channelId as string];
@@ -28,22 +32,41 @@ export default function useGetMessages(
   useEffect(() => {
     const getMessages = async () => {
       if (!getMore) updateLoading(true);
-      const messages = await getMessagesAction(
-        userId as string,
-        channelId as string,
-        conversationId,
-        parentMessageId,
-        skip,
-        take
-      );
-      if (messages && messages.length !== 0)
-        updateMessages(channelId as string, messages);
-      if (messages && messages.length == 0) updateNoMore(true);
+      let messages;
+      if (parentMessageId) {
+        console.log("I");
+        messages = await getMessagesAction(
+          userId as string,
+          undefined,
+          undefined,
+          parentMessageId,
+          skip,
+          take
+        );
+        updateCurrentThreadMessage(messages);
+      } else {
+        messages = await getMessagesAction(
+          userId as string,
+          channelId as string,
+          conversationId,
+          parentMessageId,
+          skip,
+          take
+        );
+        if (messages && messages.length) {
+          updateMessages(channelId as string, messages);
+        }
+
+        if (messages && messages.length == 0) {
+          updateNoMore(true);
+        }
+      }
+
       updateLoading(false);
       updateGetMore(false);
     };
     // refetch only if you don't fetch previuosly
-    if (!currentChannelMessages || getMore) getMessages();
+    if (!currentChannelMessages || getMore || parentMessageId) getMessages();
   }, [
     getMore,
     currentChannelMessages,
@@ -66,5 +89,6 @@ export default function useGetMessages(
     noMore,
     getMoreMessages,
     getMore,
+    currentThreadMessages,
   };
 }

@@ -22,6 +22,7 @@ export default function ChatInput({ placeholder }: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
   const editorRef = useRef<Quill | null>(null);
+  const [editorKey, updateEditorKey] = useState(0);
   const { handleSubmit: createMessage, loading } = useCreateMessage();
   const {
     currentMemberState: { member },
@@ -30,7 +31,6 @@ export default function ChatInput({ placeholder }: ChantInputProps) {
     userState: { user },
   } = useCurrentUser();
   // forcing the editor to re-render trick
-  const [editorKey, updateEditorKey] = useState(0);
   const handleSubmit = async ({
     body,
     images,

@@ -10,6 +10,7 @@ function usePanel() {
     string | null
   >("");
   useEffect(() => {
+    console.log(searchParams, "I am here here her ");
     if (
       searchParams.get("parentMessageId") &&
       searchParams.get("parentMessageIndex")
@@ -36,15 +37,23 @@ function usePanel() {
   const onCloseMessage = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("parentMessageId");
-    params.delete("parentMessageIndexs");
+    params.delete("parentMessageIndex");
     router.push(pathname + "?" + params.toString());
   };
 
+  const updateSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    console.log(key, value, "I will update here and push ");
+    params.set(key, value);
+    router.push(pathname + "?" + params.toString());
+  };
   return {
     parentMessageId,
     onCloseMessage,
     onOpenMessage,
     parentMessageIndex,
+    updateParentMessageIndex,
+    updateSearchParams,
   };
 }
 

@@ -1,3 +1,4 @@
+import usePanel from "@/hooks/use-panel";
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
@@ -11,11 +12,19 @@ export default function usePusher() {
     useCurrentMessages();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
+  const { parentMessageIndex, updateSearchParams } = usePanel();
+  console.log(parentMessageIndex);
   useEffect(() => {
     if (channelId && userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
+        console.log("Here is ", parentMessageIndex);
+        if (parentMessageIndex)
+          updateSearchParams(
+            "parentMessageIndex",
+            (+parentMessageIndex + 1).toString()
+          );
         addNewMessage(
           data.channelId as string,
           data,

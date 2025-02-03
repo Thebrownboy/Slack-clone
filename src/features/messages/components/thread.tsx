@@ -2,32 +2,110 @@ import Message from "@/components/message";
 import { Button } from "@/components/ui/button";
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentMessages } from "@/state-store/store";
+import {
+  useCurrentMember,
+  useCurrentMessages,
+  useCurrentUser,
+} from "@/state-store/store";
 import { AlertTriangle, XIcon } from "lucide-react";
-import { useMemo, useState } from "react";
-
+import { useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import useCreateMessage from "../hooks/useCreateMessage";
+import { uploadImageAction } from "@/utils/messages-actions";
+import createNativeMessage from "@/lib/common-utils";
+import Quill from "quill";
+import useGetMessages from "../hooks/useGetMessages";
+import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ThreadProps {
   messageId: string;
   onClose: () => void;
   messageIndex: string;
 }
 
+const formatDateLabel = (dateStr: string) => {
+  const date = new Date(dateStr);
+  if (isToday(date)) return "Today";
+  if (isYesterday(date)) return "Yesterday";
+  return format(date, "EEEE, MMMM d");
+};
+
+const TIME_THRESHOLD = 5;
+
 export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
+  const editorRef = useRef<Quill | null>(null);
+  const [editorKey, updateEditorKey] = useState(0);
+  const { handleSubmit: createMessage, loading } = useCreateMessage();
+  const {
+    currentMemberState: { member },
+  } = useCurrentMember();
+  const {
+    userState: { user },
+  } = useCurrentUser();
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
   const { currentChannelsMessages } = useCurrentMessages();
   const [editingId, setEditingId] = useState<string | null>(null);
+  const { currentThreadMessages } = useGetMessages(undefined, messageId);
+  console.log(currentThreadMessages, "thread is here ");
+  const handleSubmit = async ({
+    body,
+    images,
+    messageParentId,
+  }: {
+    body: string;
+    images?: File[] | null;
+    messageParentId: string;
+  }) => {
+    editorRef?.current?.enable(false);
+    const uploadedImage = await uploadImageAction(images?.[0] || null);
+    let imageId = undefined;
+    if (uploadedImage) {
+      imageId = uploadedImage.id;
+    }
+    const { message } = await createMessage(body, imageId, messageParentId);
+    updateEditorKey((prev) => prev + 1);
+    editorRef?.current?.enable(true);
+    if (message && member && user) {
+      const messageObject = createNativeMessage({
+        message,
+        member,
+        user,
+        URL: uploadedImage?.URL,
+      });
+      console.log(messageObject);
+      // addNewMessage(messageObject);
+      // triggerMessageEvent(messageObject);
+    }
+  };
   const currentMessage = useMemo(() => {
+    console.log(channelId, messageId, messageIndex, "HEERER IS THE PROBLEM");
     if (channelId && messageId && messageIndex) {
       const message =
-        currentChannelsMessages[channelId as string][+messageIndex];
-      if (message?.id === messageId) {
-        return message;
-      }
-      return null;
+        currentChannelsMessages[channelId as string]?.[+messageIndex];
+      console.log(message);
+      // if (message?.id === messageId) {
+      return message;
+      // }
+      // return null;
     }
     return null;
   }, [currentChannelsMessages, channelId, messageId, messageIndex]);
+
+  const groupedMessages = currentThreadMessages?.reduce(
+    (groups, message, currentIndex) => {
+      const date = new Date(message?.creationTime || "");
+      const dateKey = format(date, "yyyy-MM-dd");
+      if (!groups[dateKey]) {
+        groups[dateKey] = [];
+      }
+      if (message) message.messageIndex = currentIndex;
+      groups[dateKey].unshift(message);
+
+      return groups;
+    },
+    {} as Record<string, typeof currentThreadMessages>
+  );
 
   if (!currentMessage) {
     return (
@@ -53,7 +131,56 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
           <XIcon className=" size-5 stroke-[1.5]" />
         </Button>
       </div>
-      <div>
+      <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
+        {Object.entries(groupedMessages || {}).map(([dateKey, messages]) => {
+          return (
+            <div key={dateKey}>
+              <div className="text-center my-2 relative">
+                <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
+                <span className=" relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm">
+                  {formatDateLabel(dateKey)}
+                </span>
+              </div>
+              {messages.map((message, index) => {
+                const preveMessage = messages[index - 1];
+                const isCompact =
+                  preveMessage &&
+                  preveMessage.user.id === message?.user.id &&
+                  differenceInMinutes(
+                    new Date(message.creationTime),
+                    new Date(preveMessage.creationTime)
+                  ) < TIME_THRESHOLD;
+
+                if (message)
+                  return (
+                    <Message
+                      channelId={channelId as string}
+                      key={message.id}
+                      id={message.id}
+                      memberId={message?.memberId}
+                      authorImage={message.user.image}
+                      authorName={message.user.name}
+                      reactions={message.reactions}
+                      body={message.body}
+                      image={message.URL}
+                      updatedAt={message.updatedAt}
+                      createdAt={message.creationTime}
+                      threadCount={message.threadCount}
+                      threadImage={message.threadImage}
+                      threadTimestamp={message.threadTimestamp}
+                      isEditing={editingId === message.id}
+                      setEditingId={setEditingId}
+                      isCompact={isCompact || false}
+                      hideThreadButton
+                      isAuthor={member?.userId === message.user.id}
+                      messageIndex={message.messageIndex as number}
+                    />
+                  );
+                else return <></>;
+              })}
+            </div>
+          );
+        })}
         <Message
           hideThreadButton
           memberId={currentMessage.memberId}
@@ -74,6 +201,17 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
           threadImage={currentMessage.threadImage}
           threadTimestamp={currentMessage.threadTimestamp}
           isCompact={false}
+        />
+      </div>
+      <div className=" px-4">
+        <Editor
+          onSumbit={({ body, images }) => {
+            handleSubmit({ body, images, messageParentId: messageId });
+          }}
+          disabled={loading}
+          key={editorKey}
+          innerRef={editorRef}
+          placeholder="Reply..."
         />
       </div>
     </div>
