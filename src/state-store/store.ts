@@ -464,6 +464,7 @@ interface iCurrentThreadData {
     messages: tFulldataMessage[];
     skip: number;
   };
+  addReplyOnCurrentThread: (reply: tFulldataMessage) => void;
 }
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
@@ -473,6 +474,18 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
     currentThreadData: {
       skip: 0,
       messages: [],
+    },
+    addReplyOnCurrentThread(reply) {
+      set((state) => {
+        if (reply?.parentMessageId !== state.parentMessageId) return state;
+        return {
+          ...state,
+          currentThreadData: {
+            skip: state.currentThreadData.skip + 1,
+            messages: [reply, ...state.currentThreadData.messages],
+          },
+        };
+      });
     },
     updateParentMessageId(parentMessageId) {
       set((state) => {

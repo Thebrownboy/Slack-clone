@@ -2,13 +2,14 @@ import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import pusherClient from "@/lib/pusher-client";
-import { useCurrentMessages } from "@/state-store/store";
+import { useCurrentMessages, useCurrentThreadData } from "@/state-store/store";
 import { useEffect } from "react";
 
 export default function usePusher() {
   const { workspaceId } = useGetWorkspaceId();
   const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
+  const { addReplyOnCurrentThread } = useCurrentThreadData();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   useEffect(() => {
@@ -54,6 +55,10 @@ export default function usePusher() {
           channelId === data.channelId
         );
       });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("reply-on-thread", (data: any) => {
+        addReplyOnCurrentThread(data);
+      });
     }
     return () => {
       if (workspaceId) {
@@ -61,6 +66,7 @@ export default function usePusher() {
       }
     };
   }, [
+    addReplyOnCurrentThread,
     channelId,
     addNewMessage,
     userId,
