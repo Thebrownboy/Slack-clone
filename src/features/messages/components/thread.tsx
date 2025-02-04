@@ -20,7 +20,7 @@ const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ThreadProps {
   messageId: string;
   onClose: () => void;
-  messageIndex: string;
+  messageIndex: number | null;
 }
 
 const formatDateLabel = (dateStr: string) => {
@@ -85,7 +85,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
   const currentMessage = useMemo(() => {
     if (channelId && messageId && messageIndex) {
       const message =
-        currentChannelsMessages[channelId as string]?.[+messageIndex];
+        currentChannelsMessages[channelId as string].messages[messageIndex];
       // if (message?.id === messageId) {
       return message;
       // }
@@ -225,7 +225,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
           reactions={currentMessage.reactions}
           isEditing={editingId === currentMessage.id}
           setEditingId={setEditingId}
-          messageIndex={+messageIndex}
+          messageIndex={messageIndex as number}
           channelId={channelId as string}
           threadCount={currentMessage.threadCount}
           threadImage={currentMessage.threadImage}

@@ -448,3 +448,41 @@ export const useCurrentRepiles = create<iCurrentThreadMessage>((set) => {
     },
   };
 });
+
+interface iCurrentThreadData {
+  parentMessageId: string | null;
+  parentMessageIndex: number | null;
+  updateParentMessageId: (parentMessageId: string | null) => void;
+  updateParentMessageIndex: (parentMessageIndex: number | null) => void;
+  currentThreadData: {
+    messages: tFulldataMessage[];
+    skip: number;
+  };
+}
+
+export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
+  return {
+    parentMessageId: null,
+    parentMessageIndex: null,
+    currentThreadData: {
+      skip: 0,
+      messages: [],
+    },
+    updateParentMessageId(parentMessageId) {
+      set((state) => {
+        return {
+          ...state,
+          parentMessageId,
+        };
+      });
+    },
+    updateParentMessageIndex(parentMessageIndex) {
+      set((state) => {
+        return {
+          ...state,
+          parentMessageIndex,
+        };
+      });
+    },
+  };
+});

@@ -10,12 +10,16 @@ import {
 import WorkspaceSidebar from "../_components/workspaceSidebar";
 import { Loader, LoaderCircleIcon } from "lucide-react";
 import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
-import usePanel from "@/hooks/use-panel";
 import { Thread } from "@/features/messages/components/thread";
+import { useCurrentThreadData } from "@/state-store/store";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
-  const { parentMessageId, onCloseMessage, parentMessageIndex } = usePanel();
-
+  const {
+    parentMessageId,
+    parentMessageIndex,
+    updateParentMessageId,
+    updateParentMessageIndex,
+  } = useCurrentThreadData();
   const showPanel = !!parentMessageId;
   const { initalDataLoading } = useGetInitalData();
   if (initalDataLoading) {
@@ -53,8 +57,11 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
                 {parentMessageId ? (
                   <Thread
                     messageId={parentMessageId as string}
-                    onClose={onCloseMessage}
-                    messageIndex={parentMessageIndex as string}
+                    onClose={() => {
+                      updateParentMessageIndex(null);
+                      updateParentMessageId(null);
+                    }}
+                    messageIndex={parentMessageIndex}
                   />
                 ) : (
                   <div className=" flex h-full justify-center items-center ">

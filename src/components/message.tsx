@@ -12,14 +12,13 @@ import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
 import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
-import { useCurrentMember, useCurrentMessages } from "@/state-store/store";
+import { useCurrentMember, useCurrentThreadData } from "@/state-store/store";
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
 import { useParams } from "next/navigation";
 import {
   triggerDeleteMessageEvent,
   triggerEditMessageEvent,
 } from "@/utils/messages-actions";
-import usePanel from "@/hooks/use-panel";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -80,14 +79,11 @@ function Message({
   image,
   channelId,
 }: messageProps) {
-  const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
-  const { toggleReactionOnMessage, deleteMessage, editMessage } =
-    useCurrentMessages();
-  const {
-    handleSubmit: toggleReaction,
-    error: toggleError,
-    loading: toggleLoading,
-  } = useToggleReaction();
+  // const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
+  const { updateParentMessageId, parentMessageId, updateParentMessageIndex } =
+    useCurrentThreadData();
+  const { handleSubmit: toggleReaction, error: toggleError } =
+    useToggleReaction();
   const { workspaceId } = useParams();
   const {
     currentMemberState: { member },
@@ -123,11 +119,12 @@ function Message({
     const ok = await confirm();
     if (!ok) return;
 
-    await handleDelete(id);
+    const deletedMessage = await handleDelete(id);
     if (!deleteError) {
       toast.success("message deleted successfully ");
-      if (parentMessageId) {
-        onCloseMessage();
+      if (parentMessageId === deletedMessage.message?.id) {
+        updateParentMessageId(null);
+        updateParentMessageIndex(null);
       }
       triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
       // TODO :Close thread if opened
@@ -203,8 +200,11 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => onOpenMessage(id, messageIndex.toString())}
-              handleDelete={handleDeleteMessage}
+              handleThread={() => {
+                updateParentMessageId(id);
+                updateParentMessageIndex(messageIndex);
+              }}
+              handleDelete={() => {}}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
             />
@@ -285,7 +285,10 @@ function Message({
               isAuthor={isAuthor}
               isPending={false}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => onOpenMessage(id, messageIndex.toString())}
+              handleThread={() => {
+                updateParentMessageId(id);
+                updateParentMessageIndex(messageIndex);
+              }}
               handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
