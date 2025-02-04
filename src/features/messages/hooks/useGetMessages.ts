@@ -10,7 +10,7 @@ export default function useGetMessages(
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const { currentChannelsMessages, updateMessages, skip, updateSkip } =
+  const { currentChannelsMessages, updateMessages, updateSkip } =
     useCurrentMessages();
   const currentChannelMessages = useMemo(() => {
     return currentChannelsMessages[channelId as string];
@@ -22,9 +22,8 @@ export default function useGetMessages(
   const [getMore, updateGetMore] = useState(false);
 
   const getMoreMessages = () => {
-    console.log("I will get more ");
     updateGetMore(true);
-    updateSkip(skip + BATCH_SIZE);
+    updateSkip(currentChannelMessages.skip + BATCH_SIZE, channelId as string);
   };
   useEffect(() => {
     const getMessages = async () => {
@@ -34,7 +33,7 @@ export default function useGetMessages(
         channelId as string,
         conversationId,
         parentMessageId,
-        skip,
+        currentChannelMessages?.skip || 0,
         take
       );
       if (messages && messages.length !== 0)
@@ -52,7 +51,6 @@ export default function useGetMessages(
     channelId,
     conversationId,
     parentMessageId,
-    skip,
     take,
     updateMessages,
   ]);
@@ -62,7 +60,7 @@ export default function useGetMessages(
   return {
     updateSkip,
     updateTake,
-    currentChannelMessages,
+    currentChannelMessages: currentChannelMessages?.messages || [],
     loading,
     noMore,
     getMoreMessages,

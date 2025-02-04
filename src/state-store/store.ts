@@ -145,8 +145,11 @@ export const useCurrentMember = create<iCurrentMember>((set) => {
 interface IChannelMesages {
   increaseSkip: () => void;
   skip: number;
-  updateSkip: (newSkip: number) => void;
-  currentChannelsMessages: Record<string, tFulldataMessage[]>;
+  updateSkip: (newSkip: number, channelId: string) => void;
+  currentChannelsMessages: Record<
+    string,
+    { messages: tFulldataMessage[]; skip: number }
+  >;
   editMessage: (
     channelId: string,
     index: number,
@@ -185,27 +188,37 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
       });
     },
     skip: 0,
-    updateSkip(newSkip) {
+    updateSkip(newSkip, channelId) {
       set((state) => {
         return {
           ...state,
-          skip: newSkip,
+          currentChannelsMessages: {
+            ...state.currentChannelsMessages,
+            [channelId]: {
+              ...state.currentChannelsMessages[channelId],
+              skip: newSkip,
+            },
+          },
         };
       });
     },
     currentChannelsMessages: {},
     editMessage(channelId, index, newBody, updateTime: Date, activeChannel) {
       set((state) => {
-        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+        if (
+          !activeChannel &&
+          !state.currentChannelsMessages[channelId].messages
+        ) {
           return state;
         }
 
-        const editedMessage = state.currentChannelsMessages[channelId][index];
+        const editedMessage =
+          state.currentChannelsMessages[channelId].messages[index];
         if (editedMessage?.body) {
           editedMessage.body = newBody;
           editedMessage.updatedAt = updateTime;
         }
-        let channelMessages = state.currentChannelsMessages[channelId];
+        let channelMessages = state.currentChannelsMessages[channelId].messages;
         channelMessages = [
           ...channelMessages.slice(0, index),
           editedMessage,
@@ -215,27 +228,35 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           ...state,
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
-            [channelId]: channelMessages,
+            [channelId]: {
+              skip: state.currentChannelsMessages[channelId].skip,
+              messages: channelMessages,
+            },
           },
         };
       });
     },
     deleteMessage(channelId, index, activeChannel) {
       set((state) => {
-        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+        if (
+          !activeChannel &&
+          !state.currentChannelsMessages[channelId].messages
+        ) {
           return state;
         }
-        let channelMessages = state.currentChannelsMessages[channelId];
+        let channelMessages = state.currentChannelsMessages[channelId].messages;
         channelMessages = [
           ...channelMessages.slice(0, index),
           ...channelMessages.slice(index + 1),
         ];
         return {
           ...state,
-          skip: state.skip - 1,
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
-            [channelId]: channelMessages,
+            [channelId]: {
+              skip: state.currentChannelsMessages[channelId].skip - 1,
+              messages: channelMessages,
+            },
           },
         };
       });
@@ -245,10 +266,13 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         ...state,
         currentChannelsMessages: {
           ...state.currentChannelsMessages,
-          [channelId]: [
-            ...(state.currentChannelsMessages[channelId] || []),
-            ...messages,
-          ],
+          [channelId]: {
+            skip: state.currentChannelsMessages[channelId]?.skip || 0,
+            messages: [
+              ...(state.currentChannelsMessages[channelId]?.messages || []),
+              ...messages,
+            ],
+          },
         },
       }));
     },
@@ -265,10 +289,14 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
     ) => {
       set((state) => {
         // you are inactive and also , you did not load any messages
-        if (!activeChannel && !state.currentChannelsMessages[channelId]) {
+        if (
+          !activeChannel &&
+          !state.currentChannelsMessages[channelId].messages
+        ) {
           return state;
         }
-        const editedMessage = state.currentChannelsMessages[channelId][index];
+        const editedMessage =
+          state.currentChannelsMessages[channelId].messages[index];
         const reactionSize = editedMessage?.reactions.length || 0;
 
         if (!reactionSize) {
@@ -311,7 +339,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
             });
           }
         }
-        let channelMessages = state.currentChannelsMessages[channelId];
+        let channelMessages = state.currentChannelsMessages[channelId].messages;
         channelMessages = [
           ...channelMessages.slice(0, index),
           editedMessage,
@@ -321,7 +349,10 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           ...state,
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
-            [channelId]: channelMessages,
+            [channelId]: {
+              messages: channelMessages,
+              skip: state.currentChannelsMessages[channelId].skip,
+            },
           },
         };
       });
@@ -344,10 +375,13 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
 
-            [channelId]: [
-              message,
-              ...(state.currentChannelsMessages[channelId] || []),
-            ],
+            [channelId]: {
+              skip: state.currentChannelsMessages[channelId].skip + 1,
+              messages: [
+                message,
+                ...state.currentChannelsMessages[channelId].messages,
+              ],
+            },
           },
         };
       });
