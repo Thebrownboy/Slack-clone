@@ -10,17 +10,19 @@ export default function useGetMessages(
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const { currentChannelsMessages, updateMessages } = useCurrentMessages();
+  const { currentChannelsMessages, updateMessages, skip, updateSkip } =
+    useCurrentMessages();
   const currentChannelMessages = useMemo(() => {
     return currentChannelsMessages[channelId as string];
   }, [channelId, currentChannelsMessages]);
   const [loading, updateLoading] = useState(false);
-  const [skip, updateSkip] = useState(0);
+  // const [skip, updateSkip] = useState(0);
   const [take, updateTake] = useState(5);
   const [noMore, updateNoMore] = useState(false);
   const [getMore, updateGetMore] = useState(false);
 
   const getMoreMessages = () => {
+    console.log("I will get more ");
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);
   };

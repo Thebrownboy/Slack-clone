@@ -34,7 +34,6 @@ export default function useGetReplies(parentMessageId: string | undefined) {
   };
   useEffect(() => {
     const getReplies = async () => {
-      console.log(" I will fetch");
       if (!getMore) updateLoading(true);
       const messages = await getMessagesAction(
         userId as string,
@@ -44,13 +43,10 @@ export default function useGetReplies(parentMessageId: string | undefined) {
         skip,
         take
       );
-      console.log("This is the messages", messages);
       if (messages && messages.length == 0) {
-        console.log("TRUE TRUE TRUE ");
         updateNoMore(true);
       }
       if (messages && messages.length !== 0) {
-        console.log("FALSE FALSE");
         updateThreadReplies(messages);
       }
 
@@ -61,14 +57,7 @@ export default function useGetReplies(parentMessageId: string | undefined) {
       updateParentMessage(parentMessageId as string);
     }
     // refetch only if you don't fetch previuosly
-    console.log(
-      "here is the her ",
-      !loading,
-      parentMessageId,
-      !noMore,
-      getMore,
-      !threadReplies?.length
-    );
+
     if (
       !loading &&
       parentMessageId &&

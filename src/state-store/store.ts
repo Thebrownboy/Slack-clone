@@ -143,6 +143,9 @@ export const useCurrentMember = create<iCurrentMember>((set) => {
 });
 
 interface IChannelMesages {
+  increaseSkip: () => void;
+  skip: number;
+  updateSkip: (newSkip: number) => void;
   currentChannelsMessages: Record<string, tFulldataMessage[]>;
   editMessage: (
     channelId: string,
@@ -173,6 +176,23 @@ interface IChannelMesages {
 
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
+    increaseSkip() {
+      set((state) => {
+        return {
+          ...state,
+          skip: state.skip + 1,
+        };
+      });
+    },
+    skip: 0,
+    updateSkip(newSkip) {
+      set((state) => {
+        return {
+          ...state,
+          skip: newSkip,
+        };
+      });
+    },
     currentChannelsMessages: {},
     editMessage(channelId, index, newBody, updateTime: Date, activeChannel) {
       set((state) => {
@@ -212,6 +232,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         ];
         return {
           ...state,
+          skip: state.skip - 1,
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
             [channelId]: channelMessages,
@@ -316,10 +337,13 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         if (!activeChannel && !state.currentChannelsMessages[channelId]) {
           return state;
         }
+        console.log(state.skip);
         return {
           ...state,
+          skip: state.skip + 1,
           currentChannelsMessages: {
             ...state.currentChannelsMessages,
+
             [channelId]: [
               message,
               ...(state.currentChannelsMessages[channelId] || []),
@@ -336,6 +360,7 @@ interface iCurrentThreadMessage {
   threadReplies: tFulldataMessage[] | null;
   updateParentMessage: (newParentMessage: string | null) => void;
   updateThreadReplies: (replies: tFulldataMessage[]) => void;
+  addOneReply: (reply: tFulldataMessage) => void;
   putThreadReplies: (
     replies: tFulldataMessage[] | null,
     parentMessage: string | null
@@ -344,6 +369,22 @@ interface iCurrentThreadMessage {
 
 export const useCurrentRepiles = create<iCurrentThreadMessage>((set) => {
   return {
+    addOneReply(reply) {
+      set((state) => {
+        console.log(
+          "this is the parenet messmage",
+          reply?.parentMessageId,
+          state.parentMessage
+        );
+        if (reply?.parentMessageId !== state.parentMessage) {
+          return state;
+        }
+        return {
+          ...state,
+          threadReplies: [reply, ...(state.threadReplies || [])],
+        };
+      });
+    },
     updateParentMessage(newParentMessage) {
       set((state) => {
         return {

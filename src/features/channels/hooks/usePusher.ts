@@ -1,4 +1,3 @@
-import usePanel from "@/hooks/use-panel";
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
@@ -12,24 +11,27 @@ export default function usePusher() {
     useCurrentMessages();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
-  const { parentMessageIndex, updateSearchParams } = usePanel();
   useEffect(() => {
+    console.log("I will be called pusher ");
+
     if (channelId && userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
-        console.log("Here is ", parentMessageIndex);
-        if (parentMessageIndex)
-          updateSearchParams(
-            "parentMessageIndex",
-            (+parentMessageIndex + 1).toString()
-          );
         addNewMessage(
           data.channelId as string,
           data,
           data.channelId === channelId
         );
       });
+
+      // if (parentMessageId) {
+      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      //   pusherChannel.bind("incomming-reply", (data: any) => {
+      //     addOneReply(data);
+      //   });
+      // }
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
         toggleReactionOnMessage(
@@ -61,7 +63,9 @@ export default function usePusher() {
       });
     }
     return () => {
-      if (workspaceId) pusherClient.unsubscribe(workspaceId as string);
+      if (workspaceId) {
+        pusherClient.unsubscribe(workspaceId as string);
+      }
     };
   }, [
     channelId,

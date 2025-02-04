@@ -11,7 +11,7 @@ import { AlertTriangle, Loader, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import useCreateMessage from "../hooks/useCreateMessage";
-import { uploadImageAction } from "@/utils/messages-actions";
+import { triggerReplyEvent, uploadImageAction } from "@/utils/messages-actions";
 import createNativeMessage from "@/lib/common-utils";
 import Quill from "quill";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
@@ -78,7 +78,8 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
-      // triggerMessageEvent(messageObject);
+      console.log("I will trigger the reply event");
+      triggerReplyEvent(messageObject);
     }
   };
   const currentMessage = useMemo(() => {
