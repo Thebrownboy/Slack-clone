@@ -10,7 +10,6 @@ function usePanel() {
     string | null
   >("");
   useEffect(() => {
-    console.log(searchParams, "I am here here her ");
     if (
       searchParams.get("parentMessageId") &&
       searchParams.get("parentMessageIndex")
@@ -43,7 +42,6 @@ function usePanel() {
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    console.log(key, value, "I will update here and push ");
     params.set(key, value);
     router.push(pathname + "?" + params.toString());
   };

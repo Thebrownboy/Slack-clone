@@ -21,7 +21,6 @@ export default function useGetMessages(
   const [getMore, updateGetMore] = useState(false);
 
   const getMoreMessages = () => {
-    console.log("I am here ");
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);
   };

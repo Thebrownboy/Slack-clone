@@ -1,15 +1,23 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { tFulldataMessage } from "@/types/common-types";
+import { useCurrentRepiles } from "@/state-store/store";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useState } from "react";
 export default function useGetReplies(parentMessageId: string | undefined) {
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const [currentThreadMessages, updateCurrentThreadMessage] = useState<
-    tFulldataMessage[] | undefined
-  >([]);
+  const {
+    updateThreadReplies,
+    threadReplies,
+    parentMessage,
+    updateParentMessage,
+    putThreadReplies,
+  } = useCurrentRepiles();
+
+  useEffect(() => {
+    putThreadReplies([], parentMessageId as string);
+  }, [parentMessageId, updateParentMessage, putThreadReplies]);
 
   const [loading, updateLoading] = useState(false);
   const [skip, updateSkip] = useState(0);
@@ -18,7 +26,7 @@ export default function useGetReplies(parentMessageId: string | undefined) {
   const [noMore, updateNoMore] = useState(false);
 
   // request more data
-  const [getMore, updateGetMore] = useState(true);
+  const [getMore, updateGetMore] = useState(false);
 
   const getMoreMessages = () => {
     updateGetMore(true);
@@ -26,6 +34,7 @@ export default function useGetReplies(parentMessageId: string | undefined) {
   };
   useEffect(() => {
     const getReplies = async () => {
+      console.log(" I will fetch");
       if (!getMore) updateLoading(true);
       const messages = await getMessagesAction(
         userId as string,
@@ -35,24 +44,45 @@ export default function useGetReplies(parentMessageId: string | undefined) {
         skip,
         take
       );
+      console.log("This is the messages", messages);
       if (messages && messages.length == 0) {
-        console.log("I will update no more");
+        console.log("TRUE TRUE TRUE ");
         updateNoMore(true);
       }
-      if (messages)
-        updateCurrentThreadMessage((prev) => {
-          return [...(prev || []), ...(messages || [])];
-        });
+      if (messages && messages.length !== 0) {
+        console.log("FALSE FALSE");
+        updateThreadReplies(messages);
+      }
 
       updateLoading(false);
       updateGetMore(false);
     };
+    if (parentMessageId !== parentMessage) {
+      updateParentMessage(parentMessageId as string);
+    }
     // refetch only if you don't fetch previuosly
-    if (!loading && parentMessageId && !noMore && getMore) getReplies();
+    console.log(
+      "here is the her ",
+      !loading,
+      parentMessageId,
+      !noMore,
+      getMore,
+      !threadReplies?.length
+    );
+    if (
+      !loading &&
+      parentMessageId &&
+      !noMore &&
+      (getMore || !threadReplies?.length)
+    )
+      getReplies();
   }, [
+    threadReplies,
+    parentMessage,
+    updateParentMessage,
+    updateThreadReplies,
     noMore,
     loading,
-    updateCurrentThreadMessage,
     getMore,
     userId,
     channelId,
@@ -70,6 +100,6 @@ export default function useGetReplies(parentMessageId: string | undefined) {
     noMore,
     getMoreMessages,
     getMore,
-    currentThreadMessages,
+    threadReplies,
   };
 }

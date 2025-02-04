@@ -13,7 +13,6 @@ export default function usePusher() {
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   const { parentMessageIndex, updateSearchParams } = usePanel();
-  console.log(parentMessageIndex);
   useEffect(() => {
     if (channelId && userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
@@ -54,11 +53,6 @@ export default function usePusher() {
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
-        console.log(
-          data.channelId as string,
-          data.messageIndex,
-          channelId === data.channelId
-        );
         deleteMessage(
           data.channelId as string,
           data.messageIndex,

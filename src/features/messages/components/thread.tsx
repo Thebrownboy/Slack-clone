@@ -47,12 +47,11 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
   const { currentChannelsMessages } = useCurrentMessages();
   const [editingId, setEditingId] = useState<string | null>(null);
   const {
-    currentThreadMessages,
+    threadReplies: currentThreadMessages,
     getMoreMessages: loadMore,
     getMore,
     noMore,
   } = useGetReplies(messageId);
-  console.log(currentThreadMessages, "thread is here ");
   const handleSubmit = async ({
     body,
     images,
@@ -78,17 +77,14 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
         user,
         URL: uploadedImage?.URL,
       });
-      console.log(messageObject);
       // addNewMessage(messageObject);
       // triggerMessageEvent(messageObject);
     }
   };
   const currentMessage = useMemo(() => {
-    console.log(channelId, messageId, messageIndex, "HEERER IS THE PROBLEM");
     if (channelId && messageId && messageIndex) {
       const message =
         currentChannelsMessages[channelId as string]?.[+messageIndex];
-      console.log(message);
       // if (message?.id === messageId) {
       return message;
       // }
