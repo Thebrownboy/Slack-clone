@@ -7,15 +7,15 @@ import {
   useCurrentMessages,
   useCurrentUser,
 } from "@/state-store/store";
-import { AlertTriangle, XIcon } from "lucide-react";
+import { AlertTriangle, Loader, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import useCreateMessage from "../hooks/useCreateMessage";
 import { uploadImageAction } from "@/utils/messages-actions";
 import createNativeMessage from "@/lib/common-utils";
 import Quill from "quill";
-import useGetMessages from "../hooks/useGetMessages";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import useGetReplies from "../hooks/useGetReplies";
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ThreadProps {
   messageId: string;
@@ -46,7 +46,12 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
   const { userId } = useGetUserId();
   const { currentChannelsMessages } = useCurrentMessages();
   const [editingId, setEditingId] = useState<string | null>(null);
-  const { currentThreadMessages } = useGetMessages(undefined, messageId);
+  const {
+    currentThreadMessages,
+    getMoreMessages: loadMore,
+    getMore,
+    noMore,
+  } = useGetReplies(messageId);
   console.log(currentThreadMessages, "thread is here ");
   const handleSubmit = async ({
     body,
@@ -181,6 +186,34 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
             </div>
           );
         })}
+
+        <div
+          className="h-1"
+          ref={(el) => {
+            if (el) {
+              const observer = new IntersectionObserver(
+                ([entry]) => {
+                  if (entry.isIntersecting && !noMore && !getMore) {
+                    loadMore();
+                  }
+                },
+                { threshold: 1.0 }
+              );
+              observer.observe(el);
+
+              return () => observer.disconnect();
+            }
+          }}
+        />
+
+        {getMore && (
+          <div className="text-center my-2 relative">
+            <hr className="absolute top-1/2 left-0 right-0 border-t border-gray-300" />
+            <span className=" relative inline-block bg-white px-4 py-1 rounded-full text-xs border border-gray-300 shadow-sm">
+              <Loader className="size-4 animate-spin" />
+            </span>
+          </div>
+        )}
         <Message
           hideThreadButton
           memberId={currentMessage.memberId}

@@ -1,59 +1,64 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentMessages } from "@/state-store/store";
+import { tFulldataMessage } from "@/types/common-types";
 import { getMessagesAction } from "@/utils/messages-actions";
-import { useEffect, useMemo, useState } from "react";
-export default function useGetMessages(
-  conversationId: string | undefined,
-  parentMessageId: string | undefined
-) {
+import { useEffect, useState } from "react";
+export default function useGetReplies(parentMessageId: string | undefined) {
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const { currentChannelsMessages, updateMessages } = useCurrentMessages();
-  const currentChannelMessages = useMemo(() => {
-    return currentChannelsMessages[channelId as string];
-  }, [channelId, currentChannelsMessages]);
+  const [currentThreadMessages, updateCurrentThreadMessage] = useState<
+    tFulldataMessage[] | undefined
+  >([]);
+
   const [loading, updateLoading] = useState(false);
   const [skip, updateSkip] = useState(0);
   const [take, updateTake] = useState(5);
+  // no more data so no requests will be sent
   const [noMore, updateNoMore] = useState(false);
-  const [getMore, updateGetMore] = useState(false);
+
+  // request more data
+  const [getMore, updateGetMore] = useState(true);
 
   const getMoreMessages = () => {
-    console.log("I am here ");
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);
   };
   useEffect(() => {
-    const getMessages = async () => {
+    const getReplies = async () => {
       if (!getMore) updateLoading(true);
       const messages = await getMessagesAction(
         userId as string,
-        channelId as string,
-        conversationId,
+        undefined,
+        undefined,
         parentMessageId,
         skip,
         take
       );
-      if (messages && messages.length !== 0)
-        updateMessages(channelId as string, messages);
-      if (messages && messages.length == 0) updateNoMore(true);
+      if (messages && messages.length == 0) {
+        console.log("I will update no more");
+        updateNoMore(true);
+      }
+      if (messages)
+        updateCurrentThreadMessage((prev) => {
+          return [...(prev || []), ...(messages || [])];
+        });
+
       updateLoading(false);
       updateGetMore(false);
     };
     // refetch only if you don't fetch previuosly
-    if (!currentChannelMessages || getMore) getMessages();
+    if (!loading && parentMessageId && !noMore && getMore) getReplies();
   }, [
+    noMore,
+    loading,
+    updateCurrentThreadMessage,
     getMore,
-    currentChannelMessages,
     userId,
     channelId,
-    conversationId,
     parentMessageId,
     skip,
     take,
-    updateMessages,
   ]);
 
   // returning the updateSkip and the updateTake is essentail for pagination while you are loading more messages
@@ -61,10 +66,10 @@ export default function useGetMessages(
   return {
     updateSkip,
     updateTake,
-    currentChannelMessages,
     loading,
     noMore,
     getMoreMessages,
     getMore,
+    currentThreadMessages,
   };
 }

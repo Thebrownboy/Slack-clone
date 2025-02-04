@@ -203,11 +203,12 @@ export const getMessages = async (
     _conversationId = parentMessage.conversationId || undefined;
   }
 
+  console.log("HERE IS HERE ", channelId, parentMessageId, conversationId);
   const results = await db.message.findMany({
     where: {
       channelId,
-      parentMessageId,
-      conversationId,
+      parentMessageId: parentMessageId ? parentMessageId : null,
+      conversationId: conversationId ? conversationId : null,
     },
     orderBy: {
       creationTime: "desc",
