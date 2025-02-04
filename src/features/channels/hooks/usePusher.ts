@@ -25,13 +25,6 @@ export default function usePusher() {
         );
       });
 
-      // if (parentMessageId) {
-      //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      //   pusherChannel.bind("incomming-reply", (data: any) => {
-      //     addOneReply(data);
-      //   });
-      // }
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
         toggleReactionOnMessage(

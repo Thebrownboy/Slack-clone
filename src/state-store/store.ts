@@ -368,7 +368,13 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
         if (!activeChannel && !state.currentChannelsMessages[channelId]) {
           return state;
         }
-        console.log(state.skip);
+        const currentIndex = useCurrentThreadData.getState().parentMessageIndex;
+        useCurrentThreadData.setState((state) => {
+          return {
+            ...state,
+            parentMessageIndex: currentIndex ? currentIndex + 1 : null,
+          };
+        });
         return {
           ...state,
           skip: state.skip + 1,
