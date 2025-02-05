@@ -1,26 +1,19 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentRepiles } from "@/state-store/store";
+import { useCurrentThreadData } from "@/state-store/store";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useState } from "react";
 export default function useGetReplies(parentMessageId: string | undefined) {
+  const {
+    updateSkip,
+    parentMessageId: parentMessage,
+    currentThreadData: { messages: currentThreadMessages, skip },
+    updateCurrentThreadData,
+  } = useCurrentThreadData();
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
-  const {
-    updateThreadReplies,
-    threadReplies,
-    parentMessage,
-    updateParentMessage,
-    putThreadReplies,
-  } = useCurrentRepiles();
-
-  useEffect(() => {
-    putThreadReplies([], parentMessageId as string);
-  }, [parentMessageId, updateParentMessage, putThreadReplies]);
-
   const [loading, updateLoading] = useState(false);
-  const [skip, updateSkip] = useState(0);
   const [take, updateTake] = useState(5);
   // no more data so no requests will be sent
   const [noMore, updateNoMore] = useState(false);
@@ -47,29 +40,26 @@ export default function useGetReplies(parentMessageId: string | undefined) {
         updateNoMore(true);
       }
       if (messages && messages.length !== 0) {
-        updateThreadReplies(messages);
+        updateCurrentThreadData(messages);
       }
 
       updateLoading(false);
       updateGetMore(false);
     };
-    if (parentMessageId !== parentMessage) {
-      updateParentMessage(parentMessageId as string);
-    }
+
     // refetch only if you don't fetch previuosly
 
     if (
       !loading &&
       parentMessageId &&
       !noMore &&
-      (getMore || !threadReplies?.length)
+      (getMore || !currentThreadMessages?.length)
     )
       getReplies();
   }, [
-    threadReplies,
+    updateCurrentThreadData,
+    currentThreadMessages,
     parentMessage,
-    updateParentMessage,
-    updateThreadReplies,
     noMore,
     loading,
     getMore,
@@ -89,6 +79,6 @@ export default function useGetReplies(parentMessageId: string | undefined) {
     noMore,
     getMoreMessages,
     getMore,
-    threadReplies,
+    currentThreadMessages,
   };
 }

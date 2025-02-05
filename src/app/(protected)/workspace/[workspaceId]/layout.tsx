@@ -19,6 +19,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
     parentMessageIndex,
     updateParentMessageId,
     updateParentMessageIndex,
+    restData,
   } = useCurrentThreadData();
   const showPanel = !!parentMessageId;
   const { initalDataLoading } = useGetInitalData();
@@ -58,8 +59,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
                   <Thread
                     messageId={parentMessageId as string}
                     onClose={() => {
-                      updateParentMessageIndex(null);
-                      updateParentMessageId(null);
+                      restData();
                     }}
                     messageIndex={parentMessageIndex}
                   />

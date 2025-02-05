@@ -465,10 +465,48 @@ interface iCurrentThreadData {
     skip: number;
   };
   addReplyOnCurrentThread: (reply: tFulldataMessage) => void;
+  restData: () => void;
+  updateSkip: (skip: number) => void;
+  updateCurrentThreadData: (messages: tFulldataMessage[]) => void;
 }
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
   return {
+    updateCurrentThreadData(messages) {
+      set((state) => {
+        return {
+          ...state,
+          currentThreadData: {
+            ...state.currentThreadData,
+            messages: [...state.currentThreadData.messages, ...messages],
+          },
+        };
+      });
+    },
+    updateSkip(skip) {
+      set((state) => {
+        return {
+          ...state,
+          currentThreadData: {
+            ...state.currentThreadData,
+            skip,
+          },
+        };
+      });
+    },
+    restData() {
+      set((state) => {
+        return {
+          ...state,
+          parentMessageId: null,
+          parentMessageIndex: null,
+          currentThreadData: {
+            skip: 0,
+            messages: [],
+          },
+        };
+      });
+    },
     parentMessageId: null,
     parentMessageIndex: null,
     currentThreadData: {
@@ -487,6 +525,7 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
         };
       });
     },
+
     updateParentMessageId(parentMessageId) {
       set((state) => {
         return {

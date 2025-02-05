@@ -5,7 +5,6 @@ import useGetUserId from "@/hooks/useGetUserId";
 import {
   useCurrentMember,
   useCurrentMessages,
-  useCurrentThreadData,
   useCurrentUser,
 } from "@/state-store/store";
 import { AlertTriangle, Loader, XIcon } from "lucide-react";
@@ -16,6 +15,7 @@ import { triggerReplyEvent, uploadImageAction } from "@/utils/messages-actions";
 import createNativeMessage from "@/lib/common-utils";
 import Quill from "quill";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
+import useGetReplies from "../hooks/useGetReplies";
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ThreadProps {
   messageId: string;
@@ -46,16 +46,16 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
   const { userId } = useGetUserId();
   const { currentChannelsMessages } = useCurrentMessages();
   const [editingId, setEditingId] = useState<string | null>(null);
-  // const {
-  //   threadReplies: currentThreadMessages,
-  //   getMoreMessages: loadMore,
-  //   getMore,
-  //   noMore,
-  // } = useGetReplies(messageId);
-
   const {
-    currentThreadData: { messages: currentThreadMessages },
-  } = useCurrentThreadData();
+    currentThreadMessages,
+    getMoreMessages: loadMore,
+    getMore,
+    noMore,
+  } = useGetReplies(messageId);
+
+  // const {
+  //   currentThreadData: { messages: currentThreadMessages },
+  // } = useCurrentThreadData();
   const handleSubmit = async ({
     body,
     images,
@@ -196,7 +196,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
           );
         })}
 
-        {/* <div
+        <div
           className="h-1"
           ref={(el) => {
             if (el) {
@@ -222,7 +222,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
               <Loader className="size-4 animate-spin" />
             </span>
           </div>
-        )} */}
+        )}
         <Message
           hideThreadButton
           memberId={currentMessage.memberId}

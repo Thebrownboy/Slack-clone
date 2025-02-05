@@ -80,8 +80,12 @@ function Message({
   channelId,
 }: messageProps) {
   // const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
-  const { updateParentMessageId, parentMessageId, updateParentMessageIndex } =
-    useCurrentThreadData();
+  const {
+    updateParentMessageId,
+    parentMessageId,
+    updateParentMessageIndex,
+    restData,
+  } = useCurrentThreadData();
   const { handleSubmit: toggleReaction, error: toggleError } =
     useToggleReaction();
   const { workspaceId } = useParams();
@@ -123,8 +127,7 @@ function Message({
     if (!deleteError) {
       toast.success("message deleted successfully ");
       if (parentMessageId === deletedMessage.message?.id) {
-        updateParentMessageId(null);
-        updateParentMessageIndex(null);
+        restData();
       }
       triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
       // TODO :Close thread if opened
