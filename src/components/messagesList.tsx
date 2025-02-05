@@ -78,6 +78,7 @@ export default function MessagesList({
                 if (message)
                   return (
                     <Message
+                      parentMessageId={message.parentMessageId}
                       channelId={channelId}
                       key={message.id}
                       id={message.id}

@@ -168,6 +168,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
                 if (message)
                   return (
                     <Message
+                      parentMessageId={message.parentMessageId}
                       channelId={channelId as string}
                       key={message.id}
                       id={message.id}
@@ -224,6 +225,7 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
           </div>
         )}
         <Message
+          parentMessageId={currentMessage.parentMessageId}
           hideThreadButton
           memberId={currentMessage.memberId}
           authorImage={currentMessage.user.image}

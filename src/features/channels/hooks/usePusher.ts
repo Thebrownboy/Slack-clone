@@ -9,7 +9,8 @@ export default function usePusher() {
   const { workspaceId } = useGetWorkspaceId();
   const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
-  const { addReplyOnCurrentThread } = useCurrentThreadData();
+  const { addReplyOnCurrentThread, toggleReactionOnAThread } =
+    useCurrentThreadData();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   useEffect(() => {
@@ -28,6 +29,16 @@ export default function usePusher() {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("toggle-reaction", (data: any) => {
+        if (data.parentId) {
+          toggleReactionOnAThread(
+            data.parentId,
+            data.messageIndex,
+            data.userId,
+            data.value
+          );
+          return;
+        }
+
         toggleReactionOnMessage(
           data.channelId as string,
           data.messageIndex,

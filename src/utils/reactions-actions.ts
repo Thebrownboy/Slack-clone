@@ -40,6 +40,7 @@ export async function triggertoggleReactionEvent(reactionData: {
   value: string;
   channelId: string;
   messageIndex: number;
+  parentId?: string | null;
 }) {
   pusherServer.trigger(
     reactionData.workspaceId,

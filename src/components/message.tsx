@@ -24,6 +24,7 @@ const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 interface messageProps {
+  parentMessageId: string | null | undefined;
   id: string;
   memberId: string;
   authorImage?: string | null;
@@ -59,6 +60,7 @@ const formatFullTime = (date: Date) => {
   } at ${format(date, "h:mm:ss a ")}`;
 };
 function Message({
+  parentMessageId: currentMessageParentMessageId,
   messageIndex,
   id,
   isAuthor,
@@ -108,8 +110,13 @@ function Message({
     if (toggleError) {
       toast.error(toggleError);
     } else {
-      // toggleReactionOnMessage(messageIndex, value, memberId);
+      console.log(
+        currentMessageParentMessageId,
+        parentMessageId,
+        "We all are here "
+      );
       triggertoggleReactionEvent({
+        parentId: currentMessageParentMessageId,
         messageIndex,
         messageId: id,
         channelId,

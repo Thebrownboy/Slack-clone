@@ -456,6 +456,12 @@ export const useCurrentRepiles = create<iCurrentThreadMessage>((set) => {
 });
 
 interface iCurrentThreadData {
+  toggleReactionOnAThread: (
+    parentMessageId: string,
+    messageIndex: number,
+    memberId: string,
+    value: string
+  ) => void;
   parentMessageId: string | null;
   parentMessageIndex: number | null;
   updateParentMessageId: (parentMessageId: string | null) => void;
@@ -472,6 +478,67 @@ interface iCurrentThreadData {
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
   return {
+    toggleReactionOnAThread(parentMessageId, messageIndex, memberId, value) {
+      set((state) => {
+        if (parentMessageId !== state.parentMessageId) return state;
+        const editedMessage = state.currentThreadData.messages[messageIndex];
+        const reactionSize = editedMessage?.reactions.length || 0;
+
+        if (!reactionSize) {
+          editedMessage?.reactions.push({
+            count: 1,
+            membersIds: [memberId],
+            value,
+          });
+        } else {
+          let found = false;
+          for (let i = 0; i < reactionSize; i++) {
+            if (editedMessage?.reactions[i].value === value) {
+              found = true;
+
+              if (editedMessage?.reactions[i].membersIds.includes(memberId)) {
+                const deletedIndex =
+                  editedMessage?.reactions[i].membersIds.indexOf(memberId);
+                editedMessage?.reactions[i].membersIds.splice(deletedIndex);
+                if (editedMessage && editedMessage.reactions) {
+                  editedMessage.reactions[i].count--;
+                  if (editedMessage.reactions[i].count === 0) {
+                    editedMessage.reactions = [
+                      ...editedMessage.reactions.slice(0, i),
+                      ...editedMessage.reactions.slice(i + 1),
+                    ];
+                  }
+                }
+              } else {
+                editedMessage?.reactions[i].membersIds.push(memberId);
+                editedMessage.reactions[i].count++;
+              }
+              break;
+            }
+          }
+          if (!found) {
+            editedMessage?.reactions.push({
+              count: 1,
+              membersIds: [memberId],
+              value,
+            });
+          }
+        }
+        let channelMessages = state.currentThreadData.messages;
+        channelMessages = [
+          ...channelMessages.slice(0, messageIndex),
+          editedMessage,
+          ...channelMessages.slice(messageIndex + 1),
+        ];
+        return {
+          ...state,
+          currentThreadData: {
+            ...state.currentThreadData,
+            messages: channelMessages,
+          },
+        };
+      });
+    },
     updateCurrentThreadData(messages) {
       set((state) => {
         return {
