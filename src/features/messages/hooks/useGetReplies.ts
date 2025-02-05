@@ -21,6 +21,11 @@ export default function useGetReplies(parentMessageId: string | undefined) {
   // request more data
   const [getMore, updateGetMore] = useState(false);
 
+  useEffect(() => {
+    updateLoading(false);
+    updateNoMore(false);
+    updateGetMore(false);
+  }, [parentMessage]);
   const getMoreMessages = () => {
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);

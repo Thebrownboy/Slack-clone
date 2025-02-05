@@ -411,11 +411,6 @@ export const useCurrentRepiles = create<iCurrentThreadMessage>((set) => {
   return {
     addOneReply(reply) {
       set((state) => {
-        console.log(
-          "this is the parenet messmage",
-          reply?.parentMessageId,
-          state.parentMessage
-        );
         if (reply?.parentMessageId !== state.parentMessage) {
           return state;
         }

@@ -14,15 +14,11 @@ import { Thread } from "@/features/messages/components/thread";
 import { useCurrentThreadData } from "@/state-store/store";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
-  const {
-    parentMessageId,
-    parentMessageIndex,
-    updateParentMessageId,
-    updateParentMessageIndex,
-    restData,
-  } = useCurrentThreadData();
+  const { parentMessageId, parentMessageIndex, restData } =
+    useCurrentThreadData();
   const showPanel = !!parentMessageId;
   const { initalDataLoading } = useGetInitalData();
+
   if (initalDataLoading) {
     return (
       <div className="w-[95%] h-[95%] flex justify-center items-center">
@@ -30,6 +26,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
+
   return (
     <div className=" h-full">
       <Toolbar />

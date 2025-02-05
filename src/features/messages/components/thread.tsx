@@ -82,12 +82,10 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
-      console.log("I will trigger the reply event");
       triggerReplyEvent(messageObject);
     }
   };
   const currentMessage = useMemo(() => {
-    console.log(channelId, messageId, messageIndex);
     if (
       channelId &&
       messageId &&
@@ -97,7 +95,6 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
       const message =
         currentChannelsMessages[channelId as string].messages[messageIndex];
 
-      console.log(currentChannelsMessages[channelId as string]);
       // if (message?.id === messageId) {
       return message;
       // }

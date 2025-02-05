@@ -12,12 +12,10 @@ function usePanel() {
   >("");
   useEffect(() => {
     if (searchParams.size === previousSize) return;
-    console.log("I am here to updated", searchParams.size, previousSize);
     if (
       searchParams.get("parentMessageId") &&
       searchParams.get("parentMessageIndex")
     ) {
-      console.log("do something");
       // do something
       const parentId = searchParams.get("parentMessageId");
       const parentIndex = searchParams.get("parentMessageIndex");

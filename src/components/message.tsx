@@ -110,11 +110,6 @@ function Message({
     if (toggleError) {
       toast.error(toggleError);
     } else {
-      console.log(
-        currentMessageParentMessageId,
-        parentMessageId,
-        "We all are here "
-      );
       triggertoggleReactionEvent({
         parentId: currentMessageParentMessageId,
         messageIndex,
@@ -215,6 +210,7 @@ function Message({
               isPending={false}
               handleEdit={() => setEditingId(id)}
               handleThread={() => {
+                restData();
                 updateParentMessageId(id);
                 updateParentMessageIndex(messageIndex);
               }}
@@ -300,6 +296,7 @@ function Message({
               isPending={false}
               handleEdit={() => setEditingId(id)}
               handleThread={() => {
+                restData();
                 updateParentMessageId(id);
                 updateParentMessageIndex(messageIndex);
               }}

@@ -17,8 +17,6 @@ export default function usePusher() {
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   useEffect(() => {
-    console.log("I will be called pusher ");
-
     if (channelId && userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
