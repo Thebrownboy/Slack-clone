@@ -475,10 +475,31 @@ interface iCurrentThreadData {
     newBody: string,
     updateTime: Date
   ) => void;
+
+  deleteMessage: (parentMessageId: string, messageIndex: number) => void;
 }
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
   return {
+    deleteMessage(parentMessageId, messageIndex) {
+      set((state) => {
+        if (state.parentMessageId !== parentMessageId) {
+          return state;
+        }
+        let channelMessages = state.currentThreadData.messages;
+        channelMessages = [
+          ...(channelMessages?.slice(0, messageIndex) || []),
+          ...channelMessages?.slice(messageIndex + 1),
+        ];
+        return {
+          ...state,
+          currentThreadData: {
+            skip: state.currentThreadData.skip - 1,
+            messages: channelMessages,
+          },
+        };
+      });
+    },
     editThreadMessage(
       parentMessageId,
       messageIndex,

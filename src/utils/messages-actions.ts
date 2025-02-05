@@ -116,10 +116,12 @@ export async function triggerEditMessageEvent(
 export async function triggerDeleteMessageEvent(
   messageIndex: number,
   workspaceId: string,
-  channelId: string
+  channelId: string,
+  parentId: string
 ) {
   pusherServer.trigger(workspaceId, "delete-message", {
     messageIndex,
     channelId,
+    parentId,
   });
 }

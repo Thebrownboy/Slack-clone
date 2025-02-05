@@ -13,6 +13,7 @@ export default function usePusher() {
     addReplyOnCurrentThread,
     toggleReactionOnAThread,
     editThreadMessage,
+    deleteMessage: deleteThreadData,
   } = useCurrentThreadData();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
@@ -70,6 +71,10 @@ export default function usePusher() {
       });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
+        if (data.parentId) {
+          deleteThreadData(data.parentId, data.messageIndex);
+          return;
+        }
         deleteMessage(
           data.channelId as string,
           data.messageIndex,

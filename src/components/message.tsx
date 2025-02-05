@@ -87,6 +87,7 @@ function Message({
     parentMessageId,
     updateParentMessageIndex,
     restData,
+    parentMessageIndex,
   } = useCurrentThreadData();
   const { handleSubmit: toggleReaction, error: toggleError } =
     useToggleReaction();
@@ -131,7 +132,12 @@ function Message({
       if (parentMessageId === deletedMessage.message?.id) {
         restData();
       }
-      triggerDeleteMessageEvent(messageIndex, workspaceId as string, channelId);
+      triggerDeleteMessageEvent(
+        messageIndex,
+        workspaceId as string,
+        channelId,
+        currentMessageParentMessageId as string
+      );
       // TODO :Close thread if opened
     } else {
       toast.error("something went wrong ");
@@ -210,11 +216,16 @@ function Message({
               isPending={false}
               handleEdit={() => setEditingId(id)}
               handleThread={() => {
-                restData();
-                updateParentMessageId(id);
-                updateParentMessageIndex(messageIndex);
+                if (
+                  id !== parentMessageId &&
+                  messageIndex !== parentMessageIndex
+                ) {
+                  restData();
+                  updateParentMessageId(id);
+                  updateParentMessageIndex(messageIndex);
+                }
               }}
-              handleDelete={() => {}}
+              handleDelete={handleDeleteMessage}
               hideThreadButton={hideThreadButton}
               handleReaction={handleReaction}
             />
