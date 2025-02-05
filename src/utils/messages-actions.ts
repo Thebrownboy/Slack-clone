@@ -100,13 +100,15 @@ export async function triggerMessageEvent(message: tFulldataMessage) {
 
 export async function triggerEditMessageEvent(
   messageIndex: number,
-  message: tMessagePlaceholder
+  message: tMessagePlaceholder,
+  parentId: string
 ) {
   if (message?.channelId) {
     // sending the message on the workspace instead of just channel
     pusherServer.trigger(message.workspaceId, "edit-message", {
       messageIndex,
       message,
+      parentId,
     });
   }
 }

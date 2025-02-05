@@ -474,10 +474,48 @@ interface iCurrentThreadData {
   restData: () => void;
   updateSkip: (skip: number) => void;
   updateCurrentThreadData: (messages: tFulldataMessage[]) => void;
+  editThreadMessage: (
+    parentMessageId: string,
+    messageIndex: number,
+    newBody: string,
+    updateTime: Date
+  ) => void;
 }
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
   return {
+    editThreadMessage(
+      parentMessageId,
+      messageIndex,
+      newBody,
+      updateTime: Date
+    ) {
+      set((state) => {
+        if (parentMessageId !== state.parentMessageId) {
+          return state;
+        }
+
+        const editedMessage = state.currentThreadData.messages[messageIndex];
+        if (editedMessage?.body) {
+          editedMessage.body = newBody;
+          editedMessage.updatedAt = updateTime;
+        }
+        let channelMessages = state.currentThreadData.messages;
+        channelMessages = [
+          ...channelMessages.slice(0, messageIndex),
+          editedMessage,
+          ...channelMessages.slice(messageIndex + 1),
+        ];
+
+        return {
+          ...state,
+          currentThreadData: {
+            ...state.currentThreadData,
+            messages: channelMessages,
+          },
+        };
+      });
+    },
     toggleReactionOnAThread(parentMessageId, messageIndex, memberId, value) {
       set((state) => {
         if (parentMessageId !== state.parentMessageId) return state;

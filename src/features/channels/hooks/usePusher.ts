@@ -9,8 +9,11 @@ export default function usePusher() {
   const { workspaceId } = useGetWorkspaceId();
   const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
-  const { addReplyOnCurrentThread, toggleReactionOnAThread } =
-    useCurrentThreadData();
+  const {
+    addReplyOnCurrentThread,
+    toggleReactionOnAThread,
+    editThreadMessage,
+  } = useCurrentThreadData();
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   useEffect(() => {
@@ -50,6 +53,15 @@ export default function usePusher() {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("edit-message", (data: any) => {
+        if (data.parentId) {
+          editThreadMessage(
+            data.parentId,
+            data.messageIndex,
+            data.message.body,
+            data.message.updatedAt
+          );
+          return;
+        }
         editMessage(
           data.message.channelId as string,
           data.messageIndex,

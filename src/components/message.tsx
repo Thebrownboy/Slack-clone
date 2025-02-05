@@ -147,7 +147,11 @@ function Message({
     if (!error && message.message) {
       toast.success("Message Updated");
       // editMessage(messageIndex, body);
-      triggerEditMessageEvent(messageIndex, message.message);
+      triggerEditMessageEvent(
+        messageIndex,
+        message.message,
+        currentMessageParentMessageId as string
+      );
     } else toast.error("Fail to update Message");
     setEditingId(null);
   };
