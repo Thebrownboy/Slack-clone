@@ -155,6 +155,8 @@ model Conversation {
 
   ConversationMembers ConversationMembers[]
   Message             Message[]
+
+  @@unique([memberOneId, memberTwoId, workspaceId])
 }
 
 model ConversationMembers {
