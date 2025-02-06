@@ -92,6 +92,9 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
       messageIndex !== null &&
       messageIndex !== undefined
     ) {
+      if (!currentChannelsMessages[channelId as string]) {
+        return null;
+      }
       const message =
         currentChannelsMessages[channelId as string].messages[messageIndex];
 
