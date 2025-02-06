@@ -6,6 +6,7 @@ import {
   deleteWorkSpace,
   generateNewJoinCode,
   getAllWorkSpacesByUserId,
+  getFullMemberByUserIdAndWorkSpaceId,
   getMemberByUserIdAndWorkSpaceId,
   getWorkSpaceById,
   getWorkspaceNaiveInfo,
@@ -56,6 +57,12 @@ export async function getMemberByUserIdAndWorkSpaceIdAction(
   workspaceId: string
 ) {
   return await getMemberByUserIdAndWorkSpaceId(userId, workspaceId);
+}
+export async function getFullMemberByUserIdAndWorkSpaceIdAction(
+  userId: string,
+  workspaceId: string
+) {
+  return await getFullMemberByUserIdAndWorkSpaceId(userId, workspaceId);
 }
 
 export async function updateWorkSpaceAction(

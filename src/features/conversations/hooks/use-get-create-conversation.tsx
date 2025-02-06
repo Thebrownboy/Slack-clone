@@ -1,7 +1,7 @@
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { Conversation } from "@prisma/client";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getOrCreateConversationAction } from "@/utils/conversations-actions";
 
 export default function useCreateOrGetConversations(otherMemberId: string) {
@@ -13,7 +13,7 @@ export default function useCreateOrGetConversations(otherMemberId: string) {
   });
   const [currentConversation, updateCurrentConversation] =
     useState<Conversation | null>(null);
-  const submitCreateorGetAction = async () => {
+  const submitCreateorGetAction = useCallback(async () => {
     if (userId && workspaceId && otherMemberId) {
       updateCreateConversationState((state) => ({ ...state, isPending: true }));
       const response = await getOrCreateConversationAction({
@@ -22,8 +22,16 @@ export default function useCreateOrGetConversations(otherMemberId: string) {
         workspaceId: workspaceId as string,
       });
       updateCurrentConversation(response);
+      updateCreateConversationState((state) => ({
+        ...state,
+        isPending: false,
+      }));
     }
-  };
+  }, [otherMemberId, userId, workspaceId]);
+
+  useEffect(() => {
+    submitCreateorGetAction();
+  }, [submitCreateorGetAction]);
 
   return {
     createConversationState,
