@@ -32,7 +32,7 @@ export default function useCreateMessage() {
       updateError(message.errmsg);
       return message;
     } catch (err) {
-      console.log("This is the error ", err);
+      return null;
     }
   };
 

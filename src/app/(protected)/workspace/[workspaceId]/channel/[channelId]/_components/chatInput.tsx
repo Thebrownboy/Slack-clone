@@ -64,9 +64,8 @@ export default function ChatInput({
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
-      if (!conversationId) {
-        triggerMessageEvent(messageObject);
-      }
+
+      triggerMessageEvent(messageObject);
     }
   };
   return (

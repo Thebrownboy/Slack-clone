@@ -16,6 +16,7 @@ interface MessageListProps {
   isLoadingMore: boolean;
   canLoadMore: boolean;
   channelId?: string;
+  conversationId?: string | null;
 }
 
 const TIME_THRESHOLD = 5;
@@ -37,10 +38,12 @@ export default function MessagesList({
   memberName,
   variant,
   channelId,
+  conversationId,
 }: MessageListProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const groupedMessages = data?.reduce((groups, message, currentIndex) => {
     const date = new Date(message?.creationTime || "");
+
     const dateKey = format(date, "yyyy-MM-dd");
     if (!groups[dateKey]) {
       groups[dateKey] = [];
@@ -78,6 +81,7 @@ export default function MessagesList({
                 if (message)
                   return (
                     <Message
+                      conversationId={conversationId}
                       parentMessageId={message.parentMessageId}
                       channelId={channelId as string}
                       key={message.id}

@@ -2,13 +2,23 @@ import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import pusherClient from "@/lib/pusher-client";
-import { useCurrentMessages, useCurrentThreadData } from "@/state-store/store";
+import {
+  useCurrentConversationMessages,
+  useCurrentMessages,
+  useCurrentThreadData,
+} from "@/state-store/store";
 import { useEffect } from "react";
 
 export default function usePusher() {
   const { workspaceId } = useGetWorkspaceId();
   const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
+  const {
+    addNewMessage: addNewConversationMessage,
+    toggleReactionOnMessage: toggleReactiononConversationMessage,
+    editMessage: editConversationMessage,
+    deleteMessage: deleteConversationMessage,
+  } = useCurrentConversationMessages();
   const {
     addReplyOnCurrentThread,
     toggleReactionOnAThread,
@@ -18,10 +28,13 @@ export default function usePusher() {
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   useEffect(() => {
-    if (channelId && userId && workspaceId) {
+    if (userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
+        if (data.conversationId) {
+          addNewConversationMessage(data.conversationId, data);
+        }
         addNewMessage(
           data.channelId as string,
           data,
@@ -37,6 +50,15 @@ export default function usePusher() {
             data.messageIndex,
             data.userId,
             data.value
+          );
+          return;
+        }
+        if (data.conversationId) {
+          toggleReactiononConversationMessage(
+            data.conversationId,
+            data.messageIndex,
+            data.value,
+            data.userId
           );
           return;
         }
@@ -61,6 +83,15 @@ export default function usePusher() {
           );
           return;
         }
+        if (data.conversationId) {
+          editConversationMessage(
+            data.message.conversationId as string,
+            data.messageIndex,
+            data.message.body,
+            data.message.updatedAt
+          );
+          return;
+        }
         editMessage(
           data.message.channelId as string,
           data.messageIndex,
@@ -73,6 +104,13 @@ export default function usePusher() {
       pusherChannel.bind("delete-message", (data: any) => {
         if (data.parentId) {
           deleteThreadData(data.parentId, data.messageIndex);
+          return;
+        }
+        if (data.conversationId) {
+          deleteConversationMessage(
+            data.conversationId as string,
+            data.messageIndex
+          );
           return;
         }
         deleteMessage(
@@ -92,6 +130,13 @@ export default function usePusher() {
       }
     };
   }, [
+    addNewConversationMessage,
+    deleteConversationMessage,
+    editConversationMessage,
+    toggleReactiononConversationMessage,
+    toggleReactionOnAThread,
+    editThreadMessage,
+    deleteThreadData,
     addReplyOnCurrentThread,
     channelId,
     addNewMessage,

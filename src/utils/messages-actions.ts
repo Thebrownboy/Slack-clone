@@ -93,23 +93,35 @@ export async function triggerReplyEvent(message: tFulldataMessage) {
 }
 
 export async function triggerMessageEvent(message: tFulldataMessage) {
-  if (message?.channelId) {
+  if (message?.channelId || message?.conversationId) {
     // sending the message on the workspace instead of just channel
+    console.log("Push push push ", message.workspaceId, message);
     pusherServer.trigger(message.workspaceId, "incomming-message", message);
   }
 }
 
+// export async function triggerConversationMessageEvent(
+//   message: tFulldataMessage
+// ) {
+//   if (message?.conversationId) {
+//     // sending the message on the workspace instead of just channel
+//     pusherServer.trigger(message.workspaceId, "incomming-message", message);
+//   }
+// }
+
 export async function triggerEditMessageEvent(
   messageIndex: number,
   message: tMessagePlaceholder,
-  parentId: string
+  parentId: string,
+  conversationId?: string
 ) {
-  if (message?.channelId) {
+  if (message?.channelId || message.conversationId) {
     // sending the message on the workspace instead of just channel
     pusherServer.trigger(message.workspaceId, "edit-message", {
       messageIndex,
       message,
       parentId,
+      conversationId,
     });
   }
 }
@@ -118,11 +130,13 @@ export async function triggerDeleteMessageEvent(
   messageIndex: number,
   workspaceId: string,
   channelId: string,
-  parentId: string
+  parentId: string,
+  conversationId?: string | null
 ) {
   pusherServer.trigger(workspaceId, "delete-message", {
     messageIndex,
     channelId,
     parentId,
+    conversationId,
   });
 }

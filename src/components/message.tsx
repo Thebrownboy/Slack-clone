@@ -48,6 +48,7 @@ interface messageProps {
   isAuthor: boolean;
   messageIndex: number;
   channelId: string;
+  conversationId?: string | null;
 }
 
 const formatFullTime = (date: Date) => {
@@ -80,6 +81,7 @@ function Message({
   authorImage,
   image,
   channelId,
+  conversationId,
 }: messageProps) {
   // const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
   const {
@@ -119,6 +121,7 @@ function Message({
         userId: member?.userId || "",
         value,
         workspaceId: workspaceId as string,
+        conversationId: conversationId,
       });
     }
   };
@@ -136,7 +139,8 @@ function Message({
         messageIndex,
         workspaceId as string,
         channelId,
-        currentMessageParentMessageId as string
+        currentMessageParentMessageId as string,
+        conversationId
       );
       // TODO :Close thread if opened
     } else {
@@ -151,7 +155,8 @@ function Message({
       triggerEditMessageEvent(
         messageIndex,
         message.message,
-        currentMessageParentMessageId as string
+        currentMessageParentMessageId as string,
+        conversationId as string
       );
     } else toast.error("Fail to update Message");
     setEditingId(null);

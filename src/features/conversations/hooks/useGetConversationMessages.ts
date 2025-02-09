@@ -7,8 +7,16 @@ export default function useGetConversationMessage(
 ) {
   const BATCH_SIZE = 5;
   const { userId } = useGetUserId();
-  const { currentConversationsMessages, updateMessages, updateSkip } =
-    useCurrentConversationMessages();
+  const {
+    currentConversationsMessages,
+    updateMessages,
+    updateSkip,
+    updateConversationId,
+  } = useCurrentConversationMessages();
+
+  useEffect(() => {
+    updateConversationId(conversationId as string);
+  }, [conversationId, updateConversationId]);
   const currentConversationMessages = useMemo(() => {
     return currentConversationsMessages[conversationId as string];
   }, [conversationId, currentConversationsMessages]);
@@ -18,9 +26,7 @@ export default function useGetConversationMessage(
   const [noMore, updateNoMore] = useState(false);
   const [getMore, updateGetMore] = useState(false);
   const getMoreMessages = () => {
-    console.log("curentConver", currentConversationMessages);
     if (!currentConversationMessages) return;
-    console.log("I will update the skip and batch size ");
     updateGetMore(true);
     updateSkip(
       currentConversationMessages.skip + BATCH_SIZE,
@@ -39,12 +45,6 @@ export default function useGetConversationMessage(
         take
       );
       if (messages && messages.length !== 0) {
-        console.log(
-          "I will update messages ",
-          messages,
-          getMore,
-          currentConversationMessages?.skip || 0
-        );
         updateMessages(conversationId as string, messages);
       }
       if (messages && messages.length == 0) updateNoMore(true);

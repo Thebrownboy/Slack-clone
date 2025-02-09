@@ -193,7 +193,6 @@ export const getMessages = async (
   // TODO : edge case of the conversation id
   // it has no meaning !!
   let _conversationId = conversationId;
-  console.log(conversationId);
   //I a requesting the replies on a specific message
   if (!conversationId && !channelId && parentMessageId) {
     const parentMessage = await db.message.findUnique({

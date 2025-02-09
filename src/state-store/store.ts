@@ -670,6 +670,8 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
 //////////////////////////////////////////////////////////////////////////////////////
 
 interface IConversationMesages {
+  currentConversationId: string;
+  updateConversationId: (newConversationId: string) => void;
   increaseSkip: () => void;
   skip: number;
   updateSkip: (newSkip: number, conversationId: string) => void;
@@ -681,25 +683,15 @@ interface IConversationMesages {
     conversationId: string,
     index: number,
     newBody: string,
-    updateTime: Date,
-    activeChannel: boolean
+    updateTime: Date
   ) => void;
-  deleteMessage: (
-    conversationId: string,
-    index: number,
-    activeChannel: boolean
-  ) => void;
-  addNewMessage: (
-    conversationId: string,
-    message: tFulldataMessage,
-    activeChannel: boolean
-  ) => void;
+  deleteMessage: (conversationId: string, index: number) => void;
+  addNewMessage: (conversationId: string, message: tFulldataMessage) => void;
   toggleReactionOnMessage: (
-    channel: string,
+    conversationId: string,
     index: number,
     value: string,
-    memberId: string,
-    activeChannel: boolean
+    memberId: string
   ) => void;
   updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
 }
@@ -712,6 +704,15 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
           return {
             ...state,
             skip: state.skip + 1,
+          };
+        });
+      },
+      currentConversationId: "",
+      updateConversationId(newConversationId) {
+        set((state) => {
+          return {
+            ...state,
+            currentConversationId: newConversationId,
           };
         });
       },
@@ -731,14 +732,9 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
         });
       },
       currentConversationsMessages: {},
-      editMessage(
-        conversationId,
-        index,
-        newBody,
-        updateTime: Date,
-        activeChannel
-      ) {
+      editMessage(conversationId, index, newBody, updateTime: Date) {
         set((state) => {
+          const activeChannel = conversationId === state.currentConversationId;
           if (
             !activeChannel &&
             !state.currentConversationsMessages[conversationId].messages
@@ -752,6 +748,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
             editedMessage.body = newBody;
             editedMessage.updatedAt = updateTime;
           }
+
           let channelMessages =
             state.currentConversationsMessages[conversationId].messages;
           channelMessages = [
@@ -759,6 +756,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
             editedMessage,
             ...channelMessages.slice(index + 1),
           ];
+
           return {
             ...state,
             currentConversationsMessages: {
@@ -771,8 +769,9 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
           };
         });
       },
-      deleteMessage(conversationId, index, activeChannel) {
+      deleteMessage(conversationId, index) {
         set((state) => {
+          const activeChannel = conversationId === state.currentConversationId;
           if (
             !activeChannel &&
             !state.currentConversationsMessages[conversationId].messages
@@ -819,15 +818,10 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
         conversationId: null,
         messages: [],
       },
-      toggleReactionOnMessage: (
-        conversationId,
-        index,
-        value,
-        memberId,
-        activeChannel
-      ) => {
+      toggleReactionOnMessage: (conversationId, index, value, memberId) => {
         set((state) => {
           // you are inactive and also , you did not load any messages
+          const activeChannel = conversationId === state.currentConversationId;
           if (
             !activeChannel &&
             !state.currentConversationsMessages[conversationId].messages
@@ -880,6 +874,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
           }
           let channelMessages =
             state.currentConversationsMessages[conversationId].messages;
+
           channelMessages = [
             ...channelMessages.slice(0, index),
             editedMessage,
@@ -902,12 +897,9 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
       // if the user previously visited this channel , then any comming messages will be inserted in the array of the messages ,
       // however if the user did  not open the channel , all the messages will not be inserted and it will be updated after he visits the
       // channel by the first data fetch
-      addNewMessage: (
-        conversationId,
-        message: tFulldataMessage,
-        activeChannel
-      ) => {
+      addNewMessage: (conversationId, message: tFulldataMessage) => {
         set((state) => {
+          const activeChannel = conversationId === state.currentConversationId;
           // the user did not open the channel and not active
           if (
             !activeChannel &&
@@ -931,7 +923,8 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
 
               [conversationId]: {
                 skip:
-                  state.currentConversationsMessages[conversationId].skip + 1,
+                  state.currentConversationsMessages[conversationId]?.skip ||
+                  0 + 1,
                 messages: [
                   message,
                   ...state.currentConversationsMessages[conversationId]

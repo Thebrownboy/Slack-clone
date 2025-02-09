@@ -4,6 +4,7 @@ import useGetFullCurrentMember from "../hooks/useGetFullCurrentMember";
 import useGetMemberId from "@/hooks/useGetMemberId";
 import ChatInput from "@/app/(protected)/workspace/[workspaceId]/channel/[channelId]/_components/chatInput";
 import MessagesList from "@/components/messagesList";
+import usePusher from "@/features/channels/hooks/usePusher";
 
 interface ConversationProps {
   conversationId: string;
@@ -12,6 +13,7 @@ interface ConversationProps {
 export function Conversation({ conversationId }: ConversationProps) {
   const { memberId } = useGetMemberId();
   const { fullMember } = useGetFullCurrentMember(memberId as string);
+  usePusher();
   const { getMoreMessages, getMore, noMore, currentConversationMessages } =
     useGetConversationMessage(conversationId);
   if (!fullMember) return <div></div>;
@@ -23,6 +25,7 @@ export function Conversation({ conversationId }: ConversationProps) {
         onClick={() => {}}
       />
       <MessagesList
+        conversationId={conversationId}
         data={currentConversationMessages?.messages || undefined}
         variant="conversation"
         memberImage={fullMember.image || undefined}
