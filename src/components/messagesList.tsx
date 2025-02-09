@@ -15,7 +15,7 @@ interface MessageListProps {
   loadMore: () => void;
   isLoadingMore: boolean;
   canLoadMore: boolean;
-  channelId: string;
+  channelId?: string;
 }
 
 const TIME_THRESHOLD = 5;
@@ -79,7 +79,7 @@ export default function MessagesList({
                   return (
                     <Message
                       parentMessageId={message.parentMessageId}
-                      channelId={channelId}
+                      channelId={channelId as string}
                       key={message.id}
                       id={message.id}
                       memberId={message?.memberId}
@@ -113,7 +113,7 @@ export default function MessagesList({
             if (el) {
               const observer = new IntersectionObserver(
                 ([entry]) => {
-                  if (entry.isIntersecting && canLoadMore) {
+                  if (entry.isIntersecting && canLoadMore && !isLoadingMore) {
                     loadMore();
                   }
                 },

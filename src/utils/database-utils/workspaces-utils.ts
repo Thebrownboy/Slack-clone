@@ -88,7 +88,6 @@ export async function getFullMemberByUserIdAndWorkSpaceId(
   userId: string,
   workspaceId: string
 ) {
-  console.log("I am here", userId, workspaceId);
   const member = await db.members.findUnique({
     where: {
       userId_workspaceId: {
@@ -97,14 +96,12 @@ export async function getFullMemberByUserIdAndWorkSpaceId(
       },
     },
   });
-  console.log(member);
 
   const user = await db.user.findUnique({
     where: {
       id: member?.userId,
     },
   });
-  console.log("here is here ", user);
   return { ...member, name: user?.name, image: user?.image };
 }
 

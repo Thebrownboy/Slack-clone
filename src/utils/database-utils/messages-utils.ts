@@ -75,6 +75,7 @@ export async function createMessage({
   channelId,
   imageId,
   parentMessageId,
+  conversationId,
 }: {
   userId: string;
   workspaceId: string;
@@ -82,6 +83,8 @@ export async function createMessage({
   parentMessageId?: string;
   body: string;
   imageId?: string;
+  conversationId?: string;
+  otherMemberId?: string;
 }) {
   if (!userId || !workspaceId) return null;
 
@@ -96,6 +99,7 @@ export async function createMessage({
       channelId: channelId || null,
       workspaceId: workspaceId,
       parentMessageId: parentMessageId || null,
+      conversationId: conversationId,
     },
   });
   return message;
@@ -189,7 +193,7 @@ export const getMessages = async (
   // TODO : edge case of the conversation id
   // it has no meaning !!
   let _conversationId = conversationId;
-
+  console.log(conversationId);
   //I a requesting the replies on a specific message
   if (!conversationId && !channelId && parentMessageId) {
     const parentMessage = await db.message.findUnique({
@@ -207,7 +211,7 @@ export const getMessages = async (
     where: {
       channelId,
       parentMessageId: parentMessageId ? parentMessageId : null,
-      conversationId: conversationId ? conversationId : null,
+      conversationId: conversationId ? _conversationId : null,
     },
     orderBy: {
       creationTime: "desc",

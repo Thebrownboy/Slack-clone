@@ -34,9 +34,5 @@ export default function MemberIdPage({ params }: tParams) {
       </div>
     );
   }
-  return (
-    <div>
-      <Conversation id={currentConversation.id} />
-    </div>
-  );
+  return <Conversation conversationId={currentConversation.id} />;
 }

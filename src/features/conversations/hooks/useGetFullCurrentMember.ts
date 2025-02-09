@@ -19,7 +19,6 @@ function useGetFullMember(memberId: string) {
       );
       updateFullMember(fullMember);
     };
-
     getFullMember();
   }, [memberId, workspaceId]);
 

@@ -18,6 +18,7 @@ export async function createMessageAction(messageData: {
   parentMessageId?: string;
   body: string;
   imageId?: string;
+  conversationId?: string;
 }) {
   const message = await createMessage(messageData);
   if (!message) {

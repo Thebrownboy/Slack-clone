@@ -16,9 +16,13 @@ import createNativeMessage from "@/lib/common-utils";
 
 interface ChantInputProps {
   placeholder: string;
+  conversationId?: string;
 }
 
-export default function ChatInput({ placeholder }: ChantInputProps) {
+export default function ChatInput({
+  placeholder,
+  conversationId,
+}: ChantInputProps) {
   // we will control the editor component by outer refs , not by passing new props
 
   const editorRef = useRef<Quill | null>(null);
@@ -44,7 +48,12 @@ export default function ChatInput({ placeholder }: ChantInputProps) {
     if (uploadedImage) {
       imageId = uploadedImage.id;
     }
-    const { message } = await createMessage(body, imageId, undefined);
+    const { message } = await createMessage(
+      body,
+      imageId,
+      undefined,
+      conversationId
+    );
     updateEditorKey((prev) => prev + 1);
     editorRef?.current?.enable(true);
     if (message && member && user) {
@@ -55,7 +64,9 @@ export default function ChatInput({ placeholder }: ChantInputProps) {
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
-      triggerMessageEvent(messageObject);
+      if (!conversationId) {
+        triggerMessageEvent(messageObject);
+      }
     }
   };
   return (

@@ -665,3 +665,283 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
     },
   };
 });
+
+///////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////
+
+interface IConversationMesages {
+  increaseSkip: () => void;
+  skip: number;
+  updateSkip: (newSkip: number, conversationId: string) => void;
+  currentConversationsMessages: Record<
+    string,
+    { messages: tFulldataMessage[]; skip: number }
+  >;
+  editMessage: (
+    conversationId: string,
+    index: number,
+    newBody: string,
+    updateTime: Date,
+    activeChannel: boolean
+  ) => void;
+  deleteMessage: (
+    conversationId: string,
+    index: number,
+    activeChannel: boolean
+  ) => void;
+  addNewMessage: (
+    conversationId: string,
+    message: tFulldataMessage,
+    activeChannel: boolean
+  ) => void;
+  toggleReactionOnMessage: (
+    channel: string,
+    index: number,
+    value: string,
+    memberId: string,
+    activeChannel: boolean
+  ) => void;
+  updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
+}
+
+export const useCurrentConversationMessages = create<IConversationMesages>(
+  (set) => {
+    return {
+      increaseSkip() {
+        set((state) => {
+          return {
+            ...state,
+            skip: state.skip + 1,
+          };
+        });
+      },
+      skip: 0,
+      updateSkip(newSkip, conversationId) {
+        set((state) => {
+          return {
+            ...state,
+            currentConversationsMessages: {
+              ...state.currentConversationsMessages,
+              [conversationId]: {
+                ...state.currentConversationsMessages[conversationId],
+                skip: newSkip,
+              },
+            },
+          };
+        });
+      },
+      currentConversationsMessages: {},
+      editMessage(
+        conversationId,
+        index,
+        newBody,
+        updateTime: Date,
+        activeChannel
+      ) {
+        set((state) => {
+          if (
+            !activeChannel &&
+            !state.currentConversationsMessages[conversationId].messages
+          ) {
+            return state;
+          }
+
+          const editedMessage =
+            state.currentConversationsMessages[conversationId].messages[index];
+          if (editedMessage?.body) {
+            editedMessage.body = newBody;
+            editedMessage.updatedAt = updateTime;
+          }
+          let channelMessages =
+            state.currentConversationsMessages[conversationId].messages;
+          channelMessages = [
+            ...channelMessages.slice(0, index),
+            editedMessage,
+            ...channelMessages.slice(index + 1),
+          ];
+          return {
+            ...state,
+            currentConversationsMessages: {
+              ...state.currentConversationsMessages,
+              [conversationId]: {
+                skip: state.currentConversationsMessages[conversationId].skip,
+                messages: channelMessages,
+              },
+            },
+          };
+        });
+      },
+      deleteMessage(conversationId, index, activeChannel) {
+        set((state) => {
+          if (
+            !activeChannel &&
+            !state.currentConversationsMessages[conversationId].messages
+          ) {
+            return state;
+          }
+          let channelMessages =
+            state.currentConversationsMessages[conversationId].messages;
+          channelMessages = [
+            ...channelMessages.slice(0, index),
+            ...channelMessages.slice(index + 1),
+          ];
+          return {
+            ...state,
+            currentConversationsMessages: {
+              ...state.currentConversationsMessages,
+              [conversationId]: {
+                skip:
+                  state.currentConversationsMessages[conversationId].skip - 1,
+                messages: channelMessages,
+              },
+            },
+          };
+        });
+      },
+      updateMessages(conversationId, messages) {
+        set((state) => ({
+          ...state,
+          currentConversationsMessages: {
+            ...state.currentConversationsMessages,
+            [conversationId]: {
+              skip:
+                state.currentConversationsMessages[conversationId]?.skip || 0,
+              messages: [
+                ...(state.currentConversationsMessages[conversationId]
+                  ?.messages || []),
+                ...messages,
+              ],
+            },
+          },
+        }));
+      },
+      currentChannelMessages: {
+        conversationId: null,
+        messages: [],
+      },
+      toggleReactionOnMessage: (
+        conversationId,
+        index,
+        value,
+        memberId,
+        activeChannel
+      ) => {
+        set((state) => {
+          // you are inactive and also , you did not load any messages
+          if (
+            !activeChannel &&
+            !state.currentConversationsMessages[conversationId].messages
+          ) {
+            return state;
+          }
+          const editedMessage =
+            state.currentConversationsMessages[conversationId].messages[index];
+          const reactionSize = editedMessage?.reactions.length || 0;
+
+          if (!reactionSize) {
+            editedMessage?.reactions.push({
+              count: 1,
+              membersIds: [memberId],
+              value,
+            });
+          } else {
+            let found = false;
+            for (let i = 0; i < reactionSize; i++) {
+              if (editedMessage?.reactions[i].value === value) {
+                found = true;
+
+                if (editedMessage?.reactions[i].membersIds.includes(memberId)) {
+                  const deletedIndex =
+                    editedMessage?.reactions[i].membersIds.indexOf(memberId);
+                  editedMessage?.reactions[i].membersIds.splice(deletedIndex);
+                  if (editedMessage && editedMessage.reactions) {
+                    editedMessage.reactions[i].count--;
+                    if (editedMessage.reactions[i].count === 0) {
+                      editedMessage.reactions = [
+                        ...editedMessage.reactions.slice(0, i),
+                        ...editedMessage.reactions.slice(i + 1),
+                      ];
+                    }
+                  }
+                } else {
+                  editedMessage?.reactions[i].membersIds.push(memberId);
+                  editedMessage.reactions[i].count++;
+                }
+                break;
+              }
+            }
+            if (!found) {
+              editedMessage?.reactions.push({
+                count: 1,
+                membersIds: [memberId],
+                value,
+              });
+            }
+          }
+          let channelMessages =
+            state.currentConversationsMessages[conversationId].messages;
+          channelMessages = [
+            ...channelMessages.slice(0, index),
+            editedMessage,
+            ...channelMessages.slice(index + 1),
+          ];
+          return {
+            ...state,
+            currentConversationsMessages: {
+              ...state.currentConversationsMessages,
+              [conversationId]: {
+                messages: channelMessages,
+                skip: state.currentConversationsMessages[conversationId].skip,
+              },
+            },
+          };
+        });
+      },
+      // active channel will be used for one case ,  if the user load some messages in a channel
+      // and then go to another channel in the same workspace, the channel will not be active in that case
+      // if the user previously visited this channel , then any comming messages will be inserted in the array of the messages ,
+      // however if the user did  not open the channel , all the messages will not be inserted and it will be updated after he visits the
+      // channel by the first data fetch
+      addNewMessage: (
+        conversationId,
+        message: tFulldataMessage,
+        activeChannel
+      ) => {
+        set((state) => {
+          // the user did not open the channel and not active
+          if (
+            !activeChannel &&
+            !state.currentConversationsMessages[conversationId]
+          ) {
+            return state;
+          }
+          const currentIndex =
+            useCurrentThreadData.getState().parentMessageIndex;
+          useCurrentThreadData.setState((state) => {
+            return {
+              ...state,
+              parentMessageIndex: currentIndex ? currentIndex + 1 : null,
+            };
+          });
+          return {
+            ...state,
+            skip: state.skip + 1,
+            currentConversationsMessages: {
+              ...state.currentConversationsMessages,
+
+              [conversationId]: {
+                skip:
+                  state.currentConversationsMessages[conversationId].skip + 1,
+                messages: [
+                  message,
+                  ...state.currentConversationsMessages[conversationId]
+                    .messages,
+                ],
+              },
+            },
+          };
+        });
+      },
+    };
+  }
+);
