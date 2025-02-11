@@ -19,6 +19,7 @@ import {
   triggerDeleteMessageEvent,
   triggerEditMessageEvent,
 } from "@/utils/messages-actions";
+import ThreadBar from "./threadBar";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -211,6 +212,21 @@ function Message({
                   data={reactions}
                   onChange={handleReaction}
                 />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  timestamp={threadTimestamp}
+                  onClick={() => {
+                    if (
+                      id !== parentMessageId &&
+                      messageIndex !== parentMessageIndex
+                    ) {
+                      restData();
+                      updateParentMessageId(id);
+                      updateParentMessageIndex(messageIndex);
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
@@ -302,6 +318,21 @@ function Message({
                   messageIndex={messageIndex}
                   data={reactions}
                   onChange={handleReaction}
+                />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  timestamp={threadTimestamp}
+                  onClick={() => {
+                    if (
+                      id !== parentMessageId &&
+                      messageIndex !== parentMessageIndex
+                    ) {
+                      restData();
+                      updateParentMessageId(id);
+                      updateParentMessageIndex(messageIndex);
+                    }
+                  }}
                 />
               </div>
             )}
