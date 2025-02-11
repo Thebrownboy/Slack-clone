@@ -249,6 +249,17 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           ...channelMessages.slice(0, index),
           ...channelMessages.slice(index + 1),
         ];
+        const currentIndex = useCurrentThreadData.getState().parentMessageIndex;
+        useCurrentThreadData.setState((state) => {
+          return {
+            ...state,
+            parentMessageIndex: !currentIndex
+              ? null
+              : currentIndex !== 0
+              ? currentIndex - 1
+              : 0,
+          };
+        });
         return {
           ...state,
           currentChannelsMessages: {
@@ -486,6 +497,7 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
         if (state.parentMessageId !== parentMessageId) {
           return state;
         }
+
         let channelMessages = state.currentThreadData.messages;
         channelMessages = [
           ...(channelMessages?.slice(0, messageIndex) || []),
@@ -784,6 +796,19 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
             ...channelMessages.slice(0, index),
             ...channelMessages.slice(index + 1),
           ];
+
+          const currentIndex =
+            useCurrentThreadData.getState().parentMessageIndex;
+          useCurrentThreadData.setState((state) => {
+            return {
+              ...state,
+              parentMessageIndex: !currentIndex
+                ? null
+                : currentIndex !== 0
+                ? currentIndex - 1
+                : 0,
+            };
+          });
           return {
             ...state,
             currentConversationsMessages: {
@@ -915,6 +940,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
               parentMessageIndex: currentIndex ? currentIndex + 1 : null,
             };
           });
+
           return {
             ...state,
             skip: state.skip + 1,
@@ -923,8 +949,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
 
               [conversationId]: {
                 skip:
-                  state.currentConversationsMessages[conversationId]?.skip ||
-                  0 + 1,
+                  state.currentConversationsMessages[conversationId]?.skip + 1,
                 messages: [
                   message,
                   ...state.currentConversationsMessages[conversationId]

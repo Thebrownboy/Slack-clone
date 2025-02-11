@@ -18,6 +18,10 @@ export default function useGetConversationMessage(
     updateConversationId(conversationId as string);
   }, [conversationId, updateConversationId]);
   const currentConversationMessages = useMemo(() => {
+    console.log(
+      "I have changed ",
+      currentConversationsMessages[conversationId as string]
+    );
     return currentConversationsMessages[conversationId as string];
   }, [conversationId, currentConversationsMessages]);
   const [loading, updateLoading] = useState(false);

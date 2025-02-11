@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import {
+  useCurrentConversationMessages,
   useCurrentMember,
   useCurrentMessages,
   useCurrentUser,
@@ -52,7 +53,10 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
     getMore,
     noMore,
   } = useGetReplies(messageId);
-
+  const {
+    currentConversationId: conversationId,
+    currentConversationsMessages,
+  } = useCurrentConversationMessages();
   // const {
   //   currentThreadData: { messages: currentThreadMessages },
   // } = useCurrentThreadData();
@@ -87,11 +91,16 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
   };
   const currentMessage = useMemo(() => {
     if (
-      channelId &&
+      (channelId || conversationId) &&
       messageId &&
       messageIndex !== null &&
       messageIndex !== undefined
     ) {
+      if (conversationId) {
+        return currentConversationsMessages[conversationId as string].messages[
+          messageIndex
+        ];
+      }
       if (!currentChannelsMessages[channelId as string]) {
         return null;
       }
@@ -104,7 +113,14 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
       // return null;
     }
     return null;
-  }, [currentChannelsMessages, channelId, messageId, messageIndex]);
+  }, [
+    currentChannelsMessages,
+    channelId,
+    messageId,
+    messageIndex,
+    conversationId,
+    currentConversationsMessages,
+  ]);
 
   const groupedMessages = currentThreadMessages?.reduce(
     (groups, message, currentIndex) => {

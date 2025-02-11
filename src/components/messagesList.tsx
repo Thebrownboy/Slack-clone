@@ -5,6 +5,7 @@ import Message from "./message";
 import ChannelHero from "./channelHero";
 import { useCurrentMember } from "@/state-store/store";
 import { Loader } from "lucide-react";
+import ConversationHero from "./conversationHero";
 interface MessageListProps {
   memberName?: string;
   memberImage?: string;
@@ -143,6 +144,13 @@ export default function MessagesList({
             name={channelName}
             creationTime={channelCreationTime}
           ></ChannelHero>
+        )}
+
+        {variant === "conversation" && (
+          <ConversationHero
+            name={memberName}
+            image={memberImage}
+          ></ConversationHero>
         )}
       </div>
     </>
