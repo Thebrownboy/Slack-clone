@@ -102,7 +102,12 @@ export async function getFullMemberByUserIdAndWorkSpaceId(
       id: member?.userId,
     },
   });
-  return { ...member, name: user?.name, image: user?.image };
+  return {
+    ...member,
+    name: user?.name,
+    image: user?.image,
+    email: user?.email,
+  };
 }
 
 export async function updateWorkSpace(

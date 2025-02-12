@@ -12,7 +12,11 @@ import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
 import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
-import { useCurrentMember, useCurrentThreadData } from "@/state-store/store";
+import {
+  useCurrentMember,
+  useCurrentMemberProfile,
+  useCurrentThreadData,
+} from "@/state-store/store";
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
 import { useParams } from "next/navigation";
 import {
@@ -84,7 +88,6 @@ function Message({
   channelId,
   conversationId,
 }: messageProps) {
-  // const { onOpenMessage, onCloseMessage, parentMessageId } = usePanel();
   const {
     updateParentMessageId,
     parentMessageId,
@@ -92,6 +95,8 @@ function Message({
     restData,
     parentMessageIndex,
   } = useCurrentThreadData();
+  const { currentMemberProfileId, updateCurrentMemberProfileId } =
+    useCurrentMemberProfile();
   const { handleSubmit: toggleReaction, error: toggleError } =
     useToggleReaction();
   const { workspaceId } = useParams();
@@ -267,7 +272,7 @@ function Message({
           )}
         >
           <div className="flex items-start gap-2">
-            <button>
+            <button onClick={() => updateCurrentMemberProfileId(memberId)}>
               <Avatar className=" rounded-md ">
                 <AvatarImage
                   className="rounded-md"
@@ -292,7 +297,7 @@ function Message({
               <div className="flex flex-col w-full overflow-hidden">
                 <div className="text-sm">
                   <button
-                    onClick={() => {}}
+                    onClick={() => updateCurrentMemberProfileId(memberId)}
                     className=" font-bold text-primary hover:underline"
                   >
                     {authorName}

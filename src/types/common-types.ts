@@ -42,9 +42,9 @@ export type tWorkspaceMembers = {
 };
 
 export type tmember = {
-  userId: string;
-  workspaceId: string;
-  role: "member" | "admin";
+  userId?: string | undefined | null;
+  workspaceId?: string | undefined;
+  role?: "member" | "admin" | undefined;
 };
 
 export type tFulldataMessage =

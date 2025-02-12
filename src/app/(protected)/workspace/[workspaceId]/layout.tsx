@@ -11,12 +11,18 @@ import WorkspaceSidebar from "../_components/workspaceSidebar";
 import { Loader, LoaderCircleIcon } from "lucide-react";
 import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
 import { Thread } from "@/features/messages/components/thread";
-import { useCurrentThreadData } from "@/state-store/store";
+import {
+  useCurrentMemberProfile,
+  useCurrentThreadData,
+} from "@/state-store/store";
+import Profile from "@/features/members/hooks/components/profile";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   const { parentMessageId, parentMessageIndex, restData } =
     useCurrentThreadData();
-  const showPanel = !!parentMessageId;
+  const { currentMemberProfileId, updateCurrentMemberProfileId } =
+    useCurrentMemberProfile();
+  const showPanel = !!parentMessageId || !!currentMemberProfileId;
   const { initalDataLoading } = useGetInitalData();
 
   if (initalDataLoading) {
@@ -59,6 +65,13 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
                       restData();
                     }}
                     messageIndex={parentMessageIndex}
+                  />
+                ) : currentMemberProfileId ? (
+                  <Profile
+                    memberId={currentMemberProfileId}
+                    onClose={() => {
+                      updateCurrentMemberProfileId(null);
+                    }}
                   />
                 ) : (
                   <div className=" flex h-full justify-center items-center ">

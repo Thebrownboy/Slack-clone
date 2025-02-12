@@ -1,5 +1,4 @@
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
-import { useCurrentMember } from "@/state-store/store";
 import { tmember } from "@/types/common-types";
 import { getFullMemberByUserIdAndWorkSpaceIdAction } from "@/utils/workspaces-actions";
 import { useEffect, useState } from "react";
@@ -7,7 +6,11 @@ import { useEffect, useState } from "react";
 function useGetFullMember(memberId: string) {
   const { workspaceId } = useGetWorkspaceId();
   const [fullMember, updateFullMember] = useState<
-    | (tmember & { name?: string | null | undefined; image?: string | null })
+    | (tmember & {
+        name?: string | null | undefined;
+        image?: string | null;
+        email?: string | null | undefined;
+      })
     | null
   >(null);
 

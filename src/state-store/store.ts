@@ -660,6 +660,13 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
     },
 
     updateParentMessageId(parentMessageId) {
+      // if you will open the thread , just close the profile
+      useCurrentMemberProfile.setState((state) => {
+        return {
+          ...state,
+          currentMemberProfileId: null,
+        };
+      });
       set((state) => {
         return {
           ...state,
@@ -963,3 +970,33 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
     };
   }
 );
+
+interface ICurrentMemberProfile {
+  currentMemberProfileId: string | null;
+  updateCurrentMemberProfileId: (newMemberId: string | null) => void;
+}
+export const useCurrentMemberProfile = create<ICurrentMemberProfile>((set) => {
+  return {
+    currentMemberProfileId: null,
+
+    updateCurrentMemberProfileId(newMemberId) {
+      useCurrentThreadData.setState((state) => {
+        return {
+          ...state,
+          parentMessageId: null,
+          parentMessageIndex: null,
+          currentThreadData: {
+            skip: 0,
+            messages: [],
+          },
+        };
+      });
+      set((state) => {
+        return {
+          ...state,
+          currentMemberProfileId: newMemberId,
+        };
+      });
+    },
+  };
+});
