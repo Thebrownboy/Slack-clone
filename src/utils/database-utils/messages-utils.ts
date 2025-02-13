@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import "server-only";
 import { getMember } from "./general-utils";
-import pusherServer from "@/lib/pusher";
 const populateUser = async (userId: string | null) => {
   if (!userId) return null;
   const user = await db.user.findUnique({

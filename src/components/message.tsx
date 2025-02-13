@@ -95,8 +95,7 @@ function Message({
     restData,
     parentMessageIndex,
   } = useCurrentThreadData();
-  const { currentMemberProfileId, updateCurrentMemberProfileId } =
-    useCurrentMemberProfile();
+  const { updateCurrentMemberProfileId } = useCurrentMemberProfile();
   const { handleSubmit: toggleReaction, error: toggleError } =
     useToggleReaction();
   const { workspaceId } = useParams();

@@ -2,10 +2,9 @@
 
 import { Conversation } from "@/features/conversations/components/conversation";
 import useCreateOrGetConversations from "@/features/conversations/hooks/use-get-create-conversation";
-import useGetMemberId from "@/hooks/useGetMemberId";
-import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
+
 import { AlertTriangle, Loader } from "lucide-react";
-import React, { useEffect } from "react";
+import React from "react";
 
 type tParams = {
   params: Promise<{
@@ -13,8 +12,6 @@ type tParams = {
   }>;
 };
 export default function MemberIdPage({ params }: tParams) {
-  const { workspaceId } = useGetWorkspaceId();
-  const { memberId } = useGetMemberId();
   const { memberId: otherMemberId } = React.use(params);
   const { currentConversation, createConversationState } =
     useCreateOrGetConversations(otherMemberId);

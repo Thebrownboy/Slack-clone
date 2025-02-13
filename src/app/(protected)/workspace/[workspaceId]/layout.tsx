@@ -15,7 +15,7 @@ import {
   useCurrentMemberProfile,
   useCurrentThreadData,
 } from "@/state-store/store";
-import Profile from "@/features/members/hooks/components/profile";
+import Profile from "@/features/members/components/profile";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   const { parentMessageId, parentMessageIndex, restData } =

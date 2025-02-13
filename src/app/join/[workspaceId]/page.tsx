@@ -47,6 +47,7 @@ export default function JoinPage({ params }: JoinPageProps) {
 
   const handleComplete = async (value: string) => {
     const response = await submitJoinAction(value);
+    console.log(response);
     if (response?.success) {
       toast.success("Workspace joined.");
       router.replace(`/workspace/${workspaceId}`);
