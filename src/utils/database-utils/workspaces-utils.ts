@@ -228,7 +228,7 @@ export async function makeUserJoin(
   });
 
   if (workspace?.joinCode !== joinCode.toLowerCase()) {
-    return "join code mismatch";
+    return null;
   }
   const existingMembmer = await db.members.findUnique({
     where: {
@@ -239,7 +239,7 @@ export async function makeUserJoin(
     },
   });
   if (existingMembmer) {
-    return "Already a member of this workspace";
+    return null;
   }
   await db.members.create({
     data: {

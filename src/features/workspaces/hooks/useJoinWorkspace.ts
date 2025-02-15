@@ -1,26 +1,34 @@
+import useGetCurrentUserData from "@/hooks/getCurrentUserData";
 import { makeUserJoinAction } from "@/utils/workspaces-actions";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export default function useJoinWorkspace(userId: string, workspaceId: string) {
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
+  const { user, loading: userLoading } = useGetCurrentUserData();
+  const submitJoinAction = useCallback(
+    async (joinCode: string) => {
+      if (user && user.id) {
+        updateIsPending(true);
+        const response = await makeUserJoinAction(
+          user.id,
+          workspaceId,
+          joinCode
+        );
+        if (!response.success) {
+          updateErrorMsg(response.msg);
+        }
+        updateIsPending(false);
 
-  const submitJoinAction = async (joinCode: string) => {
-    if (userId) {
-      updateIsPending(true);
-      const response = await makeUserJoinAction(userId, workspaceId, joinCode);
-      if (!response.success) {
-        updateErrorMsg(response.msg);
+        return response;
       }
-      updateIsPending(false);
-
-      return response;
-    }
-  };
+    },
+    [user, workspaceId]
+  );
 
   return {
     errorMsg,
-    isPending,
+    isPending: isPending && userLoading,
     submitJoinAction,
   };
 }

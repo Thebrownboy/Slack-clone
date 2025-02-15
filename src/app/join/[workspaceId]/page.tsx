@@ -51,9 +51,9 @@ export default function JoinPage({ params }: JoinPageProps) {
     if (response?.success) {
       toast.success("Workspace joined.");
       router.replace(`/workspace/${workspaceId}`);
+    } else {
+      toast.error(response?.msg);
     }
-
-    toast.error(response?.msg);
   };
   return (
     <div className=" h-full flex flex-col gap-y-8 justify-center items-center bg-white p-8 rounded-lg shadow-md">

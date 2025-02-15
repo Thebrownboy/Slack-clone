@@ -129,16 +129,11 @@ export async function makeUserJoinAction(
   joinCode: string
 ) {
   const response = await makeUserJoin(userId, workspaceId, joinCode);
+  console.log("this is the response returning ", response);
   if (!response) {
     return {
       success: false,
       msg: "Unkown error happened",
-    };
-  }
-  if (typeof response == "string") {
-    return {
-      success: false,
-      msg: response,
     };
   }
 
