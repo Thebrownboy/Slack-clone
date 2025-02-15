@@ -16,9 +16,11 @@ import WorkspaceSection from "./workspaceSection";
 import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMembers";
 import UserItem from "./userItem";
 import { useParams } from "next/navigation";
+import useGetMemberId from "@/hooks/useGetMemberId";
 
 export default function WorkspaceSidebar() {
   const { setOpen } = useCreateChannelModal((state) => state);
+  const { memberId } = useGetMemberId();
   const {
     currentWorkspaceState: { isLoading: workspaceLoading },
   } = useCurrentWorkspace((state) => state);
@@ -87,10 +89,11 @@ export default function WorkspaceSidebar() {
         {currentWorkspaceMembers?.map((item) => {
           return (
             <UserItem
+              currentUserId={member?.userId ?? ""}
               id={item.user.id || ""}
               image={item.user.image || ""}
               label={item.user.name || ""}
-              variant={"default"}
+              variant={memberId === item.user.id ? "active" : "default"}
               key={item.user.id}
             />
           );

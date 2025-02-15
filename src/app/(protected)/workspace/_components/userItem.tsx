@@ -24,8 +24,15 @@ interface UserItemProps {
   label?: string;
   image?: string;
   variant?: VariantProps<typeof userItemVariants>["variant"];
+  currentUserId: string;
 }
-function UserItem({ id, image, label = "Member", variant }: UserItemProps) {
+function UserItem({
+  id,
+  image,
+  label = "Member",
+  variant,
+  currentUserId,
+}: UserItemProps) {
   const { workspaceId } = useParams();
   const avatarFallback = label.charAt(0).toUpperCase();
   return (
@@ -42,7 +49,9 @@ function UserItem({ id, image, label = "Member", variant }: UserItemProps) {
             {avatarFallback}
           </AvatarFallback>
         </Avatar>
-        <span className="text-sm truncate">{label}</span>
+        <span className="text-sm truncate">
+          {label} {currentUserId == id ? "(you)" : ""}
+        </span>
       </Link>
     </Button>
   );
