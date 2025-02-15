@@ -1,8 +1,6 @@
-import {
-  useCurrentMember,
-  useCurrentUser,
-  useCurrentWorkspace,
-} from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/member-store";
+import { useCurrentUser } from "@/state-store/user-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 import { getUserAction } from "@/utils/auth-actions";
 import {
   getMemberByUserIdAndWorkSpaceIdAction,

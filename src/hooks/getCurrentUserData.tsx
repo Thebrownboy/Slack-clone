@@ -1,4 +1,4 @@
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser } from "@/state-store/user-store";
 import { getUser } from "@/utils/authentication";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";

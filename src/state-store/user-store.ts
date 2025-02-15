@@ -1,0 +1,34 @@
+import { create } from "zustand";
+
+interface iUser {
+  email: string;
+  id: string;
+  image: string | null;
+  name: string | null;
+}
+interface iUserState {
+  user: iUser | null;
+  loading: boolean;
+}
+
+interface IUserStore {
+  userState: iUserState;
+  updateState(userState: iUserState): void;
+}
+
+// why I did not separet the state  and used one object
+// because if you use multiple values and multiple udpate funciton to that values
+// you will use these function separtely e.g. `updateLoading(false) , updateUser(user)`
+// this will cuz two renders instead of one , so udpating the two values one time
+// will be more efficient
+export const useCurrentUser = create<IUserStore>((set) => {
+  return {
+    userState: {
+      loading: true,
+      user: null,
+    },
+    updateState(userState) {
+      set((state) => ({ userState: { ...state.userState, ...userState } }));
+    },
+  };
+});

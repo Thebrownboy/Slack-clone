@@ -1,6 +1,7 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentChannels, useCurrentWorkspace } from "@/state-store/store";
+import { useCurrentChannels } from "@/state-store/channel-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 import { deleteChannelAction } from "@/utils/channels-actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

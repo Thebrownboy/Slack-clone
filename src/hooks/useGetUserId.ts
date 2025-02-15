@@ -1,4 +1,4 @@
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser } from "@/state-store/user-store";
 
 function useGetUserId() {
   const {

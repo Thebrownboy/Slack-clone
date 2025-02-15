@@ -11,11 +11,10 @@ import WorkspaceSidebar from "../_components/workspaceSidebar";
 import { Loader, LoaderCircleIcon } from "lucide-react";
 import useGetInitalData from "@/features/workspaces/hooks/useGetInitalData";
 import { Thread } from "@/features/messages/components/thread";
-import {
-  useCurrentMemberProfile,
-  useCurrentThreadData,
-} from "@/state-store/store";
+
 import Profile from "@/features/members/components/profile";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
+import { useCurrentMemberProfile } from "@/state-store/member-profile.store";
 
 function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
   const { parentMessageId, parentMessageIndex, restData } =
@@ -46,6 +45,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
           <ResizablePanel
             defaultSize={20}
             minSize={11}
+            maxSize={25}
             className="bg-[#5e2c5f]"
           >
             <WorkspaceSidebar />
@@ -57,7 +57,7 @@ function WorkspaceIdLayout({ children }: { children: React.ReactNode }) {
           {showPanel && (
             <>
               <ResizableHandle withHandle />
-              <ResizablePanel minSize={20} defaultSize={29}>
+              <ResizablePanel minSize={30} defaultSize={30} maxSize={40}>
                 {parentMessageId ? (
                   <Thread
                     messageId={parentMessageId as string}

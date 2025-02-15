@@ -8,11 +8,12 @@ import {
 } from "@/../src/components/ui/dropdown-menu";
 import { Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
 import {
   useCreateWorkspaceModal,
   useCurrentWorkspace,
-} from "@/state-store/store";
-import { Button } from "@/components/ui/button";
+} from "@/state-store/workspace-store";
 export default function WorkSpaceSwitcher() {
   const {
     currentWorkspaceState: { workSpace, isLoading },

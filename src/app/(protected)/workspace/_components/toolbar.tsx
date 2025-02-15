@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useCurrentWorkspace } from "@/state-store/store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 import { Info, Search } from "lucide-react";
 
 export const Toolbar = () => {

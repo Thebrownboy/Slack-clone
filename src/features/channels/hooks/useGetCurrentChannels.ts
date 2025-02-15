@@ -1,8 +1,9 @@
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentChannels, useCurrentWorkspace } from "@/state-store/store";
 import { getcurrentChannelsAction } from "@/utils/channels-actions";
 import { useEffect } from "react";
 import useGetChannelId from "@/hooks/useGetChannelId";
+import { useCurrentChannels } from "@/state-store/channel-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 
 export default function useGetCurrentChannels() {
   const { currentChannlesState, updateCurrentChannels } = useCurrentChannels(

@@ -1,6 +1,6 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentMessages } from "@/state-store/store";
+import { useCurrentMessages } from "@/state-store/channels-messages";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useMemo, useState } from "react";
 export default function useGetMessages(

@@ -1,6 +1,6 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentChannels } from "@/state-store/store";
+import { useCurrentChannels } from "@/state-store/channel-store";
 import { editChannelNameAction } from "@/utils/channels-actions";
 import React, { useState } from "react";
 import { toast } from "sonner";

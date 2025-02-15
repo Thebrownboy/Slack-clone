@@ -10,9 +10,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MdError } from "react-icons/md";
 import useGetCurrentUserWorkSpaces from "@/features/workspaces/hooks/useGetCurrentUserWorkSpaces";
-import { useCreateWorkspaceModal } from "@/state-store/store";
 import useCreateWorkspace from "../hooks/useCreateWorkspace";
 import useGetUserId from "@/hooks/useGetUserId";
+import { useCreateWorkspaceModal } from "@/state-store/workspace-store";
 
 export default function WorkSpaceModal() {
   const { setOpen, isOpen: open } = useCreateWorkspaceModal((state) => state);

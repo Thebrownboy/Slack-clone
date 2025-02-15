@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useEditChannel from "../hooks/useEditChannelName";
-import { useCurrentMember } from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/member-store";
 
 export default function EditChannelNameModal({
   channelName,

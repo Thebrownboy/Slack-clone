@@ -1,6 +1,9 @@
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
-import { useCreateChannelModal, useCurrentChannels } from "@/state-store/store";
+import {
+  useCreateChannelModal,
+  useCurrentChannels,
+} from "@/state-store/channel-store";
 import { createChannelAction } from "@/utils/channels-actions";
 import React, { useState } from "react";
 

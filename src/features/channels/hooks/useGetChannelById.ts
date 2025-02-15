@@ -1,5 +1,5 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
-import { useCurrentChannels } from "@/state-store/store";
+import { useCurrentChannels } from "@/state-store/channel-store";
 
 import { useMemo } from "react";
 

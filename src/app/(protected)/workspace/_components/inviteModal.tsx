@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/dialog";
 import { CopyIcon, RefreshCcw } from "lucide-react";
 import useNewJoinCode from "@/features/workspaces/hooks/useNewJoinCode";
-import { useCurrentUser, useCurrentWorkspace } from "@/state-store/store";
 import useConfirm from "@/hooks/useConfirm";
+import { useCurrentUser } from "@/state-store/user-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 
 interface InviteModalProps {
   open: boolean;

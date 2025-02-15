@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import useGetWorkspaceInfo from "@/features/workspaces/hooks/useGetWorkspaceInfo";
 import useJoinWorkspace from "@/features/workspaces/hooks/useJoinWorkspace";
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser } from "@/state-store/user-store";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -47,7 +47,6 @@ export default function JoinPage({ params }: JoinPageProps) {
 
   const handleComplete = async (value: string) => {
     const response = await submitJoinAction(value);
-    console.log(response);
     if (response?.success) {
       toast.success("Workspace joined.");
       router.replace(`/workspace/${workspaceId}`);

@@ -8,8 +8,9 @@ import {
   triggerMessageEvent,
   uploadImageAction,
 } from "@/utils/messages-actions";
-import { useCurrentMember, useCurrentUser } from "@/state-store/store";
 import createNativeMessage from "@/lib/common-utils";
+import { useCurrentMember } from "@/state-store/member-store";
+import { useCurrentUser } from "@/state-store/user-store";
 // quills does not working correclty with the server-side rendering
 // even if the component is a client componet , but next will render it once on the server
 // so we should have some work-around

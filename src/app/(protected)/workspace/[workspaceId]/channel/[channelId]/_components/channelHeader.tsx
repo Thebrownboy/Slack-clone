@@ -9,7 +9,7 @@ import {
 import EditChannelNameModal from "@/features/channels/components/editChannelNameModal";
 import useDeleteChannel from "@/features/channels/hooks/useDeleteChannel";
 import useConfirm from "@/hooks/useConfirm";
-import { useCurrentMember } from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/member-store";
 import { TrashIcon } from "lucide-react";
 import { FaChevronDown } from "react-icons/fa";
 

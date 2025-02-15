@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { useCurrentMember } from "@/state-store/store";
 import { Hint } from "./ui/hint";
 import EmojiPopOver from "./emojiPopOver";
 import { MdOutlineAddReaction } from "react-icons/md";
+import { useCurrentMember } from "@/state-store/member-store";
 
 interface ReactionsProps {
   messageIndex: number;
@@ -14,11 +14,7 @@ interface ReactionsProps {
   onChange: (value: string) => void;
 }
 
-export default function Reactions({
-  data,
-  onChange,
-  messageIndex,
-}: ReactionsProps) {
+export default function Reactions({ data, onChange }: ReactionsProps) {
   const {
     currentMemberState: { member, loading },
   } = useCurrentMember();

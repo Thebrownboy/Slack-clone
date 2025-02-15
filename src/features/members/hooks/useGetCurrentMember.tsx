@@ -1,6 +1,6 @@
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
-import { useCurrentMember } from "@/state-store/store";
+import { useCurrentMember } from "@/state-store/member-store";
 import { getMemberByUserIdAndWorkSpaceIdAction } from "@/utils/workspaces-actions";
 import { useEffect } from "react";
 

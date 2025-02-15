@@ -2,12 +2,7 @@ import Message from "@/components/message";
 import { Button } from "@/components/ui/button";
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import {
-  useCurrentConversationMessages,
-  useCurrentMember,
-  useCurrentMessages,
-  useCurrentUser,
-} from "@/state-store/store";
+
 import { AlertTriangle, Loader, XIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
@@ -17,6 +12,10 @@ import createNativeMessage from "@/lib/common-utils";
 import Quill from "quill";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import useGetReplies from "../hooks/useGetReplies";
+import { useCurrentMember } from "@/state-store/member-store";
+import { useCurrentUser } from "@/state-store/user-store";
+import { useCurrentMessages } from "@/state-store/channels-messages";
+import { useCurrentConversationMessages } from "@/state-store/conversation-store";
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 interface ThreadProps {
   messageId: string;

@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useCurrentUser } from "@/state-store/store";
+import { useCurrentUser } from "@/state-store/user-store";
 import { Loader, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 

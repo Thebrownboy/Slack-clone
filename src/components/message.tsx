@@ -12,11 +12,7 @@ import useRemoveMessage from "@/features/messages/hooks/useDeleteMessage";
 import useConfirm from "@/hooks/useConfirm";
 import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
-import {
-  useCurrentMember,
-  useCurrentMemberProfile,
-  useCurrentThreadData,
-} from "@/state-store/store";
+
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
 import { useParams } from "next/navigation";
 import {
@@ -24,6 +20,9 @@ import {
   triggerEditMessageEvent,
 } from "@/utils/messages-actions";
 import ThreadBar from "./threadBar";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
+import { useCurrentMemberProfile } from "@/state-store/member-profile.store";
+import { useCurrentMember } from "@/state-store/member-store";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 

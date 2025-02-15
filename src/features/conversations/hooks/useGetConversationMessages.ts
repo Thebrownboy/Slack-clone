@@ -1,5 +1,5 @@
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentConversationMessages } from "@/state-store/store";
+import { useCurrentConversationMessages } from "@/state-store/conversation-store";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useMemo, useState } from "react";
 export default function useGetConversationMessage(

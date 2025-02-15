@@ -6,10 +6,7 @@ import {
   SendHorizonal,
 } from "lucide-react";
 import WorkspaceHeader from "./workspaceHeader";
-import {
-  useCreateChannelModal,
-  useCurrentWorkspace,
-} from "@/state-store/store";
+
 import SidebarItem from "./sidebarItem";
 import useGetCurrentChannels from "@/features/channels/hooks/useGetCurrentChannels";
 import WorkspaceSection from "./workspaceSection";
@@ -17,6 +14,8 @@ import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMemb
 import UserItem from "./userItem";
 import { useParams } from "next/navigation";
 import useGetMemberId from "@/hooks/useGetMemberId";
+import { useCreateChannelModal } from "@/state-store/channel-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 
 export default function WorkspaceSidebar() {
   const { setOpen } = useCreateChannelModal((state) => state);

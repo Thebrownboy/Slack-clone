@@ -10,8 +10,8 @@ import { Hint } from "@/components/ui/hint";
 import { ChevronDown, ListFilter, SquarePen } from "lucide-react";
 import PreferencesModal from "./preferencesModal";
 import { useState } from "react";
-import { useCurrentWorkspace } from "@/state-store/store";
 import InviteModal from "./inviteModal";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
 
 export default function WorkspaceHeader({
   isAdmin,

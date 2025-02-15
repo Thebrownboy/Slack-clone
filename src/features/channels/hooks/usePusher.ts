@@ -2,11 +2,10 @@ import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import pusherClient from "@/lib/pusher-client";
-import {
-  useCurrentConversationMessages,
-  useCurrentMessages,
-  useCurrentThreadData,
-} from "@/state-store/store";
+import { useCurrentMessages } from "@/state-store/channels-messages";
+import { useCurrentConversationMessages } from "@/state-store/conversation-store";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
+
 import { useEffect } from "react";
 
 export default function usePusher() {

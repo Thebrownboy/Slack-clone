@@ -33,7 +33,6 @@ function Profile({ memberId, onClose }: IProfileProps) {
     useConfirm("Remove member", "Are you sure?");
   const { ConfirmDialog: ConfirmUpdate, confirm: handleUpdateConfirm } =
     useConfirm("update Member", "Are you sure?");
-  console.log("HI HI ", fullMember, currentFullMember);
   if (!fullMember || !currentFullMember) {
     return (
       <div className="h-full flex flex-col">

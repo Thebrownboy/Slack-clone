@@ -3,9 +3,9 @@ import { tFulldataMessage } from "@/types/common-types";
 import { differenceInMinutes, format, isToday, isYesterday } from "date-fns";
 import Message from "./message";
 import ChannelHero from "./channelHero";
-import { useCurrentMember } from "@/state-store/store";
 import { Loader } from "lucide-react";
 import ConversationHero from "./conversationHero";
+import { useCurrentMember } from "@/state-store/member-store";
 interface MessageListProps {
   memberName?: string;
   memberImage?: string;

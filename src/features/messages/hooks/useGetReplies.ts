@@ -1,6 +1,6 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentThreadData } from "@/state-store/store";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useState } from "react";
 export default function useGetReplies(parentMessageId: string | undefined) {
