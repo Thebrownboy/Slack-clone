@@ -261,20 +261,21 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
               parentMessageIndex: currentIndex ? currentIndex + 1 : null,
             };
           });
-
+          console.log(conversationId, state.skip);
           return {
             ...state,
-            skip: state.skip + 1,
+            skip: (state.skip || 0) + 1,
             currentConversationsMessages: {
               ...state.currentConversationsMessages,
 
               [conversationId]: {
                 skip:
-                  state.currentConversationsMessages[conversationId]?.skip + 1,
+                  (state.currentConversationsMessages[conversationId]?.skip ||
+                    0) + 1,
                 messages: [
                   message,
-                  ...state.currentConversationsMessages[conversationId]
-                    .messages,
+                  ...(state.currentConversationsMessages[conversationId]
+                    ?.messages || []),
                 ],
               },
             },

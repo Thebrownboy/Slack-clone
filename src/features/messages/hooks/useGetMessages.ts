@@ -1,12 +1,20 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentMessages } from "@/state-store/channels-messages";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
 import { getMessagesAction } from "@/utils/messages-actions";
 import { useEffect, useMemo, useState } from "react";
 export default function useGetMessages(
   conversationId: string | undefined,
   parentMessageId: string | undefined
 ) {
+  const { restData, updateParentMessageId, updateParentMessageIndex } =
+    useCurrentThreadData();
+  useEffect(() => {
+    restData();
+    updateParentMessageId(null);
+    updateParentMessageIndex(null);
+  }, [updateParentMessageIndex, updateParentMessageId, restData]);
   const BATCH_SIZE = 5;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();

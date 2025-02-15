@@ -4,7 +4,7 @@ import { Conversation } from "@/features/conversations/components/conversation";
 import useCreateOrGetConversations from "@/features/conversations/hooks/use-get-create-conversation";
 
 import { AlertTriangle, Loader } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
 
 type tParams = {
   params: Promise<{

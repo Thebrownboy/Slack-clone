@@ -3,8 +3,16 @@ import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { Conversation } from "@prisma/client";
 import { useCallback, useEffect, useState } from "react";
 import { getOrCreateConversationAction } from "@/utils/conversations-actions";
+import { useCurrentThreadData } from "@/state-store/thread-messages";
 
 export default function useCreateOrGetConversations(otherMemberId: string) {
+  const { restData, updateParentMessageIndex, updateParentMessageId } =
+    useCurrentThreadData();
+  useEffect(() => {
+    restData();
+    updateParentMessageId(null);
+    updateParentMessageIndex(null);
+  }, []);
   const { workspaceId } = useGetWorkspaceId();
   const { userId } = useGetUserId();
   const [createConversationState, updateCreateConversationState] = useState({
