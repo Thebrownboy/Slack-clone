@@ -1,3 +1,4 @@
+import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import { tWorkspaceMembers } from "@/types/common-types";
@@ -11,7 +12,7 @@ export default function useGetWorkspaceMembers() {
     currentWorkspaceMembers: tWorkspaceMembers[] | null;
     isLoading: boolean;
   }>({ isLoading: true, currentWorkspaceMembers: null });
-
+  const { channelId } = useGetChannelId();
   useEffect(() => {
     const getWorkspaceMembers = async () => {
       try {
@@ -28,9 +29,10 @@ export default function useGetWorkspaceMembers() {
         updateWorkspaceMembers((state) => ({ ...state, isLoading: false }));
       }
     };
-
-    getWorkspaceMembers();
-  }, [userId, workspaceId]);
+    if (!workspaceMembers || !workspaceMembers.currentWorkspaceMembers) {
+      getWorkspaceMembers();
+    }
+  }, [userId, workspaceId, channelId, workspaceMembers]);
 
   return { ...workspaceMembers };
 }

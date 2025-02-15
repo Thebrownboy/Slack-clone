@@ -2,12 +2,13 @@ import useGetUserId from "@/hooks/useGetUserId";
 import { useCurrentChannels, useCurrentWorkspace } from "@/state-store/store";
 import { getcurrentChannelsAction } from "@/utils/channels-actions";
 import { useEffect } from "react";
+import useGetChannelId from "@/hooks/useGetChannelId";
 
 export default function useGetCurrentChannels() {
   const { currentChannlesState, updateCurrentChannels } = useCurrentChannels(
     (state) => state
   );
-
+  const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
 
   const {
@@ -23,9 +24,16 @@ export default function useGetCurrentChannels() {
         updateCurrentChannels(response);
       } catch {}
     };
-
-    getChannels();
-  }, [workSpace, updateCurrentChannels, userId]);
+    if (currentChannlesState && !currentChannlesState.currentChannels) {
+      getChannels();
+    }
+  }, [
+    workSpace,
+    updateCurrentChannels,
+    userId,
+    channelId,
+    currentChannlesState,
+  ]);
 
   return {
     ...currentChannlesState,
