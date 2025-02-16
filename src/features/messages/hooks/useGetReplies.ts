@@ -10,22 +10,25 @@ export default function useGetReplies(parentMessageId: string | undefined) {
     currentThreadData: { messages: currentThreadMessages, skip },
     updateCurrentThreadData,
   } = useCurrentThreadData();
-  const BATCH_SIZE = 5;
+  const BATCH_SIZE = 10;
   const { channelId } = useGetChannelId();
   const { userId } = useGetUserId();
   const [loading, updateLoading] = useState(false);
-  const [take, updateTake] = useState(5);
+  const [take, updateTake] = useState(10);
   // no more data so no requests will be sent
   const [noMore, updateNoMore] = useState(false);
 
   // request more data
-  const [getMore, updateGetMore] = useState(false);
+  const [getMore, updateGetMore] = useState(true);
 
   useEffect(() => {
     updateLoading(false);
     updateNoMore(false);
-    updateGetMore(false);
+    updateGetMore(true);
   }, [parentMessage]);
+  useEffect(() => {
+    console.log(skip);
+  }, [skip]);
   const getMoreMessages = () => {
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);
@@ -41,6 +44,8 @@ export default function useGetReplies(parentMessageId: string | undefined) {
         skip,
         take
       );
+
+      console.log("This is messages ", messages);
       if (messages && messages.length == 0) {
         updateNoMore(true);
       }

@@ -85,10 +85,17 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
+      if (messageObject) {
+        messageObject.channelId = channelId as string;
+        messageObject.conversationId = conversationId;
+        messageObject.messageIndex = messageIndex ?? undefined;
+      }
+
       triggerReplyEvent(messageObject);
     }
   };
   const currentMessage = useMemo(() => {
+    console.log("I will update the thread ", channelId, conversationId);
     if (
       (channelId || conversationId) &&
       messageId &&
@@ -213,12 +220,18 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
         })}
 
         <div
-          className="h-1"
+          className="h-1 "
           ref={(el) => {
             if (el) {
               const observer = new IntersectionObserver(
                 ([entry]) => {
+                  console.log(entry.isIntersecting, noMore, getMore);
                   if (entry.isIntersecting && !noMore && !getMore) {
+                    document
+                      .querySelectorAll(".messages-scrollbar")[1]
+                      ?.scrollBy({
+                        top: 100,
+                      });
                     loadMore();
                   }
                 },

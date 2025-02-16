@@ -110,16 +110,18 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
           ...channelMessages.slice(index + 1),
         ];
         const currentIndex = useCurrentThreadData.getState().parentMessageIndex;
-        useCurrentThreadData.setState((state) => {
-          return {
-            ...state,
-            parentMessageIndex: !currentIndex
-              ? null
-              : currentIndex !== 0
-              ? currentIndex - 1
-              : 0,
-          };
-        });
+        if (currentIndex && index < currentIndex) {
+          useCurrentThreadData.setState((state) => {
+            return {
+              ...state,
+              parentMessageIndex: !currentIndex
+                ? null
+                : currentIndex !== 0
+                ? currentIndex - 1
+                : 0,
+            };
+          });
+        }
         return {
           ...state,
           currentChannelsMessages: {
@@ -253,7 +255,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
             ...state.currentChannelsMessages,
 
             [channelId]: {
-              skip: state.currentChannelsMessages[channelId].skip + 1,
+              skip: (state.currentChannelsMessages[channelId]?.skip || 0) + 1,
               messages: [
                 message,
                 ...state.currentChannelsMessages[channelId].messages,

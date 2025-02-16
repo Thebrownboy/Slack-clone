@@ -1,6 +1,8 @@
 import { tFulldataMessage } from "@/types/common-types";
 import { create } from "zustand";
 import { useCurrentMemberProfile } from "./member-profile.store";
+import { useCurrentMessages } from "./channels-messages";
+import { useCurrentConversationMessages } from "./conversation-store";
 
 interface iCurrentThreadMessage {
   parentMessage: string | null;
@@ -93,6 +95,20 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
         if (state.parentMessageId !== parentMessageId) {
           return state;
         }
+        // TODO: after deletion you should update the number of replies
+        // if (reply?.channelId && state.parentMessageIndex) {
+        //   const currentParentMessage =
+        //     useCurrentMessages.getState().currentChannelsMessages[
+        //       reply.channelId
+        //     ].messages[state.parentMessageIndex];
+        //   if (currentParentMessage && !currentParentMessage?.threadCount) {
+        //     currentParentMessage.threadCount = 1;
+        //   } else if (currentParentMessage && currentParentMessage.threadCount) {
+        //     currentParentMessage.threadCount += 1;
+        //   }
+        //   if (currentParentMessage)
+        //     currentParentMessage.threadTimestamp = new Date();
+        // }
 
         let channelMessages = state.currentThreadData.messages;
         channelMessages = [
@@ -244,7 +260,105 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
     },
     addReplyOnCurrentThread(reply) {
       set((state) => {
+        if (
+          reply?.channelId &&
+          reply?.messageIndex !== null &&
+          reply.messageIndex !== undefined
+        ) {
+          console.log(
+            "If I am here I shoud updated ",
+            reply?.channelId,
+            reply?.messageIndex
+          );
+          const currentParentMessage =
+            useCurrentMessages.getState().currentChannelsMessages[
+              reply.channelId
+            ].messages[reply.messageIndex];
+          console.log(currentParentMessage);
+          if (currentParentMessage && !currentParentMessage?.threadCount) {
+            currentParentMessage.threadCount = 1;
+          } else if (currentParentMessage && currentParentMessage.threadCount) {
+            currentParentMessage.threadCount += 1;
+          }
+          if (currentParentMessage)
+            currentParentMessage.threadTimestamp = new Date();
+
+          useCurrentMessages.setState((state) => {
+            return {
+              ...state,
+              currentChannelsMessages: {
+                ...state.currentChannelsMessages,
+                [reply.channelId || ""]: {
+                  ...state.currentChannelsMessages[reply.channelId || ""],
+                  messages: [
+                    ...state.currentChannelsMessages[
+                      reply.channelId || ""
+                    ].messages.slice(0, reply.messageIndex),
+                    currentParentMessage,
+                    ...state.currentChannelsMessages[
+                      reply.channelId || ""
+                    ].messages.slice((reply.messageIndex as number) + 1),
+                  ],
+                },
+              },
+            };
+          });
+        }
+        console.log(
+          "I am her ein the conversation",
+          reply,
+          reply?.messageIndex
+        );
+        if (
+          reply?.conversationId &&
+          reply?.messageIndex !== null &&
+          reply.messageIndex !== undefined
+        ) {
+          const currentParentMessage =
+            useCurrentConversationMessages.getState()
+              .currentConversationsMessages[reply.conversationId].messages[
+              reply.messageIndex
+            ];
+
+          console.log(currentParentMessage);
+          if (currentParentMessage && !currentParentMessage?.threadCount) {
+            currentParentMessage.threadCount = 1;
+          } else if (currentParentMessage && currentParentMessage.threadCount) {
+            currentParentMessage.threadCount += 1;
+          }
+          if (currentParentMessage)
+            currentParentMessage.threadTimestamp = new Date();
+
+          useCurrentConversationMessages.setState((state) => {
+            return {
+              ...state,
+              currentChannelsMessages: {
+                ...state.currentConversationsMessages,
+                [reply.channelId || ""]: {
+                  ...state.currentConversationsMessages[
+                    reply.conversationId || ""
+                  ],
+                  messages: [
+                    ...state.currentConversationsMessages[
+                      reply.conversationId || ""
+                    ].messages.slice(0, reply.messageIndex),
+                    currentParentMessage,
+                    ...state.currentConversationsMessages[
+                      reply.conversationId || ""
+                    ].messages.slice((reply.messageIndex as number) + 1),
+                  ],
+                },
+              },
+            };
+          });
+        }
+
         if (reply?.parentMessageId !== state.parentMessageId) return state;
+        // TODO: do the same for the conversation
+        console.log(reply.channelId);
+
+        console.log(reply?.conversationId, state.parentMessageIndex);
+
         return {
           ...state,
           currentThreadData: {

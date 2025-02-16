@@ -119,6 +119,9 @@ export default function MessagesList({
               const observer = new IntersectionObserver(
                 ([entry]) => {
                   if (entry.isIntersecting && canLoadMore && !isLoadingMore) {
+                    document.querySelector(".messages-scrollbar")?.scrollBy({
+                      top: 100,
+                    });
                     loadMore();
                   }
                 },
