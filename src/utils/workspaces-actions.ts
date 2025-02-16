@@ -23,15 +23,17 @@ export async function getWorkAllWorkSpacesAction() {
 
 export async function createNewWorkspace(name: string, id: string) {
   try {
-    await addWorkSpace(name, id);
+    const createdWorkspace = await addWorkSpace(name, id);
     return {
       success: true,
       msg: "Workspace created successfully",
+      workspace: createdWorkspace,
     };
   } catch {
     return {
       success: false,
       msg: "Unkown Error Happend",
+      workspace: null,
     };
   }
 }

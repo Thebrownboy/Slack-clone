@@ -24,7 +24,7 @@ export async function addWorkSpace(name: string, userId: string) {
     },
   });
 
-  await db.members.create({
+  const createdWorkspace = await db.members.create({
     data: {
       role: "admin",
       userId,
@@ -39,6 +39,8 @@ export async function addWorkSpace(name: string, userId: string) {
       workspaceId,
     },
   });
+
+  return createdWorkspace;
 }
 
 export async function getAllWorkSpacesByUserId(userId: string) {

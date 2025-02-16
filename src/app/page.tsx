@@ -6,6 +6,7 @@ import { tWorkspaceMembers } from "@/types/common-types";
 import { getWorkspaceMembersAction } from "@/utils/members-actions";
 import { getAllWorkSpacesOfUserAction } from "@/utils/workspaces-actions";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
@@ -13,6 +14,9 @@ export default async function Home() {
   const workspaces = await getAllWorkSpacesOfUserAction(
     session?.user?.id || ""
   );
+  if (workspaces?.length === 0) {
+    redirect("/create-workspace");
+  }
 
   const members: tWorkspaceMembers[][] | null = [];
   if (workspaces) {
@@ -28,7 +32,7 @@ export default async function Home() {
     }
   }
   return (
-    <div className=" bg-[#481349] w-full h-full p-10">
+    <div className=" bg-[#481349] w-full min-h-full p-10">
       <h1 className="text-6xl text-white">👋 Welcome back </h1>
       <div className=" rounded-xl border-4 border-[#6D4876] mt-10">
         <div className="rounded-t-xl header p-5 bg-[#ECDEEC]">
@@ -85,9 +89,11 @@ export default async function Home() {
       </div>
       <div className="my-10 flex bg-white p-8 items-center rounded-xl justify-between ">
         <p className=" text-xl">Want to create your own team? </p>
-        <button className=" font-bold hover:scale-105 transition-all uppercase border-2 rounded-xl p-5 text-[#481A54] border-[#481A54]">
-          creaet a new workspace
-        </button>
+        <Link href={"/create-workspace"}>
+          <button className=" font-bold hover:scale-105 transition-all uppercase border-2 rounded-xl p-5 text-[#481A54] border-[#481A54]">
+            creaet a new workspace
+          </button>
+        </Link>
       </div>
     </div>
   );
