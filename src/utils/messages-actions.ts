@@ -130,12 +130,14 @@ export async function triggerDeleteMessageEvent(
   workspaceId: string,
   channelId: string,
   parentId: string,
-  conversationId?: string | null
+  conversationId?: string | null,
+  parentMessageIndex?: number | null
 ) {
   pusherServer.trigger(workspaceId, "delete-message", {
     messageIndex,
     channelId,
     parentId,
     conversationId,
+    parentMessageIndex,
   });
 }

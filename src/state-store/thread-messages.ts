@@ -85,13 +85,116 @@ interface iCurrentThreadData {
     updateTime: Date
   ) => void;
 
-  deleteMessage: (parentMessageId: string, messageIndex: number) => void;
+  deleteMessage: (
+    parentMessageId: string,
+    messageIndex: number,
+    channelId: string,
+    conversationId: string
+  ) => void;
 }
 
 export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
   return {
-    deleteMessage(parentMessageId, messageIndex) {
+    deleteMessage(parentMessageId, messageIndex, channelId, conversationId) {
       set((state) => {
+        if (
+          channelId &&
+          state.parentMessageIndex !== null &&
+          state.parentMessageIndex !== undefined
+        ) {
+          const currentParentMessage =
+            useCurrentMessages.getState().currentChannelsMessages[channelId]
+              .messages[state.parentMessageIndex];
+          if (currentParentMessage && !currentParentMessage?.threadCount) {
+            currentParentMessage.threadCount = 0;
+          } else if (currentParentMessage && currentParentMessage.threadCount) {
+            currentParentMessage.threadCount -= 1;
+          }
+          if (currentParentMessage) {
+            // if the delete message is the last one , you should update the time stamp
+            if (messageIndex === 0) {
+              // you are delete the last message
+
+              currentParentMessage.threadTimestamp = state.currentThreadData
+                .messages[messageIndex + 1]?.updatedAt
+                ? (state.currentThreadData.messages[messageIndex + 1]
+                    ?.updatedAt as Date)
+                : (state.currentThreadData.messages[messageIndex + 1]
+                    ?.creationTime as Date);
+            }
+          }
+          const parentMessageIndex = state.parentMessageIndex;
+          useCurrentMessages.setState((state) => {
+            return {
+              ...state,
+              currentChannelsMessages: {
+                ...state.currentChannelsMessages,
+                [channelId]: {
+                  ...state.currentChannelsMessages[channelId],
+                  messages: [
+                    ...state.currentChannelsMessages[channelId].messages.slice(
+                      0,
+                      parentMessageIndex
+                    ),
+                    currentParentMessage,
+                    ...state.currentChannelsMessages[channelId].messages.slice(
+                      parentMessageIndex + 1
+                    ),
+                  ],
+                },
+              },
+            };
+          });
+        }
+        if (
+          conversationId &&
+          state.parentMessageIndex !== null &&
+          state.parentMessageIndex !== undefined
+        ) {
+          const currentParentMessage =
+            useCurrentConversationMessages.getState()
+              .currentConversationsMessages[conversationId].messages[
+              state.parentMessageIndex
+            ];
+          if (currentParentMessage && !currentParentMessage?.threadCount) {
+            currentParentMessage.threadCount = 0;
+          } else if (currentParentMessage && currentParentMessage.threadCount) {
+            currentParentMessage.threadCount -= 1;
+          }
+          if (currentParentMessage && messageIndex === 0) {
+            // if the delete message is the last one , you should update the time stamp
+
+            // you are delete the last message
+
+            currentParentMessage.threadTimestamp = state.currentThreadData
+              .messages[messageIndex + 1]?.updatedAt
+              ? (state.currentThreadData.messages[messageIndex + 1]
+                  ?.updatedAt as Date)
+              : (state.currentThreadData.messages[messageIndex + 1]
+                  ?.creationTime as Date);
+          }
+          const parentMessageIndex = state.parentMessageIndex;
+          useCurrentConversationMessages.setState((state) => {
+            return {
+              ...state,
+              currentConversationsMessages: {
+                ...state.currentConversationsMessages,
+                [channelId]: {
+                  ...state.currentConversationsMessages[conversationId],
+                  messages: [
+                    ...state.currentConversationsMessages[
+                      conversationId
+                    ].messages.slice(0, parentMessageIndex),
+                    currentParentMessage,
+                    ...state.currentConversationsMessages[
+                      conversationId
+                    ].messages.slice(parentMessageIndex + 1),
+                  ],
+                },
+              },
+            };
+          });
+        }
         if (state.parentMessageId !== parentMessageId) {
           return state;
         }

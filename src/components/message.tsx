@@ -14,7 +14,7 @@ import useToggleReaction from "@/features/reactions/useToggleReaction";
 import Reactions from "./reactions";
 
 import { triggertoggleReactionEvent } from "@/utils/reactions-actions";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import {
   triggerDeleteMessageEvent,
   triggerEditMessageEvent,
@@ -23,6 +23,8 @@ import ThreadBar from "./threadBar";
 import { useCurrentThreadData } from "@/state-store/thread-messages";
 import { useCurrentMemberProfile } from "@/state-store/member-profile.store";
 import { useCurrentMember } from "@/state-store/member-store";
+import useCreateOrGetConversations from "@/features/conversations/hooks/use-get-create-conversation";
+import { useCurrentConversationMessages } from "@/state-store/conversation-store";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -94,6 +96,8 @@ function Message({
     restData,
     parentMessageIndex,
   } = useCurrentThreadData();
+
+  const { currentConversationId } = useCurrentConversationMessages();
   const { updateCurrentMemberProfileId } = useCurrentMemberProfile();
   const { handleSubmit: toggleReaction, error: toggleError } =
     useToggleReaction();
@@ -139,12 +143,14 @@ function Message({
       if (parentMessageId === deletedMessage.message?.id) {
         restData();
       }
+
       triggerDeleteMessageEvent(
         messageIndex,
         workspaceId as string,
         channelId,
         currentMessageParentMessageId as string,
-        conversationId
+        conversationId || currentConversationId,
+        parentMessageIndex
       );
       // TODO :Close thread if opened
     } else {

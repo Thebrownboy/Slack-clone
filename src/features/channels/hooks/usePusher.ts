@@ -102,7 +102,12 @@ export default function usePusher() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("delete-message", (data: any) => {
         if (data.parentId) {
-          deleteThreadData(data.parentId, data.messageIndex);
+          deleteThreadData(
+            data.parentId,
+            data.messageIndex,
+            data.channelId,
+            data.conversationId
+          );
           return;
         }
         if (data.conversationId) {
