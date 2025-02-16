@@ -1,6 +1,4 @@
 "use server";
-import UserButton from "@/features/auth/components/userButton";
-import Link from "next/link";
 
 export default async function Home() {
   // you can initialize the store from a server componet because you can initialzie the store of zustand
@@ -12,12 +10,8 @@ export default async function Home() {
   //   },
   // });
   return (
-    <div>
-      <Link href={"/workspace/cm5tjkucy0007usi4bik199kw"}>
-        {" "}
-        go to workspace
-      </Link>
-      <UserButton />
+    <div className=" bg-[#481349] w-full h-full">
+      <h1 className="text-6xl text-white">👋 Welcome back </h1>
     </div>
   );
 }

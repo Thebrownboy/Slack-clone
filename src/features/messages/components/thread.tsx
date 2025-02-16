@@ -95,7 +95,6 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
     }
   };
   const currentMessage = useMemo(() => {
-    console.log("I will update the thread ", channelId, conversationId);
     if (
       (channelId || conversationId) &&
       messageId &&
@@ -225,7 +224,6 @@ export const Thread = ({ messageId, onClose, messageIndex }: ThreadProps) => {
             if (el) {
               const observer = new IntersectionObserver(
                 ([entry]) => {
-                  console.log(entry.isIntersecting, noMore, getMore);
                   if (entry.isIntersecting && !noMore && !getMore) {
                     document
                       .querySelectorAll(".messages-scrollbar")[1]

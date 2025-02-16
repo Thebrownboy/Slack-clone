@@ -151,6 +151,40 @@ export async function deleteWorkSpace(userId: string, workspaceId: string) {
   if (!member || member.role !== "admin") {
     return null;
   }
+
+  const deletedMembers = await db.members.deleteMany({
+    where: {
+      workspaceId,
+    },
+  });
+  if (!deletedMembers) return null;
+  const deletedChannels = await db.channels.deleteMany({
+    where: {
+      workspaceId,
+    },
+  });
+  if (!deletedChannels) return null;
+
+  const deletedConversations = await db.conversation.deleteMany({
+    where: {
+      workspaceId,
+    },
+  });
+  if (!deletedConversations) return null;
+
+  const deletedReactions = await db.reactions.deleteMany({
+    where: {
+      workspaceId,
+    },
+  });
+  if (!deletedReactions) return null;
+  const deletedMessages = await db.message.deleteMany({
+    where: {
+      workspaceId,
+    },
+  });
+
+  if (!deletedMessages) return null;
   const deleteWorkSpace = await db.workspace.delete({
     where: {
       id: workspaceId,

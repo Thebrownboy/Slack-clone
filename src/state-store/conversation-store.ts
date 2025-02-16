@@ -107,7 +107,7 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
           const activeChannel = conversationId === state.currentConversationId;
           if (
             !activeChannel &&
-            !state.currentConversationsMessages[conversationId].messages
+            !state.currentConversationsMessages[conversationId]?.messages
           ) {
             return state;
           }
@@ -261,7 +261,6 @@ export const useCurrentConversationMessages = create<IConversationMesages>(
               parentMessageIndex: currentIndex ? currentIndex + 1 : null,
             };
           });
-          console.log(conversationId, state.skip);
           return {
             ...state,
             skip: (state.skip || 0) + 1,

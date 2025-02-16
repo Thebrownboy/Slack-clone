@@ -265,16 +265,10 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
           reply?.messageIndex !== null &&
           reply.messageIndex !== undefined
         ) {
-          console.log(
-            "If I am here I shoud updated ",
-            reply?.channelId,
-            reply?.messageIndex
-          );
           const currentParentMessage =
             useCurrentMessages.getState().currentChannelsMessages[
               reply.channelId
             ].messages[reply.messageIndex];
-          console.log(currentParentMessage);
           if (currentParentMessage && !currentParentMessage?.threadCount) {
             currentParentMessage.threadCount = 1;
           } else if (currentParentMessage && currentParentMessage.threadCount) {
@@ -304,11 +298,7 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
             };
           });
         }
-        console.log(
-          "I am her ein the conversation",
-          reply,
-          reply?.messageIndex
-        );
+
         if (
           reply?.conversationId &&
           reply?.messageIndex !== null &&
@@ -320,7 +310,6 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
               reply.messageIndex
             ];
 
-          console.log(currentParentMessage);
           if (currentParentMessage && !currentParentMessage?.threadCount) {
             currentParentMessage.threadCount = 1;
           } else if (currentParentMessage && currentParentMessage.threadCount) {
@@ -354,10 +343,6 @@ export const useCurrentThreadData = create<iCurrentThreadData>((set) => {
         }
 
         if (reply?.parentMessageId !== state.parentMessageId) return state;
-        // TODO: do the same for the conversation
-        console.log(reply.channelId);
-
-        console.log(reply?.conversationId, state.parentMessageIndex);
 
         return {
           ...state,

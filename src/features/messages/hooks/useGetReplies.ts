@@ -26,9 +26,7 @@ export default function useGetReplies(parentMessageId: string | undefined) {
     updateNoMore(false);
     updateGetMore(true);
   }, [parentMessage]);
-  useEffect(() => {
-    console.log(skip);
-  }, [skip]);
+
   const getMoreMessages = () => {
     updateGetMore(true);
     updateSkip(skip + BATCH_SIZE);
@@ -45,7 +43,6 @@ export default function useGetReplies(parentMessageId: string | undefined) {
         take
       );
 
-      console.log("This is messages ", messages);
       if (messages && messages.length == 0) {
         updateNoMore(true);
       }
