@@ -35,7 +35,7 @@ export default function Reactions({ data, onChange }: ReactionsProps) {
               onClick={() => onChange(reaction.value)}
               className={cn(
                 "h-6 px-2 rounded-full bg-slate-200/70 border border-transparent text-slate-800 flex items-center gap-x-1 ",
-                reaction.membersIds.includes(member.userId) &&
+                reaction.membersIds.includes(member.userId || "") &&
                   "bg-blue-100/70 border-blue-500 text-white"
               )}
             >
@@ -43,7 +43,8 @@ export default function Reactions({ data, onChange }: ReactionsProps) {
               <span
                 className={cn(
                   "text-xs font-semibold text-muted-foreground ",
-                  reaction.membersIds.includes(member.userId) && "text-blue-500"
+                  reaction.membersIds.includes(member.userId || "") &&
+                    "text-blue-500"
                 )}
               >
                 {reaction.count}{" "}

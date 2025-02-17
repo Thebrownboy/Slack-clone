@@ -1,15 +1,15 @@
 /* eslint-disable */
 "use client";
 import { Button } from "@/components/ui/button";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandSeparator,
-} from "@/components/ui/command";
+// import {
+//   CommandDialog,
+//   CommandEmpty,
+//   CommandGroup,
+//   CommandInput,
+//   CommandItem,
+//   CommandList,
+//   CommandSeparator,
+// } from "@/components/ui/command";
 
 import { useCurrentWorkspace } from "@/state-store/workspace-store";
 import { Info, Search } from "lucide-react";
@@ -18,6 +18,7 @@ import { useCurrentChannels } from "@/state-store/channel-store";
 import useGetWorkspaceMembers from "@/features/members/hooks/useGetWorkspaceMembers";
 import Link from "next/link";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
+import CommandList from "./commandList";
 
 export const Toolbar = () => {
   const {
@@ -39,8 +40,8 @@ export const Toolbar = () => {
           <Search className="size-4 text-white mr-2" />
           <span className="text-white text-xs">Search {workSpace?.name}</span>
         </Button>
-
-        <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandList open={open} setOpen={setOpen}></CommandList>
+        {/* <CommandDialog open={open} onOpenChange={setOpen}>
           <CommandInput
             placeholder="Type a command or search"
             {...({} as any)}
@@ -76,7 +77,7 @@ export const Toolbar = () => {
               })}
             </CommandGroup>
           </CommandList>
-        </CommandDialog>
+        </CommandDialog> */}
       </div>
       <div className="ml-auto flex-1 flex items-center justify-end">
         <Button variant={"transparent"} size={"iconSm"}>

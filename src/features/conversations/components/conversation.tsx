@@ -27,7 +27,7 @@ export function Conversation({ conversationId }: ConversationProps) {
         memberImage={fullMember?.image}
         memberName={fullMember?.name}
         onClick={() => {
-          updateCurrentMemberProfileId(memberId);
+          updateCurrentMemberProfileId(memberId as string);
         }}
       />
       <MessagesList

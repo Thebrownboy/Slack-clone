@@ -18,22 +18,19 @@ export default function useCreateMessage() {
     conversationId?: string
   ) => {
     updateLoading(true);
-    try {
-      const message = await createMessageAction({
-        body,
-        imageId,
-        userId: userId as string,
-        workspaceId: workspaceId as string,
-        channelId: channelId as string,
-        parentMessageId,
-        conversationId,
-      });
-      updateLoading(false);
-      updateError(message.errmsg);
-      return message;
-    } catch (err) {
-      return null;
-    }
+
+    const message = await createMessageAction({
+      body,
+      imageId,
+      userId: userId as string,
+      workspaceId: workspaceId as string,
+      channelId: channelId as string,
+      parentMessageId,
+      conversationId,
+    });
+    updateLoading(false);
+    updateError(message.errmsg);
+    return message;
   };
 
   return { handleSubmit, error, loading };

@@ -12,7 +12,7 @@ export default function useCreateOrGetConversations(otherMemberId: string) {
     restData();
     updateParentMessageId(null);
     updateParentMessageIndex(null);
-  }, []);
+  }, [restData, updateParentMessageId, updateParentMessageIndex]);
   const { workspaceId } = useGetWorkspaceId();
   const { userId } = useGetUserId();
   const [createConversationState, updateCreateConversationState] = useState({
