@@ -93,6 +93,7 @@ export async function triggerReplyEvent(message: tFulldataMessage) {
 }
 
 export async function triggerMessageEvent(message: tFulldataMessage) {
+  console.log("I will trigger the event here ");
   if (message?.channelId || message?.conversationId) {
     // sending the message on the workspace instead of just channel
     pusherServer.trigger(message.workspaceId, "incomming-message", message);
