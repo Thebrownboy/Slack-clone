@@ -20,7 +20,10 @@ export async function createMessageAction(messageData: {
   imageId?: string;
   conversationId?: string;
 }) {
+  console.log(" I am here insisde the create message action ");
   const message = await createMessage(messageData);
+
+  console.log("I have created the message and here it's ", message);
   if (!message) {
     return {
       success: false,
