@@ -27,6 +27,7 @@ export default async function WorkSpace({
     session?.user?.id || "",
     workspaceId
   );
+  console.log(channels, currentUser);
   if (!channels || !channels.length) {
     if (session?.user?.id && currentUser?.role === "admin") {
       const channelCreated = await createChannel(

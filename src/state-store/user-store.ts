@@ -14,6 +14,7 @@ interface iUserState {
 interface IUserStore {
   userState: iUserState;
   updateState(userState: iUserState): void;
+  resetData(): void;
 }
 
 // why I did not separet the state  and used one object
@@ -23,6 +24,17 @@ interface IUserStore {
 // will be more efficient
 export const useCurrentUser = create<IUserStore>((set) => {
   return {
+    resetData() {
+      set((state) => {
+        return {
+          ...state,
+          userState: {
+            loading: true,
+            user: null,
+          },
+        };
+      });
+    },
     userState: {
       loading: true,
       user: null,

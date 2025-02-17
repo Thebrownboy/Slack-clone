@@ -22,10 +22,22 @@ interface iWorkspaceState {
 interface iCurrentWorkspace {
   currentWorkspaceState: iWorkspaceState;
   updateWorkspaceState(workspaceState: iWorkspaceState): void;
+  resetData(): void;
 }
 
 export const useCurrentWorkspace = create<iCurrentWorkspace>((set) => {
   return {
+    resetData() {
+      set((state) => {
+        return {
+          ...state,
+          currentWorkspaceState: {
+            isLoading: true,
+            workSpace: null,
+          },
+        };
+      });
+    },
     currentWorkspaceState: {
       isLoading: true,
       workSpace: null,
@@ -40,3 +52,43 @@ export const useCurrentWorkspace = create<iCurrentWorkspace>((set) => {
     },
   };
 });
+
+interface ICurrentUserWorkspaces {
+  userWorkspacesState: {
+    userWorkSpaces: tWorkspace[] | null;
+    fetching: boolean;
+  };
+  resetUserWorkspacesData(): void;
+  updateCurrentUserWorkspaces(workSpaces: tWorkspace[]): void;
+}
+
+export const useCurrentUserWorkspaces = create<ICurrentUserWorkspaces>(
+  (set) => {
+    return {
+      resetUserWorkspacesData() {
+        set(() => {
+          return {
+            userWorkspacesState: {
+              fetching: true,
+              userWorkSpaces: null,
+            },
+          };
+        });
+      },
+      userWorkspacesState: {
+        fetching: true,
+        userWorkSpaces: null,
+      },
+      updateCurrentUserWorkspaces(workSpaces) {
+        set(() => {
+          return {
+            userWorkspacesState: {
+              userWorkSpaces: workSpaces,
+              fetching: false,
+            },
+          };
+        });
+      },
+    };
+  }
+);

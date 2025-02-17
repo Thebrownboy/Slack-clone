@@ -4,61 +4,6 @@ import { useCurrentMemberProfile } from "./member-profile.store";
 import { useCurrentMessages } from "./channels-messages";
 import { useCurrentConversationMessages } from "./conversation-store";
 
-interface iCurrentThreadMessage {
-  parentMessage: string | null;
-  threadReplies: tFulldataMessage[] | null;
-  updateParentMessage: (newParentMessage: string | null) => void;
-  updateThreadReplies: (replies: tFulldataMessage[]) => void;
-  addOneReply: (reply: tFulldataMessage) => void;
-  putThreadReplies: (
-    replies: tFulldataMessage[] | null,
-    parentMessage: string | null
-  ) => void;
-}
-
-export const useCurrentRepiles = create<iCurrentThreadMessage>((set) => {
-  return {
-    addOneReply(reply) {
-      set((state) => {
-        if (reply?.parentMessageId !== state.parentMessage) {
-          return state;
-        }
-        return {
-          ...state,
-          threadReplies: [reply, ...(state.threadReplies || [])],
-        };
-      });
-    },
-    updateParentMessage(newParentMessage) {
-      set((state) => {
-        return {
-          ...state,
-          parentMessage: newParentMessage,
-        };
-      });
-    },
-    parentMessage: null,
-    putThreadReplies: (replies, parentMessage) => {
-      set((state) => {
-        return {
-          ...state,
-          threadReplies: replies,
-          parentMessage,
-        };
-      });
-    },
-    threadReplies: [],
-    updateThreadReplies(replies) {
-      set((state) => {
-        return {
-          ...state,
-          threadReplies: [...(state.threadReplies || []), ...(replies || [])],
-        };
-      });
-    },
-  };
-});
-
 interface iCurrentThreadData {
   toggleReactionOnAThread: (
     parentMessageId: string,

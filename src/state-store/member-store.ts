@@ -7,10 +7,22 @@ interface iCurrentMember {
     member: null | tmember;
   };
   updateCurrentMemberState(member: tmember | null): void;
+  resetData(): void;
 }
 
 export const useCurrentMember = create<iCurrentMember>((set) => {
   return {
+    resetData() {
+      set((state) => {
+        return {
+          ...state,
+          currentMemberState: {
+            loading: true,
+            member: null,
+          },
+        };
+      });
+    },
     currentMemberState: {
       loading: true,
       member: null,

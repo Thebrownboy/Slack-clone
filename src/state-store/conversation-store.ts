@@ -27,11 +27,26 @@ interface IConversationMesages {
     memberId: string
   ) => void;
   updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
+  resetData(): void;
 }
 
 export const useCurrentConversationMessages = create<IConversationMesages>(
   (set) => {
     return {
+      resetData() {
+        set((state) => {
+          return {
+            ...state,
+            currentConversationId: "",
+            skip: 0,
+            currentConversationsMessages: {},
+            currentChannelMessages: {
+              conversationId: null,
+              messages: [],
+            },
+          };
+        });
+      },
       increaseSkip() {
         set((state) => {
           return {

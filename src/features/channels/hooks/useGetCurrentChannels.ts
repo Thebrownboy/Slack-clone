@@ -26,6 +26,7 @@ export default function useGetCurrentChannels() {
       } catch {}
     };
     if (currentChannlesState && !currentChannlesState.currentChannels) {
+      console.log(currentChannlesState, "channels will fetch ");
       getChannels();
     }
   }, [

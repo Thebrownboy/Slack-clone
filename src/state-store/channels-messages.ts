@@ -35,10 +35,23 @@ interface IChannelMesages {
     activeChannel: boolean
   ) => void;
   updateMessages: (channel: string, messages: tFulldataMessage[]) => void;
+  resetData(): void;
 }
 
 export const useCurrentMessages = create<IChannelMesages>((set) => {
   return {
+    resetData() {
+      set((state) => {
+        return {
+          ...state,
+          skip: 0,
+          currentChannelMessages: {
+            channelId: null,
+            messages: [],
+          },
+        };
+      });
+    },
     increaseSkip() {
       set((state) => {
         return {

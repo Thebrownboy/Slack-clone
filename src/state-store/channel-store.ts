@@ -22,10 +22,22 @@ interface iCurrentChannels {
   };
 
   updateCurrentChannels(channels: tChannel[] | null): void;
+  resetData(): void;
 }
 
 export const useCurrentChannels = create<iCurrentChannels>((set) => {
   return {
+    resetData() {
+      set((state) => {
+        return {
+          ...state,
+          currentChannlesState: {
+            currentChannels: null,
+            isLoading: true,
+          },
+        };
+      });
+    },
     currentChannlesState: {
       currentChannels: null,
       isLoading: true,

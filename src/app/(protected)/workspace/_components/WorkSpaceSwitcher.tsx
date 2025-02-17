@@ -52,7 +52,9 @@ export default function WorkSpaceSwitcher() {
         </DropdownMenuItem>
         {filteredWorkspaces?.map((item) => (
           <DropdownMenuItem
-            onClick={() => router.push(`/workspace/${item.id}`)}
+            onClick={() => {
+              router.push(`/workspace/${item.id}`);
+            }}
             key={item.id}
             className=" cursor-pointer capitalize "
           >
