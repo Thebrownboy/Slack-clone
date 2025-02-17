@@ -20,9 +20,6 @@ Slack Clone is a **full-stack** real-time messaging application that mimics the 
 - **Real-Time Updates:** Pusher
 - **Styling:** Tailwind CSS
 
-## 📸 Screenshots
-_(Add some screenshots here to showcase the UI and functionality)_
-
 ## 📦 Installation & Setup
 
 ### 1️⃣ Clone the Repository
