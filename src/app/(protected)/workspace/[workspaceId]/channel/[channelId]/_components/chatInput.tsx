@@ -65,7 +65,6 @@ export default function ChatInput({
         URL: uploadedImage?.URL,
       });
       // addNewMessage(messageObject);
-      console.log("I will trigger the action ");
       triggerMessageEvent(messageObject);
     }
   };

@@ -43,7 +43,7 @@ export async function triggertoggleReactionEvent(reactionData: {
   parentId?: string | null;
   conversationId?: string | null;
 }) {
-  pusherServer.trigger(
+  await pusherServer.trigger(
     reactionData.workspaceId,
     "toggle-reaction",
     reactionData

@@ -7,7 +7,6 @@ export default function useGetChannelById() {
   const { channelId } = useGetChannelId();
   const { currentChannlesState } = useCurrentChannels((state) => state);
   const currentChannel = useMemo(() => {
-    console.log(currentChannlesState.currentChannels, "Here channels");
     if (currentChannlesState.currentChannels) {
       for (const channel of currentChannlesState.currentChannels) {
         if (channel.id === channelId) return channel;

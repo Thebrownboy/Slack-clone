@@ -31,7 +31,6 @@ export default function usePusher() {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       pusherChannel.bind("incomming-message", (data: any) => {
-        console.log("I have an incoming message ");
         if (data.conversationId) {
           addNewConversationMessage(data.conversationId, data);
         }

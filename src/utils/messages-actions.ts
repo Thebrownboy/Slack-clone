@@ -20,10 +20,8 @@ export async function createMessageAction(messageData: {
   imageId?: string;
   conversationId?: string;
 }) {
-  console.log(" I am here insisde the create message action ");
   const message = await createMessage(messageData);
 
-  console.log("I have created the message and here it's ", message);
   if (!message) {
     return {
       success: false,
@@ -91,15 +89,18 @@ export async function deleteMessageAction(messageData: {
 export async function triggerReplyEvent(message: tFulldataMessage) {
   if (message?.parentMessageId) {
     // sending the message on the workspace instead of just channel
-    pusherServer.trigger(message.workspaceId, "reply-on-thread", message);
+    await pusherServer.trigger(message.workspaceId, "reply-on-thread", message);
   }
 }
 
 export async function triggerMessageEvent(message: tFulldataMessage) {
-  console.log("I will trigger the event here ");
   if (message?.channelId || message?.conversationId) {
     // sending the message on the workspace instead of just channel
-    pusherServer.trigger(message.workspaceId, "incomming-message", message);
+    await pusherServer.trigger(
+      message.workspaceId,
+      "incomming-message",
+      message
+    );
   }
 }
 
@@ -120,7 +121,7 @@ export async function triggerEditMessageEvent(
 ) {
   if (message?.channelId || message.conversationId) {
     // sending the message on the workspace instead of just channel
-    pusherServer.trigger(message.workspaceId, "edit-message", {
+    await pusherServer.trigger(message.workspaceId, "edit-message", {
       messageIndex,
       message,
       parentId,
@@ -137,7 +138,7 @@ export async function triggerDeleteMessageEvent(
   conversationId?: string | null,
   parentMessageIndex?: number | null
 ) {
-  pusherServer.trigger(workspaceId, "delete-message", {
+  await pusherServer.trigger(workspaceId, "delete-message", {
     messageIndex,
     channelId,
     parentId,
