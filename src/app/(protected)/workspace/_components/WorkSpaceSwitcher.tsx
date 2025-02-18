@@ -10,18 +10,14 @@ import { Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import {
-  useCreateWorkspaceModal,
-  useCurrentWorkspace,
-} from "@/state-store/workspace-store";
+import { useCurrentWorkspace } from "@/state-store/workspace-store";
+import Link from "next/link";
 export default function WorkSpaceSwitcher() {
   const {
     currentWorkspaceState: { workSpace, isLoading },
   } = useCurrentWorkspace((state) => state);
   const workspaceId = workSpace?.id;
   const router = useRouter();
-
-  const setOpen = useCreateWorkspaceModal((state) => state.setOpen);
 
   const { userWorkSpaces } = useGetCurrentUserWorkSpaces();
   const filteredWorkspaces = userWorkSpaces?.filter(
@@ -64,15 +60,15 @@ export default function WorkSpaceSwitcher() {
             <p className=" max-w-full truncate"> {item?.name}</p>
           </DropdownMenuItem>
         ))}
-        <DropdownMenuItem
-          className=" cursor-pointer"
-          onClick={() => setOpen(true)}
-        >
-          <div className="size-9 relative overflow-hidden bg-[#F2F2F2] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
-            <Plus />
-          </div>
-          Create a new workspace
-        </DropdownMenuItem>
+        <Link href={"/create-workspace"}>
+          {" "}
+          <DropdownMenuItem className=" cursor-pointer">
+            <div className="size-9 relative overflow-hidden bg-[#F2F2F2] text-slate-800 font-semibold text-lg rounded-md flex items-center justify-center mr-2">
+              <Plus />
+            </div>
+            Create a new workspace
+          </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -43,7 +43,7 @@ export async function onLoginSubmit(email: string, password: string) {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/settings",
+      redirectTo: "/",
     });
     return {
       success: true,
