@@ -271,7 +271,7 @@ export const useCurrentMessages = create<IChannelMesages>((set) => {
               skip: (state.currentChannelsMessages[channelId]?.skip || 0) + 1,
               messages: [
                 message,
-                ...state.currentChannelsMessages[channelId]?.messages,
+                ...(state.currentChannelsMessages[channelId]?.messages || []),
               ],
             },
           },

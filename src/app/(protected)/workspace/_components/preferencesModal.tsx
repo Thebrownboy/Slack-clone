@@ -50,7 +50,7 @@ export default function PreferencesModal({
   const workspaceId = workSpace?.id;
   const { isPending: isUpdatingWorkspace, submitUpdateAction } =
     useUpdateWorkspace(user?.id, workspaceId as string, updateWorkspaceState);
-  const { submitDeleteAction } = useDeleteWorkspace(
+  const { submitDeleteAction, isPending } = useDeleteWorkspace(
     user?.id,
     workspaceId as string
   );
@@ -115,11 +115,14 @@ export default function PreferencesModal({
               </DialogContent>
             </Dialog>
             <button
-              disabled={false}
+              disabled={isPending}
               onClick={async () => {
                 const ok = await confirm();
                 if (!ok) return;
                 await submitDeleteAction();
+
+                setEditOpen(false);
+                setOpen(false);
                 router.replace("/");
               }}
               className=" flex items-center gap-x-2 px-5 py-4 bg-white rounded-lg border cursor-pointer hover:bg-gray-50 text-rose-600"
