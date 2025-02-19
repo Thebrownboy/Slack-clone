@@ -17,9 +17,7 @@ export default function useEditChannel(channelName: string) {
     errorMsg: "",
     isPending: false,
   });
-  const { updateCurrentChannels, currentChannlesState } = useCurrentChannels(
-    (state) => state
-  );
+  const { currentChannlesState } = useCurrentChannels((state) => state);
   const submitEditNameAction = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {

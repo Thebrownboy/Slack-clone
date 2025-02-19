@@ -1,9 +1,6 @@
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
-import {
-  useCreateChannelModal,
-  useCurrentChannels,
-} from "@/state-store/channel-store";
+import { useCreateChannelModal } from "@/state-store/channel-store";
 import {
   createChannelAction,
   triggerCreateChannelEvent,
@@ -19,9 +16,7 @@ export default function useCreateChannel() {
     errorMsg: "",
     isPending: false,
   });
-  const { updateCurrentChannels, currentChannlesState } = useCurrentChannels(
-    (state) => state
-  );
+
   const submitCreateAction = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
