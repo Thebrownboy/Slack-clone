@@ -4,7 +4,10 @@ import {
   useCreateChannelModal,
   useCurrentChannels,
 } from "@/state-store/channel-store";
-import { createChannelAction } from "@/utils/channels-actions";
+import {
+  createChannelAction,
+  triggerCreateChannelEvent,
+} from "@/utils/channels-actions";
 import React, { useState } from "react";
 
 export default function useCreateChannel() {
@@ -30,13 +33,8 @@ export default function useCreateChannel() {
         userId,
         name
       );
-      if (response.success && !currentChannlesState.currentChannels) {
-        updateCurrentChannels([response.channel]);
-      } else if (response.success && currentChannlesState.currentChannels) {
-        updateCurrentChannels([
-          response.channel,
-          ...currentChannlesState.currentChannels,
-        ]);
+      if (response.success) {
+        triggerCreateChannelEvent(response.channel);
       }
       // redirect to channel
       updateCreateChannelState((prevState) => ({

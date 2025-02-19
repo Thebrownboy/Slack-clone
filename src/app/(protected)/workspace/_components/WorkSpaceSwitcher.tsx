@@ -50,6 +50,7 @@ export default function WorkSpaceSwitcher() {
           <DropdownMenuItem
             onClick={() => {
               router.push(`/workspace/${item.id}`);
+              router.refresh();
             }}
             key={item.id}
             className=" cursor-pointer capitalize "

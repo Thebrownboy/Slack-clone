@@ -8,6 +8,7 @@ import {
   getWorkspaceChannels,
 } from "./database-utils/channels-utils";
 import { tChannel } from "@/types/common-types";
+import pusherServer from "@/lib/pusher";
 
 export async function getcurrentChannelsAction(
   workspaceId: string,
@@ -76,5 +77,26 @@ export async function deleteChannelAction(userId: string, channelId: string) {
       channel: null,
       msg: "An error happened",
     };
+  }
+}
+
+export async function triggerCreateChannelEvent(channel: tChannel) {
+  if (channel?.workspaceId) {
+    // sending the message on the workspace instead of just channel
+    await pusherServer.trigger(channel.workspaceId, "create-channel", channel);
+  }
+}
+
+export async function triggerDeleteChannelEvent(channel: tChannel | null) {
+  if (channel?.workspaceId) {
+    // sending the message on the workspace instead of just channel
+    await pusherServer.trigger(channel.workspaceId, "delete-channel", channel);
+  }
+}
+
+export async function triggerEditChannelEvent(channel: tChannel | null) {
+  if (channel?.workspaceId) {
+    // sending the message on the workspace instead of just channel
+    await pusherServer.trigger(channel.workspaceId, "edit-channel", channel);
   }
 }

@@ -29,6 +29,7 @@ function CreateWorkSpace() {
         open={true}
         onOpenChange={() => {
           router.push("/");
+          router.refresh();
         }}
       >
         <DialogContent>

@@ -1,21 +1,16 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
-import { useCurrentChannels } from "@/state-store/channel-store";
-import { useCurrentWorkspace } from "@/state-store/workspace-store";
-import { deleteChannelAction } from "@/utils/channels-actions";
-import { useRouter } from "next/navigation";
+import {
+  deleteChannelAction,
+  triggerDeleteChannelEvent,
+} from "@/utils/channels-actions";
 import { useState } from "react";
 
 export default function useDeleteChannel() {
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
-  const router = useRouter();
   const [errorMsg, updateErrorMsg] = useState("");
   const [isPending, updateIsPending] = useState(false);
-  const { currentChannlesState, updateCurrentChannels } = useCurrentChannels(
-    (state) => state
-  );
-  const { currentWorkspaceState } = useCurrentWorkspace((state) => state);
   const submitDeleteAction = async () => {
     if (userId) {
       updateIsPending(true);
@@ -23,14 +18,8 @@ export default function useDeleteChannel() {
       if (!response.success) {
         updateErrorMsg(response.msg);
       } else {
-        if (currentChannlesState.currentChannels) {
-          router.push(`/workspace/${currentWorkspaceState.workSpace?.id}`);
-          updateCurrentChannels(
-            currentChannlesState.currentChannels.filter(
-              (channel) => channel.id !== response.channel?.id
-            )
-          );
-        }
+        console.log("I will trigerer ");
+        triggerDeleteChannelEvent(response.channel);
       }
       updateIsPending(false);
     }

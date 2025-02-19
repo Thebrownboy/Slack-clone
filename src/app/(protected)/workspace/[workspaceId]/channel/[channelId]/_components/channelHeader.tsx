@@ -53,6 +53,7 @@ export default function ChannelHeader({ channelName }: channelHeaderProps) {
                   disabled={isPending}
                   onClick={async () => {
                     const ok = await confirm();
+                    console.log("OK IS OK");
                     if (!ok) return;
                     await submitDeleteAction();
                   }}

@@ -22,6 +22,7 @@ export default function useGetCurrentChannels() {
           workSpace?.id as string,
           userId as string
         );
+        console.log(response);
         updateCurrentChannels(response);
       } catch {}
     };

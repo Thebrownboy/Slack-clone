@@ -1,11 +1,13 @@
 import { signUpValidationSchema } from "@/lib/validation-schemas";
 import { onRegisterSubmit } from "@/utils/authentication";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function useSignUpFunc() {
   const [successMsg, setSucessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
   const initialValues = {
     name: "",
     email: "",
@@ -30,6 +32,7 @@ export default function useSignUpFunc() {
     } else {
       setErrorMsg("");
       setSucessMsg(response.msg);
+      router.push("/signin");
       return;
     }
   };
