@@ -152,6 +152,5 @@ export async function removeMember({
       },
     },
   });
-
   return removedMember;
 }

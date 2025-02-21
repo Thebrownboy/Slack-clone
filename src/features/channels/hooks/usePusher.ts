@@ -1,4 +1,5 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
+import useGetMemberId from "@/hooks/useGetMemberId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
 import pusherClient from "@/lib/pusher-client";
@@ -6,6 +7,7 @@ import { useCurrentChannels } from "@/state-store/channel-store";
 import { useCurrentMessages } from "@/state-store/channels-messages";
 import { useCurrentConversationMessages } from "@/state-store/conversation-store";
 import { useCurrentThreadData } from "@/state-store/thread-messages";
+import { useCurrentWorkspaceMembers } from "@/state-store/user-store";
 import { useCurrentWorkspace } from "@/state-store/workspace-store";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +16,7 @@ import { useEffect } from "react";
 export default function usePusher() {
   const router = useRouter();
   const { workspaceId } = useGetWorkspaceId();
+  const { memberId } = useGetMemberId();
   const { addNewMessage, toggleReactionOnMessage, editMessage, deleteMessage } =
     useCurrentMessages();
   const {
@@ -32,6 +35,8 @@ export default function usePusher() {
   const { userId } = useGetUserId();
   const { channelId } = useGetChannelId();
   const { currentWorkspaceState } = useCurrentWorkspace((state) => state);
+  const { currentWorkspaceMembers, updateCurrentWorkspaceMembers } =
+    useCurrentWorkspaceMembers();
   useEffect(() => {
     if (userId && workspaceId) {
       const pusherChannel = pusherClient.subscribe(workspaceId as string);
@@ -174,6 +179,31 @@ export default function usePusher() {
             index++;
           }
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("add-user-to-workspace", (data: any) => {
+        console.log("I AM HERE IAM HERE HREREHEREHREHREHR");
+        if (data) {
+          if (currentWorkspaceMembers)
+            updateCurrentWorkspaceMembers([data, ...currentWorkspaceMembers]);
+        }
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      pusherChannel.bind("remove-user-from-workspace", (data: any) => {
+        console.log("I AM HERE IAM HERE HREREHEREHREHREHR");
+        if (data) {
+          if (currentWorkspaceMembers) {
+            const newMembers = currentWorkspaceMembers.filter(
+              (member) => member.member.userId !== data.userId
+            );
+            updateCurrentWorkspaceMembers(newMembers);
+            if (memberId === data.userId) {
+              router.push(`/workspace/${newMembers[0].member.workspaceId}`);
+            }
+          }
+        }
+      });
     }
     return () => {
       if (workspaceId) {
@@ -181,6 +211,9 @@ export default function usePusher() {
       }
     };
   }, [
+    memberId,
+    currentWorkspaceMembers,
+    updateCurrentWorkspaceMembers,
     router,
     currentWorkspaceState,
     currentChannlesState,

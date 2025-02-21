@@ -135,12 +135,14 @@ export async function makeUserJoinAction(
     return {
       success: false,
       msg: "Unkown error happened",
+      newMember: response,
     };
   }
 
   return {
     success: true,
     msg: "",
+    newMember: response,
   };
 }
 

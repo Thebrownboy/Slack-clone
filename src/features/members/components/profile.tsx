@@ -16,12 +16,15 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
+import { triggerRemoveUserFromWorkspace } from "@/utils/members-actions";
 
 interface IProfileProps {
   memberId: string | null;
   onClose: () => void;
 }
 function Profile({ memberId, onClose }: IProfileProps) {
+  const router = useRouter();
   const { fullMember } = useGetFullMember(memberId as string);
   const { userId } = useGetUserId();
   const { fullMember: currentFullMember } = useGetFullMember(userId || "");
@@ -74,12 +77,14 @@ function Profile({ memberId, onClose }: IProfileProps) {
     const deletedMember = await handleRemove();
     if (deletedMember.success) {
       toast.success("you have left successfully ");
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve("");
-          window.location.reload();
-        }, 2000);
-      });
+      await triggerRemoveUserFromWorkspace(
+        deletedMember.updatedMember as {
+          workspaceId: string;
+          userId: string;
+          role: "admin" | "member";
+        }
+      );
+      router.replace("/");
     } else {
       toast.error(" can't leave ");
     }

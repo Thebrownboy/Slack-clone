@@ -2,6 +2,8 @@
 import "server-only";
 import { getWorkspaceMembers } from "./database-utils/channels-utils";
 import { removeMember, updateMember } from "./database-utils/members";
+import pusherServer from "@/lib/pusher";
+import { tWorkspaceMembers } from "@/types/common-types";
 
 export async function getWorkspaceMembersAction(
   workspaceId: string,
@@ -52,5 +54,37 @@ export async function removeMemberAction(data: {
       success: false,
       updatedMember: removedUser,
     };
+  }
+}
+
+export async function triggerAddUserToWorkspace(
+  member: tWorkspaceMembers | null
+) {
+  console.log("I will trigger hrerh rehre herhrhe rhe rheh", member);
+  if (member) {
+    console.log("I will send the trigger ");
+    // sending the message on the workspace instead of just channel
+    await pusherServer.trigger(
+      member.member.workspaceId,
+      "add-user-to-workspace",
+      member
+    );
+  }
+}
+
+export async function triggerRemoveUserFromWorkspace(member: {
+  workspaceId: string;
+  userId: string;
+  role: "admin" | "member";
+}) {
+  console.log("I will trigger hrerh rehre herhrhe rhe rheh", member);
+  if (member) {
+    console.log("I will send the trigger ");
+    // sending the message on the workspace instead of just channel
+    await pusherServer.trigger(
+      member.workspaceId,
+      "remove-user-from-workspace",
+      member
+    );
   }
 }

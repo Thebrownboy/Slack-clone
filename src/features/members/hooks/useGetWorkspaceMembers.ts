@@ -1,38 +1,37 @@
 import useGetChannelId from "@/hooks/useGetChannelId";
 import useGetUserId from "@/hooks/useGetUserId";
 import useGetWorkspaceId from "@/hooks/useGetWorkspaceId";
-import { tWorkspaceMembers } from "@/types/common-types";
+import { useCurrentWorkspaceMembers } from "@/state-store/user-store";
 import { getWorkspaceMembersAction } from "@/utils/members-actions";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function useGetWorkspaceMembers() {
   const { userId } = useGetUserId();
   const { workspaceId } = useGetWorkspaceId();
-  const [workspaceMembers, updateWorkspaceMembers] = useState<{
-    currentWorkspaceMembers: tWorkspaceMembers[] | null;
-    isLoading: boolean;
-  }>({ isLoading: true, currentWorkspaceMembers: null });
+
+  const { currentWorkspaceMembers, isLoading, updateCurrentWorkspaceMembers } =
+    useCurrentWorkspaceMembers();
   const { channelId } = useGetChannelId();
   useEffect(() => {
     const getWorkspaceMembers = async () => {
-      try {
-        const response = await getWorkspaceMembersAction(
-          workspaceId as string,
-          userId as string
-        );
-        updateWorkspaceMembers((state) => ({
-          ...state,
-          isLoading: false,
-          currentWorkspaceMembers: response,
-        }));
-      } catch {
-        updateWorkspaceMembers((state) => ({ ...state, isLoading: false }));
-      }
+      const response = await getWorkspaceMembersAction(
+        workspaceId as string,
+        userId as string
+      );
+
+      updateCurrentWorkspaceMembers(response);
+      console.log(response);
     };
-    if (!workspaceMembers || !workspaceMembers.currentWorkspaceMembers) {
+    if (!currentWorkspaceMembers) {
       getWorkspaceMembers();
     }
-  }, [userId, workspaceId, channelId, workspaceMembers]);
+  }, [
+    currentWorkspaceMembers,
+    userId,
+    workspaceId,
+    channelId,
+    updateCurrentWorkspaceMembers,
+  ]);
 
-  return { ...workspaceMembers };
+  return { currentWorkspaceMembers: currentWorkspaceMembers, isLoading };
 }

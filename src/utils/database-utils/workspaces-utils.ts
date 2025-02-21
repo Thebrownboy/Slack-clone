@@ -277,12 +277,23 @@ export async function makeUserJoin(
   if (existingMembmer) {
     return null;
   }
-  await db.members.create({
+  const newMember = await db.members.create({
     data: {
       userId,
       workspaceId,
       role: "member",
     },
   });
-  return workspace.id;
+  const user = await db.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      image: true,
+    },
+  });
+  return { member: newMember, user };
 }

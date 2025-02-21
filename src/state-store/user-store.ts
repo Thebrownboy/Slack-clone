@@ -1,3 +1,4 @@
+import { tWorkspaceMembers } from "@/types/common-types";
 import { create } from "zustand";
 
 interface iUser {
@@ -41,6 +42,28 @@ export const useCurrentUser = create<IUserStore>((set) => {
     },
     updateState(userState) {
       set((state) => ({ userState: { ...state.userState, ...userState } }));
+    },
+  };
+});
+
+interface IworkspaceMembers {
+  currentWorkspaceMembers: tWorkspaceMembers[] | null;
+  isLoading: boolean;
+  updateCurrentWorkspaceMembers(members: tWorkspaceMembers[] | null): void;
+}
+
+export const useCurrentWorkspaceMembers = create<IworkspaceMembers>((set) => {
+  return {
+    currentWorkspaceMembers: null,
+    isLoading: true,
+    updateCurrentWorkspaceMembers(members) {
+      set((state) => {
+        return {
+          ...state,
+          isLoading: false,
+          currentWorkspaceMembers: members,
+        };
+      });
     },
   };
 });

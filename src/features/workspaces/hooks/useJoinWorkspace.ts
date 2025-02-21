@@ -1,4 +1,6 @@
 import useGetCurrentUserData from "@/hooks/getCurrentUserData";
+import { tFulldataMessage } from "@/types/common-types";
+import { triggerAddUserToWorkspace } from "@/utils/members-actions";
 import { makeUserJoinAction } from "@/utils/workspaces-actions";
 import { useCallback, useState } from "react";
 
@@ -20,6 +22,7 @@ export default function useJoinWorkspace(userId: string, workspaceId: string) {
         }
         updateIsPending(false);
 
+        await triggerAddUserToWorkspace(response.newMember as tFulldataMessage);
         return response;
       }
     },
